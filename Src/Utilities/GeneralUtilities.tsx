@@ -1,0 +1,208 @@
+import {useDispatch} from 'react-redux';
+import Toast from '../Components/Toast';
+import {clearStorage} from './SecureStorage';
+import {Alert, Linking, PermissionsAndroid, Platform} from 'react-native';
+import {AlertBoxProps} from '../@types/general';
+import {IS_IOS} from './Constants';
+import RNFetchBlob, {RNFetchBlobConfig} from 'rn-fetch-blob';
+
+type DownloadTypeProps = 'latest_app' | 'pdf_download';
+
+export const getCatchMessage = (err: any) => {
+  try {
+    let errorMsg = '';
+    if (err?.response?.data?.detail) {
+      errorMsg = Array.isArray(err?.response?.data?.detail)
+        ? err?.response?.data?.detail?.[0]?.msg
+        : err?.response?.data?.detail;
+    } else {
+      errorMsg = 'Network Error';
+    }
+    Toast.error(errorMsg);
+  } catch (error) {}
+};
+
+export const getTrimedText = (str: string, len: number = 20) => {
+  if (str) {
+    return str.length > len ? str.substring(0, len) + '...' : str;
+  }
+  return '';
+};
+
+export const cancelApi = (controller: AbortController | null) => {
+  if (controller) {
+    controller.abort();
+  }
+};
+
+export const handleOpenPlayStore = () => {
+  const appStoreUrl = 'market://details?id=com.rkecran';
+  Linking.openURL(appStoreUrl)
+    .then(data => {})
+    .catch(error => {});
+};
+
+export const secureVerifyText = (text: string) => {
+  return text
+    ? `${text?.slice(0, 2)}.....${
+        text?.includes('@') ? '@gmail.com' : text?.slice(-3)
+      }`
+    : '';
+};
+
+export const AlertBox = ({
+  title = '',
+  alertMsg = 'Are you sure want to logout?',
+  positiveBtnText = 'Ok',
+  negativeBtntext = 'Cancel',
+  onPressPositiveButton,
+  onPressNegativeButton,
+}: AlertBoxProps) => {
+  Alert.alert(title, alertMsg, [
+    {
+      text: negativeBtntext,
+      onPress: onPressNegativeButton,
+    },
+    {
+      text: positiveBtnText,
+      onPress: onPressPositiveButton,
+    },
+  ]);
+};
+
+export const getFileNameFromUrl = (url: string = '') => {
+  if (url) {
+    return url.split('/').pop() ?? '';
+  }
+  return '';
+};
+
+export const generateUniqueId = () => {
+  return Math.floor(Math.random() * 100);
+};
+
+const downloadDocument = async (
+  url: string,
+  fileName: string,
+  download_type: DownloadTypeProps,
+  setisLoading: (val: boolean) => void,
+) => {
+  Toast.normal(`${fileName} Downloading...`);
+  const {config, fs} = RNFetchBlob;
+  let downloadDir = IS_IOS ? fs.dirs.DocumentDir : fs.dirs.DownloadDir;
+  let downloadDirName =
+    download_type === 'latest_app' ? 'Maestro Apps' : 'Maestro Documents';
+  let options: RNFetchBlobConfig = {
+    fileCache: true,
+    path: downloadDir + `/${downloadDirName}/` + fileName,
+    addAndroidDownloads: {
+      //Related to the Android only
+      useDownloadManager: true,
+      notification: true,
+      path: downloadDir + `/${downloadDirName}/` + fileName,
+      description: `${
+        download_type === 'latest_app' ? 'App' : 'Document'
+      } Download`,
+    },
+  };
+
+  config(options)
+    .fetch('GET', url)
+    .then((res: any) => {
+      if (download_type === 'latest_app') {
+        // RNExitApp.exitApp();
+      }
+      if (IS_IOS) {
+        RNFetchBlob.ios.openDocument(
+          downloadDir + '/Maestro ERP Documents/' + fileName,
+        );
+      }
+      Toast.success('Download Successfully');
+    })
+    .catch(e => {
+      Toast.error(e.message);
+    })
+    .finally(() => {
+      if (setisLoading) setisLoading(false);
+    });
+};
+
+export const downloadPdf = (
+  url: string,
+  fileName: string,
+  download_type: DownloadTypeProps = 'pdf_download',
+  setisLoading: (val: boolean) => void,
+) => {
+  if (IS_IOS) {
+    downloadDocument(url, fileName, download_type, setisLoading);
+  } else {
+    try {
+      if (IS_IOS || (Platform.OS === 'android' && Platform.Version >= 33)) {
+        downloadDocument(url, fileName, download_type, setisLoading);
+      } else {
+        PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          {
+            title: 'Storage Permission',
+            message: 'Maestro ERP needs storage access to download files.',
+            buttonPositive: 'Allow',
+            buttonNegative: 'Denied',
+          },
+        )
+          .then(granted => {
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+              downloadDocument(url, fileName, download_type, setisLoading);
+            } else {
+              Toast.error('Storage Permission Denied');
+            }
+          })
+          .catch(e => {
+            Toast.error(e.message);
+          });
+      }
+    } catch (err: any) {
+      Toast.error(err.message);
+    }
+  }
+};
+
+const isValidContent = (value: any) => {
+  const type = typeof value;
+
+  const unprocessableEntries = [
+    null,
+    undefined,
+    '',
+    'false',
+    false,
+    'undefined',
+    'null',
+  ];
+  switch (type) {
+    case 'object':
+      return Array.isArray(value)
+        ? value?.length > 0
+        : Object.keys(value)?.length > 0;
+    default:
+      const val = type === 'string' ? value?.trim() : value;
+      return !unprocessableEntries.includes(val);
+  }
+};
+export const cleanFormData = (formData: any) => {
+  const cleanedFormData: any = new FormData();
+
+  // Check if the formData has _parts
+  if (formData?._parts) {
+    for (const [key, value] of formData._parts) {
+      // Check if the value is not empty
+      if (isValidContent(value)) {
+        cleanedFormData.append(
+          key,
+          typeof value === 'string' ? value?.trim() : value,
+        );
+      }
+    }
+  }
+
+  return cleanedFormData?._parts?.length ? cleanedFormData : undefined;
+};
