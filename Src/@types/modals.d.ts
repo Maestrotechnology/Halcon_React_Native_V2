@@ -5,7 +5,7 @@ import {DivisionDropdownProp, WorkCenterDropdownProp} from './dropdown';
 
 export interface SearchDropdownBoxModalProps {
   options?: any[];
-  apiType?: 'machineList' | 'user' | 'work_center' | 'division';
+  apiType?: 'machineList' | 'user' | 'work_center' | 'division' | 'roleList';
   searchFieldName?: string;
   icon?: IconType;
   onEndReached?: ((info: {distanceFromEnd: number}) => void) | null | undefined;

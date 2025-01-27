@@ -6,7 +6,6 @@ import {
   checkSubscriptionService,
   deleteServiceRequestService,
   exportServiceRequestService,
-  getServiceRequestListService,
   listUserService,
 } from '../../../Services/Services';
 import Toast from '../../../Components/Toast';
@@ -30,7 +29,6 @@ import {
   ServiceRequestFilterInitialProp,
 } from '../../../@types/modals';
 import GlobaModal from '../../../Components/GlobalModal';
-import ServiceRequestListFilterModal from '../../../Modals/Filter/ServiceRequestListFilterModal';
 import ConfirmationModal from '../../../Modals/ConfirmationModal';
 import {CommonStyles} from '../../../Utilities/CommonStyles';
 import moment from 'moment';
@@ -216,6 +214,8 @@ const UserList = ({navigation, route}: any) =>
           }
         })
         .catch(err => {
+          console.log(err, 'ERROR===');
+
           Toast.error(err.message);
         })
         .finally(() => {

@@ -210,6 +210,9 @@ export const getWorkCenterDropdownListService = (data: FormData) => {
 export const getDivisionDropdownListService = (data: FormData) => {
   return axios.post('division_dropdown', data);
 };
+export const getRoleDropdownListService = (data: FormData) => {
+  return axios.post('dropdown/dropdown_role', data);
+};
 
 // Profile
 export const getProfileService = (data: FormData) => {

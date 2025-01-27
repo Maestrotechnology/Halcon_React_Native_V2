@@ -1,35 +1,19 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import React, {useEffect} from 'react';
+import {useFormik} from 'formik';
 import {
-  ServiceRequestFilterDataProps,
-  ServiceRequestListFilterModalProps,
   UserListFilterdataProps,
   UserListFilterModalProps,
 } from '../../@types/modals';
-import {useFormik} from 'formik';
-import * as Yup from 'yup';
-import {
-  DeviceStatusProps,
-  SORT_OPTIONS,
-  priorityLevelOptions,
-  requestStatusOptions,
-} from '../../Utilities/StaticDropdownOptions';
 import DropdownBox from '../../Components/DropdownBox';
 import CustomButton from '../../Components/CustomButton';
-import DateTimePicker from '../../Components/DateTimePicker';
 import TextInputBox from '../../Components/TextInputBox';
 import {COLORS} from '../../Utilities/Constants';
-
-const reqStatusOptions: DeviceStatusProps[] = [
-  // {id: 1, name: 'Created'},
-  ...requestStatusOptions,
-];
 
 const UserFilterModal = ({
   filterData,
   onApplyFilter,
   onClose,
-  initialValue,
 }: UserListFilterModalProps) => {
   const {
     setFieldValue,
@@ -60,19 +44,19 @@ const UserFilterModal = ({
   return (
     <View>
       <DropdownBox
-        title="Machine"
+        title="Role"
         value={values.role_id}
-        placeHolder="Select machine"
-        apiType="machineList"
+        placeHolder="Select Role"
+        apiType="roleList"
         onSelect={val => {
-          setFieldValue('machine', val);
+          setFieldValue('role_id', val);
         }}
         type="search"
-        fieldName="machine_name"
+        fieldName="role_name"
         isLocalSearch
-        searchFieldName="machine_name"
+        searchFieldName="role_name"
         onIconPress={() => {
-          setFieldValue('machine', null);
+          setFieldValue('role_id', null);
         }}
       />
 
@@ -118,7 +102,6 @@ const UserFilterModal = ({
             resetForm({
               values: {
                 ...initialValues,
-                reqStatus: null,
               },
             });
             onApplyFilter(null);

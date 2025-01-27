@@ -152,7 +152,7 @@ export interface DropdownBoxProps
   isRefreshing?: boolean;
   onEndReached?: () => void;
   onRefresh?: () => void;
-  apiType?: 'machineList' | 'user' | 'work_center' | 'division';
+  apiType?: 'machineList' | 'user' | 'work_center' | 'division' | 'roleList';
   isRequired?: boolean;
   placeHolder?: string;
   iconHeight?: number;

@@ -5,6 +5,7 @@ import {Alert, Linking, PermissionsAndroid, Platform} from 'react-native';
 import {AlertBoxProps} from '../@types/general';
 import {IS_IOS} from './Constants';
 import RNFetchBlob, {RNFetchBlobConfig} from 'rn-fetch-blob';
+import {getCatchMsgType} from './Types';
 
 type DownloadTypeProps = 'latest_app' | 'pdf_download';
 
@@ -206,3 +207,52 @@ export const cleanFormData = (formData: any) => {
 
   return cleanedFormData?._parts?.length ? cleanedFormData : undefined;
 };
+
+export function getCatchMsg(error: getCatchMsgType) {
+  if (error?.response?.data) {
+    if (typeof error?.response?.data?.detail === 'string') {
+      Toast.error(error?.response?.data?.detail);
+    } else if (error?.response?.data?.detail) {
+      if (Array.isArray(error?.response?.data?.detail)) {
+        Toast.error(error?.response?.data?.detail?.[0]?.msg);
+      } else {
+        Toast.error(error?.response?.data?.detail?.msg);
+      }
+    }
+  } else if (error.response) {
+    if (error.response.status === 404) {
+      Toast.error('The requested resource does not exist or has been deleted');
+    } else if (error.response.status === 401) {
+      Toast.error('Please login to access this resource!');
+    } else if (error.response.status === 500) {
+      Toast.error('Internal Server Error !');
+    } else {
+      Toast.error('An error occurred');
+    }
+  } else {
+    Toast.error('Something went wrong!');
+  }
+}
+// export const FilterValidObj = (obj: ObjectType) => {
+//   const finalObj: ObjectType = {};
+//   for (const key in obj) {
+//     const value = obj[key];
+
+//     if (value !== undefined && value !== null && value !== '') {
+//       finalObj[key] = typeof value === 'string' ? value.trim() : value;
+//     }
+//   }
+//   return finalObj;
+// };
+
+// export const ConvertJSONtoFormData = (obj: ObjectType, isFilter = true) => {
+//   const formData = new FormData();
+//   for (const key in obj) {
+//     const value = obj[key];
+//     if (!isFilter || (value !== undefined && value !== null && value !== '')) {
+//       formData.append(key, typeof value === 'string' ? value.trim() : value);
+//     }
+//   }
+
+//   return formData;
+// };

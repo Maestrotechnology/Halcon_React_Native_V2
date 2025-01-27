@@ -1,8 +1,5 @@
 import axios from 'axios';
 import {baseUrl} from './ServiceConstatnts';
-import {retrieveUserSession} from '../Utilities/SecureStorage';
-import {userLoginKey} from '../Utilities/Constants';
-import Toast from '../Components/Toast';
 import {cleanFormData} from '../Utilities/GeneralUtilities';
 
 const instance = axios.create({
