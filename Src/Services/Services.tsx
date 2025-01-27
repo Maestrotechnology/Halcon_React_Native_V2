@@ -246,3 +246,11 @@ export const createWorkOrderService = (data: FormData) => {
 export const updateWorkOrderService = (data: FormData) => {
   return axios.post('masters/update_work_order', data);
 };
+
+// User Management
+
+// User
+
+export const listUserService = (data: FormData, page: number) => {
+  return axios.post(`/user/list_user?page=${page}&size=20`, data);
+};

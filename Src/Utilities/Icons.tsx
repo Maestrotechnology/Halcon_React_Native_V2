@@ -42,8 +42,12 @@ import service_icon from '../Assets/Svg/Service_icon.svg';
 import preventive_icon from '../Assets/Svg/preventive_req_icon.svg';
 import WorkOrderIcon from '../Assets/Svg/work_order_icon.svg';
 import WorkOrderActiveIcon from '../Assets/Svg/work_order_active_icon.svg';
+import RoleIcon from '../Assets/Svg/userRole.svg';
+import UserMenuIcon from '../Assets/Svg/userMenuIcon.svg';
 
 export type IconType =
+  | 'RoleIcon'
+  | 'UserMenuIcon'
   | 'successIcon'
   | 'failureIcon'
   | 'backArrowIcon'
@@ -134,4 +138,6 @@ export const ICONS = {
   preventive_req__icon: preventive_icon,
   work_order_icon: WorkOrderIcon,
   work_order_active_icon: WorkOrderActiveIcon,
+  RoleIcon,
+  UserMenuIcon,
 };

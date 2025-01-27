@@ -1,6 +1,6 @@
-import { RouteProp } from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { ServiceRequestItemsProps, TaskDetailsDataItemsProps } from "./api";
+import {RouteProp} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {ServiceRequestItemsProps, TaskDetailsDataItemsProps} from './api';
 
 export type MainStackParamList = {
   DrawerNavigation: undefined;
@@ -9,11 +9,14 @@ export type MainStackParamList = {
 
 export type DrawerNavigationParamList = {
   Dashboard: undefined;
+  User: undefined;
   ServiceRequestStack: undefined;
   PreventiveSRStack: undefined;
   PermisionDeniedStack: undefined;
   ProfileStack: undefined;
   MaintenaceWorkOrderStack: undefined;
+  UserManagementStack: undefined;
+  MastersStack: undefined;
 };
 
 export type DrawerScreensProps = {
@@ -44,6 +47,10 @@ export type ServiceRequestStackParamList = {
   ServiceRequest: undefined;
   ServiceRequestCreationStack: ServiceRequestCreationStackParamsDataProps;
 };
+export type UserStackStackParamList = {
+  UserList: undefined;
+  AccessRoleList: undefined;
+};
 
 export type PreventiveSRStackParamList = {
   PreventiveSR: undefined;
@@ -59,7 +66,7 @@ export type MaintananceWorkOrderParamList = {
 };
 
 export type FileUploadingScreenParamDataProps = {
-  isFrom: "deviceFailure" | "TaskDetails";
+  isFrom: 'deviceFailure' | 'TaskDetails';
 };
 
 export type CreateTaskScreenParamsDataProps = {
@@ -67,7 +74,7 @@ export type CreateTaskScreenParamsDataProps = {
   isUpdate?: boolean;
   isView?: boolean;
   taskItemData?: TaskDetailsDataItemsProps;
-  isFrom?: "deviceFailure" | "TaskDetails";
+  isFrom?: 'deviceFailure' | 'TaskDetails';
 };
 
 export type ServiceRequestCreationStackParamList = {
@@ -85,6 +92,8 @@ export type DrawerNavigationProps = {
   navigation: DrawerNavigationScreensProps<DrawerNavigationParamList>;
 };
 
+export type UserScreenScreensNavigationProps =
+  NativeStackScreenProps<UserStackStackParamList>;
 export type ServiceRequestScreensNavigationProps =
   NativeStackScreenProps<ServiceRequestStackParamList>;
 

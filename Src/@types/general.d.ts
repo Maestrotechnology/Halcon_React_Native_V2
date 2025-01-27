@@ -5,19 +5,19 @@ import {
   TextInputProps,
   TextStyle,
   ViewStyle,
-} from "react-native";
-import { IconType } from "../Utilities/Icons";
+} from 'react-native';
+import {IconType} from '../Utilities/Icons';
 import {
   DashboardChartDetailsApiResponseProps,
   DashboardChartProps,
-} from "./api";
-import { FormikErrors } from "formik";
-import { SearchDropdownBoxModalProps } from "./modals";
-import { LegacyRef, Ref } from "react";
-import { NativePickerProps } from "react-native-modal-datetime-picker";
-import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
-import { BottomSheetModalProps } from "@gorhom/bottom-sheet";
-import { DeviceStatusProps } from "../Utilities/StaticDropdownOptions";
+} from './api';
+import {FormikErrors} from 'formik';
+import {SearchDropdownBoxModalProps} from './modals';
+import {LegacyRef, Ref} from 'react';
+import {NativePickerProps} from 'react-native-modal-datetime-picker';
+import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
+import {BottomSheetModalProps} from '@gorhom/bottom-sheet';
+import {DeviceStatusProps} from '../Utilities/StaticDropdownOptions';
 
 export type DashboardDetailsStateProps = {
   data: DashboardChartProps[];
@@ -34,6 +34,8 @@ export type CustomDrawerNavigationOptionsProps = {
   leftIcon: IconType;
   isVisible: boolean;
   activeIcon: IconType;
+  isMenu?: boolean;
+  children?: CustomDrawerNavigationOptionsProps[];
 };
 
 export type SVGIconProps = {
@@ -55,6 +57,10 @@ export type SVGIconProps = {
 export type RenderDrawerOptionsProps = {
   item: CustomDrawerNavigationOptionsProps;
   index: number;
+};
+export type RenderSubMenuItemProps = {
+  children: CustomDrawerNavigationOptionsProps[];
+  mainItem: any;
 };
 
 export type AlertBoxProps = {
@@ -108,7 +114,7 @@ export type StyledTextProps = {
   style?: StyleProp<TextStyle>;
   textProps?: TextProps;
   onPress?: () => void;
-  textMode?: "normal" | "read_more";
+  textMode?: 'normal' | 'read_more';
   readMoreButtonTextStyle?: TextStyle;
   numberOfLines?: number;
 };
@@ -129,7 +135,7 @@ export interface DropdownBoxProps
     SearchDropdownBoxModalProps {
   value: any;
   options?: any[];
-  type?: "normal" | "search" | "miniList";
+  type?: 'normal' | 'search' | 'miniList';
   fieldName?: string;
   icon?: IconType;
   errorText?:
@@ -146,7 +152,7 @@ export interface DropdownBoxProps
   isRefreshing?: boolean;
   onEndReached?: () => void;
   onRefresh?: () => void;
-  apiType?: "machineList" | "user" | "work_center" | "division";
+  apiType?: 'machineList' | 'user' | 'work_center' | 'division';
   isRequired?: boolean;
   placeHolder?: string;
   iconHeight?: number;
@@ -188,7 +194,7 @@ export type TextInputBoxProps = {
 
 export type DateTimePickerProps = {
   title?: string;
-  mode?: "date" | "time" | "datetime";
+  mode?: 'date' | 'time' | 'datetime';
   errorText?: string;
   placeHolder?: string;
   maximumDate?: any;
@@ -283,15 +289,15 @@ export type CreateTaskFormikDataOProps = {
 export type ColorPickerModalProps = {
   isVisible: boolean;
   colorValueType?:
-    | "hex"
-    | "rgb"
-    | "rgba"
-    | "hsv"
-    | "hsva"
-    | "hwb"
-    | "hwba"
-    | "hsl"
-    | "hsla";
+    | 'hex'
+    | 'rgb'
+    | 'rgba'
+    | 'hsv'
+    | 'hsva'
+    | 'hwb'
+    | 'hwba'
+    | 'hsl'
+    | 'hsla';
   colorValue: string;
   onClose: () => void;
   onSelect: (val: string) => void;

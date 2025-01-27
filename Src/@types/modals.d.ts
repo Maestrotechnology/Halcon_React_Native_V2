@@ -23,6 +23,16 @@ export type SearchDropdownBoxModalRenderOptionsProps = {
   item: any;
   index: number;
 };
+export type UserListFilterdataProps = {
+  role_id: null | null;
+  username: string;
+};
+export type UserListFilterModalProps = {
+  filterData: UserListFilterdataProps | null;
+  onApplyFilter: (val: UserListFilterdataProps | null) => void;
+  onClose: () => void;
+  initialValue?: UserListFilterdataProps;
+};
 
 export type ServiceRequestFilterDataProps = {
   machine: MachineDropdownListDataProps | null;

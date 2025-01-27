@@ -13,6 +13,8 @@ import {GetPermissions} from '../../Utilities/StoreData';
 import PermisionDeniedStack from '../../Screens/ErrorScreen/PermisionDeniedStack';
 import MyProfile from '../../Screens/HomeScreens/Profile/MyProfile';
 import MaintenaceWorkOrderStack from '../../Stacks/MaintenaceWorkOrderStack';
+import UserManagementStack from '../../Stacks/UserManagementStack';
+import MastersStack from '../../Stacks/MastersStack';
 
 const Drawer = createDrawerNavigator<DrawerNavigationParamList>();
 
@@ -28,6 +30,18 @@ const DrawerNavigation = () => {
     {
       name: 'Dashboard',
       component: Dashboard,
+      // hasPermission: UserPermissions?.service_dashboard?.service_dashboard_menu,
+      hasPermission: 1,
+    },
+    {
+      name: 'UserManagementStack',
+      component: UserManagementStack,
+      // hasPermission: UserPermissions?.service_dashboard?.service_dashboard_menu,
+      hasPermission: 1,
+    },
+    {
+      name: 'MastersStack',
+      component: MastersStack,
       // hasPermission: UserPermissions?.service_dashboard?.service_dashboard_menu,
       hasPermission: 1,
     },
@@ -67,7 +81,7 @@ const DrawerNavigation = () => {
     <Drawer.Navigator
       screenOptions={{
         headerShown: false,
-        unmountOnBlur: true,
+        // unmountOnBlur: true,
         swipeEnabled: false,
       }}
       drawerContent={props => <CustomDrawerNavigation {...props} />}>
