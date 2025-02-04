@@ -47,8 +47,12 @@ export type ServiceRequestStackParamList = {
   ServiceRequest: undefined;
   ServiceRequestCreationStack: ServiceRequestCreationStackParamsDataProps;
 };
+export type AddEditUserNavigationProps = {
+  type: 'Create' | 'Update' | 'View';
+};
 export type UserStackStackParamList = {
   UserList: undefined;
+  AddEditUser: AddEditUserNavigationProps;
   AccessRoleList: undefined;
 };
 
