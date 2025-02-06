@@ -190,6 +190,8 @@ export type TextInputBoxProps = {
   disableNonEditableBg?: boolean;
   hasVerify?: boolean;
   onVerifyPress?: () => void;
+  multiline?: boolean;
+  numberOfLines?: number;
 };
 
 export type DateTimePickerProps = {

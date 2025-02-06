@@ -6,17 +6,23 @@ import {
 import {GetUserData} from '../../../Utilities/StoreData';
 import StyledText from '../../../Components/StyledText';
 import {FONTS} from '../../../Utilities/Fonts';
-import {COLORS, REGEX} from '../../../Utilities/Constants';
+import {
+  COLORS,
+  EMAIL_REGEX,
+  PHONE_NUMBER_REGEX,
+  REGEX,
+} from '../../../Utilities/Constants';
 import HOCView from '../../../Components/HOCView';
 import DropdownBox from '../../../Components/DropdownBox';
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import * as Yup from 'yup';
 import {useFormik} from 'formik';
-import {getCatchMsg} from '../../../Utilities/GeneralUtilities';
+import CustomButton from '../../../Components/CustomButton';
+import TextInputBox from '../../../Components/TextInputBox';
 const UserValidation = Yup.object().shape({
   isupdate: Yup.boolean(),
-  name: Yup.string().trim().required('Name is required.'),
-  username: Yup.string().trim().required('User Name is required.'),
+  name: Yup.string().trim().required('* Name is required.'),
+  username: Yup.string().trim().required('* User Name is required.'),
   password: Yup.string()
     .when('isupdate', {
       is: false,
@@ -27,19 +33,22 @@ const UserValidation = Yup.object().shape({
             REGEX.PASSWORD,
             'Password must contain at least one lower and upper case character and a digit.',
           )
-          .required('Password is required'),
+          .required('* Password is required'),
     })
     .nullable(),
-
   email_id: Yup.string()
-    .matches(REGEX.EMAIL, 'Email is invalid.')
-    .nullable()
-    .required('Email is required.'),
+    .matches(EMAIL_REGEX, 'Invalid email address')
+    .trim('Remove leading and trailing spaces')
+    .strict(true)
+    .required('* Email is required'),
   mobile_no: Yup.string()
-    .matches(REGEX.MOBILE_REGEX, 'Contact number is invalid.')
-    .nullable(),
-  // division_id: Yup.string().trim().required("Division is required"),
-  role_id: Yup.string().trim().required('Role is required'),
+    .matches(PHONE_NUMBER_REGEX, 'Enter valid mobile number')
+    .trim('Remove leading and trailing spaces')
+    .strict(true)
+    .required('* Mobile number is required')
+    .min(10, 'Mobile number must have 10 digits')
+    .max(10, 'Mobile number must have 10 digits'),
+  role_id: Yup.string().trim().required('* Role is required'),
 });
 
 const AddEditUser = ({navigation}: UserScreenScreensNavigationProps) => {
@@ -58,108 +67,106 @@ const AddEditUser = ({navigation}: UserScreenScreensNavigationProps) => {
         isupdate: false,
         name: '',
         username: '',
-        // user_type: null,
         mobile_no: '',
         email_id: '',
-        // division_id: null,
         password: '',
-
         role_id: '',
         state: '',
         address: '',
         city: '',
         country: '',
       },
+
       validationSchema: UserValidation,
       onSubmit: values => {
-        if (type === 'add') {
+        if (type === 'Add') {
           handleaddUser(values);
-        } else if (type === 'update') {
+        } else if (type === 'Update') {
           handleUpdateUser(values);
         }
       },
     });
 
-  const getfinalObject = (values: any) => {
-    if (usertype === 2) {
-      return {
-        ...values,
-        isupdate: '',
-      };
-    } else if (usertype === 3) {
-      return {
-        ...values,
-        isupdate: '',
-      };
-    } else if (usertype === 4) {
-      return {
-        ...values,
-        isupdate: '',
-      };
-    } else if (usertype === 5) {
-      return {
-        ...values,
-        isupdate: '',
-      };
-    }
-  };
+  // const getfinalObject = (values: any) => {
+  //   if (usertype === 2) {
+  //     return {
+  //       ...values,
+  //       isupdate: '',
+  //     };
+  //   } else if (usertype === 3) {
+  //     return {
+  //       ...values,
+  //       isupdate: '',
+  //     };
+  //   } else if (usertype === 4) {
+  //     return {
+  //       ...values,
+  //       isupdate: '',
+  //     };
+  //   } else if (usertype === 5) {
+  //     return {
+  //       ...values,
+  //       isupdate: '',
+  //     };
+  //   }
+  // };
   // add new user
   const handleaddUser = (values: any) => {
-    dispatch(handlemodalLoading(true));
-    let finalObj = {
-      ...getfinalObject(values),
-      token: LoginaccessData?.token,
-      user_type: usertype,
-    };
-    CreateUserservice(filterValidObject(finalObj))
-      .then(async res => {
-        if (res.data.status === 1) {
-          toast.success(res?.data?.msg);
-          handleUserdata();
-          close();
-        } else if (res.data.status === -1) {
-          const istokenValid = await tokenisValid(LoginaccessData?.token);
-          if (istokenValid) {
-            toast.error(res.data.msg);
-          } else {
-            dispatch(handlesessionmodal(true));
-          }
-        } else {
-          toast.error(res.data.msg);
-        }
-      })
-      .catch(err => getCatchMsg(err))
-      .finally(() => dispatch(handlemodalLoading(false)));
+    // dispatch(handlemodalLoading(true));
+    // let finalObj = {
+    //   ...getfinalObject(values),
+    //   token: LoginaccessData?.token,
+    //   user_type: usertype,
+    // };
+    // CreateUserservice(filterValidObject(finalObj))
+    //   .then(async res => {
+    //     if (res.data.status === 1) {
+    //       toast.success(res?.data?.msg);
+    //       handleUserdata();
+    //       close();
+    //     } else if (res.data.status === -1) {
+    //       const istokenValid = await tokenisValid(LoginaccessData?.token);
+    //       if (istokenValid) {
+    //         toast.error(res.data.msg);
+    //       } else {
+    //         dispatch(handlesessionmodal(true));
+    //       }
+    //     } else {
+    //       toast.error(res.data.msg);
+    //     }
+    //   })
+    //   .catch(err => getCatchMsg(err))
+    //   .finally(() => dispatch(handlemodalLoading(false)));
   };
 
   // update user
   const handleUpdateUser = (values: any) => {
-    dispatch(handlemodalLoading(true));
-    let finalObj = {
-      ...getfinalObject(values),
-      token: LoginaccessData?.token,
-      user_id: datas?.user_id,
-      user_type: usertype,
-    };
-    UpdateUserservice(filterValidObject(finalObj))
-      .then(async res => {
-        if (res.data.status === 1) {
-          toast.success(res?.data?.msg);
-          handleUserdata();
-          close();
-        } else if (res.data.status === -1) {
-          const istokenValid = await tokenisValid(LoginaccessData?.token);
-          if (istokenValid) {
-            toast.error(res.data.msg);
-          } else {
-            dispatch(handlesessionmodal(true));
-          }
-        } else {
-          toast.error(res.data.msg);
-        }
-      })
-      .catch(err => getCatchMsg(err))
-      .finally(() => dispatch(handlemodalLoading(false)));
+    //   dispatch(handlemodalLoading(true));
+    //   let finalObj = {
+    //     ...getfinalObject(values),
+    //     token: LoginaccessData?.token,
+    //     user_id: datas?.user_id,
+    //     user_type: usertype,
+    //   };
+    //   UpdateUserservice(filterValidObject(finalObj))
+    //     .then(async res => {
+    //       if (res.data.status === 1) {
+    //         toast.success(res?.data?.msg);
+    //         handleUserdata();
+    //         close();
+    //       } else if (res.data.status === -1) {
+    //         const istokenValid = await tokenisValid(LoginaccessData?.token);
+    //         if (istokenValid) {
+    //           toast.error(res.data.msg);
+    //         } else {
+    //           dispatch(handlesessionmodal(true));
+    //         }
+    //       } else {
+    //         toast.error(res.data.msg);
+    //       }
+    //     })
+    //     .catch(err => getCatchMsg(err))
+    //     .finally(() => dispatch(handlemodalLoading(false)));
   };
   const renderTitleText = (title: string) => {
     return (
@@ -195,248 +202,155 @@ const AddEditUser = ({navigation}: UserScreenScreensNavigationProps) => {
       }}
       isEnableKeyboardAware
       secondaryHeaderTitle={`${type} User`}>
-      {renderTitleText('Device Failure Information')}
-      <DropdownBox
-        title="Machine"
-        value={values.machine}
-        isRequired
-        placeHolder="Select machine"
-        apiType="machineList"
-        onSelect={val => {
-          setFieldValue('machine', val);
-        }}
-        type="search"
-        fieldName="machine_name"
-        searchFieldName="machine_name"
-        onIconPress={() => {
-          setFieldValue('machine', null);
-        }}
-        isDisabled={isView || isServiceUpdate}
-        isEnableRightIcon={!isView && !isServiceUpdate}
-        errorText={errors.machine && touched.machine ? errors.machine : ''}
-      />
-
-      <DropdownBox
-        title="Request Status"
-        isRequired
-        options={[...requestStatusOptions]?.filter(ele => {
-          if (isUpdate && ele?.id === 3) {
-            return undefined;
-          } else if (isCreate && [2, 3]?.includes(ele?.id)) {
-            return undefined;
-          }
-          return ele;
-        })}
-        value={values.reqStatus}
-        placeHolder="Select machine status"
-        onSelect={val => {
-          setFieldValue('reqStatus', val);
-        }}
-        type="miniList"
-        fieldName="name"
-        onIconPress={() => {
-          setFieldValue('reqStatus', null);
-        }}
-        errorText={
-          errors.reqStatus && touched.reqStatus ? errors.reqStatus : ''
-        }
-        isDisabled={isView || isServiceUpdate}
-        isEnableRightIcon={!isView && !isServiceUpdate}
-      />
-      {isServiceUpdate && (
-        <TextInputBox
-          title="Pending Reason"
-          value={values?.pending_reason}
-          placeHolder="Pending Reason"
-          onChangeText={e => {
-            setFieldValue('pending_reason', e);
-          }}
-          textInputProps={{
-            ...bigInputBoxStyle,
-          }}
-          customInputBoxContainerStyle={{
-            height: 130,
-            backgroundColor: COLORS.white,
-            borderColor: isView ? COLORS.white : COLORS.primary,
-          }}
-          isEditable={isServiceUpdate}
-        />
-      )}
-
-      <DateTimePicker
-        isDisabled={isView || isServiceUpdate}
-        mode="datetime"
-        format="YYYY-MM-DD hh:mm A"
-        title="Expected Completed Date"
-        value={renderValue(values.expectedCompletedDate)}
-        onSelect={date => {
-          setFieldValue('expectedCompletedDate', date);
-        }}
-        minimumDate={new Date()}
-      />
-      {values.serviceStartedDate && (
-        <DateTimePicker
-          isDisabled={isView || isServiceUpdate}
-          mode="datetime"
-          format="YYYY-MM-DD hh:mm A"
-          title="Service Started Date"
-          value={renderValue(values.serviceStartedDate)}
-          onSelect={date => {
-            setFieldValue('serviceStartedDate', date);
-          }}
-          minimumDate={new Date()}
-        />
-      )}
-
-      <DropdownBox
-        title="Machine Status"
-        isRequired
-        options={[...deviceStatusOptions]}
-        value={values.deviceStatus}
-        placeHolder="Select machine status"
-        onSelect={val => {
-          setFieldValue('deviceStatus', val);
-        }}
-        type="miniList"
-        fieldName="name"
-        onIconPress={() => {
-          setFieldValue('deviceStatus', null);
-        }}
-        errorText={
-          errors.deviceStatus && touched.deviceStatus ? errors.deviceStatus : ''
-        }
-        isDisabled={isView || isServiceUpdate}
-        isEnableRightIcon={!isView && !isServiceUpdate}
-      />
-
-      {userData?.user_type === 1 && (
-        <DropdownBox
-          title="Assigned To"
-          value={values.employee}
-          placeHolder="Assigned to"
-          apiType="user"
-          onSelect={val => {
-            setFieldValue('employee', val);
-          }}
-          type="search"
-          fieldName="name"
-          searchFieldName="name"
-          onIconPress={() => {
-            setFieldValue('employee', null);
-          }}
-          isDisabled={isView || isServiceUpdate}
-          isEnableRightIcon={!isView && !isServiceUpdate}
-          errorText={errors.employee && touched.employee ? errors.employee : ''}
-        />
-      )}
-
-      <DropdownBox
-        title="Priority Level"
-        // isRequired
-        options={[...priorityLevelOptions1]}
-        value={values.priorityLevel}
-        placeHolder="Select priority"
-        onSelect={val => {
-          setFieldValue('priorityLevel', val);
-        }}
-        type="miniList"
-        fieldName="name"
-        onIconPress={() => {
-          setFieldValue('priorityLevel', null);
-        }}
-        errorText={
-          errors.priorityLevel && touched.priorityLevel
-            ? errors.priorityLevel
-            : ''
-        }
-        isDisabled={isView || isServiceUpdate}
-        isEnableRightIcon={!isView && !isServiceUpdate}
-      />
-
-      {/* {renderTitleText('Operator Details')}
       <TextInputBox
-        title="Operator Name"
-        value={renderValue(values.operatorName)}
-        placeHolder="Operator Name"
-        onChangeText={handleChange('operatorName')}
-        isEditable={isCreate}
+        value={values?.username}
+        onChangeText={(val: string) => {
+          setFieldValue('username', val);
+        }}
         customInputBoxContainerStyle={{
-          backgroundColor: COLORS.white,
-          borderColor:
-            isView || isServiceUpdate ? COLORS.white : COLORS.primary,
+          borderColor: COLORS.primary,
         }}
-        disableNonEditableBg
+        placeHolder="Enter User Name"
+        title="User Name"
+        isEditable
+        isRequired
+        errorText={errors.username && touched.username ? errors.username : ''}
       />
       <TextInputBox
-        title="Operator ID"
-        value={renderValue(values.operatorId)}
-        placeHolder="Operator ID"
-        onChangeText={handleChange('operatorId')}
-        isEditable={isCreate}
+        value={values?.name}
+        onChangeText={(val: string) => {
+          setFieldValue('name', val);
+        }}
         customInputBoxContainerStyle={{
-          backgroundColor: COLORS.white,
-          borderColor:
-            isView || isServiceUpdate ? COLORS.white : COLORS.primary,
+          borderColor: COLORS.primary,
         }}
-        disableNonEditableBg
-      /> */}
-
-      {renderTitleText('Problem Details')}
-      {/* <DropdownBox
-        title="What Was The Machine Doing At The Time Of The Alarm?"
-        // isRequired
-        options={[...MACHINE_WORK_STATUS]}
-        value={values.machineStatusWhileAlarm}
-        placeHolder="Select machine status at alarm"
-        onSelect={val => {
-          setFieldValue('machineStatusWhileAlarm', val);
-        }}
-        type="miniList"
-        fieldName="name"
-        onIconPress={() => {
-          setFieldValue('machineStatusWhileAlarm', null);
-        }}
-        errorText={
-          errors.machineStatusWhileAlarm && touched.machineStatusWhileAlarm
-            ? errors.machineStatusWhileAlarm
-            : ''
-        }
-        isDisabled={isView || isServiceUpdate}
-        isEnableRightIcon={!isView && !isServiceUpdate}
-      /> */}
-      <TextInputBox
-        title="What Error Message On Alarm Was Displayed?"
-        value={renderValue(values.msgOnDisplay)}
-        placeHolder="Error message"
-        onChangeText={handleChange('msgOnDisplay')}
-        isEditable={isCreate || isUpdate}
-        customInputBoxContainerStyle={{
-          backgroundColor: COLORS.white,
-          borderColor:
-            isView || isServiceUpdate ? COLORS.white : COLORS.primary,
-        }}
-        disableNonEditableBg
+        placeHolder="Enter Name"
+        title="Name"
+        isEditable
+        isRequired
+        errorText={errors.name && touched.name ? errors.name : ''}
       />
       <TextInputBox
-        title="Requester Comments"
-        value={renderValue(values.comments)}
-        placeHolder="Requester Comments"
-        onChangeText={handleChange('comments')}
+        value={values?.mobile_no}
+        onChangeText={(val: string) => {
+          setFieldValue('mobile_no', val);
+        }}
+        customInputBoxContainerStyle={{
+          borderColor: COLORS.primary,
+        }}
+        keyboardType="number-pad"
+        placeHolder="Enter Mobile No"
+        title="Mobile No"
+        isEditable
         textInputProps={{
-          ...bigInputBoxStyle,
+          maxLength: 10,
+        }}
+        errorText={
+          errors.mobile_no && touched.mobile_no ? errors.mobile_no : ''
+        }
+      />
+      <TextInputBox
+        value={values?.email_id}
+        onChangeText={(val: string) => {
+          setFieldValue('email_id', val);
         }}
         customInputBoxContainerStyle={{
-          height: 130,
-          backgroundColor: COLORS.white,
-          borderColor:
-            isView || isServiceUpdate ? COLORS.white : COLORS.primary,
+          borderColor: COLORS.primary,
         }}
-        isEditable={isCreate || isUpdate}
+        placeHolder="Enter Email"
+        title="Email"
+        isEditable
+        isRequired
+        errorText={errors.email_id && touched.email_id ? errors.email_id : ''}
       />
-      <CustomButton
-        onPress={handleSubmit}
-        style={{marginVertical: 10, marginBottom: 25}}>
-        Next
+      <TextInputBox
+        showIcon
+        title="Password"
+        placeHolder="Password"
+        isSecure={true}
+        customInputBoxContainerStyle={{
+          borderColor: COLORS.primary,
+        }}
+        onChangeText={text => {
+          setFieldValue('password', text);
+        }}
+        value={values.password}
+        errorText={errors.password && touched.password ? errors?.password : ''}
+      />
+      <TextInputBox
+        value={values?.state}
+        onChangeText={(val: string) => {
+          setFieldValue('state', val);
+        }}
+        customInputBoxContainerStyle={{
+          borderColor: COLORS.primary,
+        }}
+        placeHolder="Enter State"
+        title="State"
+        isEditable
+        errorText={errors.state && touched.state ? errors.state : ''}
+      />
+      <TextInputBox
+        value={values?.city}
+        onChangeText={(val: string) => {
+          setFieldValue('city', val);
+        }}
+        customInputBoxContainerStyle={{
+          borderColor: COLORS.primary,
+        }}
+        placeHolder="Enter City"
+        title="City"
+        isEditable
+        errorText={errors.city && touched.city ? errors.city : ''}
+      />
+      <TextInputBox
+        value={values?.country}
+        onChangeText={(val: string) => {
+          setFieldValue('country', val);
+        }}
+        customInputBoxContainerStyle={{
+          borderColor: COLORS.primary,
+        }}
+        placeHolder="Enter Country"
+        title="Country"
+        isEditable
+        errorText={errors.country && touched.country ? errors.country : ''}
+      />
+      <DropdownBox
+        title="Role"
+        value={values.role_id}
+        placeHolder="Select Role"
+        apiType="roleList"
+        onSelect={val => {
+          setFieldValue('role_id', val);
+        }}
+        isRequired
+        errorText={errors.role_id && touched.role_id ? errors.role_id : ''}
+        type="search"
+        fieldName="role_name"
+        isLocalSearch
+        searchFieldName="role_name"
+        onIconPress={() => {
+          setFieldValue('role_id', null);
+        }}
+      />
+      <TextInputBox
+        value={values?.address}
+        onChangeText={(val: string) => {
+          setFieldValue('address', val);
+        }}
+        customInputBoxContainerStyle={{
+          borderColor: COLORS.primary,
+        }}
+        placeHolder="Enter Address"
+        title="Address"
+        isEditable
+        multiline
+        numberOfLines={3}
+        errorText={errors.address && touched.address ? errors.address : ''}
+      />
+      <CustomButton onPress={handleSubmit} style={{marginVertical: 40}}>
+        Submit
       </CustomButton>
     </HOCView>
   );

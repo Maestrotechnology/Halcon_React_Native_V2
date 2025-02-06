@@ -142,8 +142,6 @@ const UserList = ({navigation, route}: any) => {
         }
       })
       .catch(err => {
-        console.log(err, 'ERROR===');
-
         Toast.error(err.message);
       })
       .finally(() => {
@@ -285,20 +283,16 @@ const UserList = ({navigation, route}: any) => {
             val: ServiceRequestItemsProps,
           ) => {
             if (actionType === 1) {
-              navigation.navigate('ServiceRequestCreationStack', {
-                serviceReqData: val,
+              navigation.navigate('AddEditUser', {
+                type: 'Add',
                 isView: true,
               });
             } else if (actionType === 2) {
-              navigation.navigate('ServiceRequestCreationStack', {
-                serviceReqData: val,
-                isServiceUpdate: true,
+              navigation.navigate('AddEditUser', {
+                type: 'Update',
               });
             } else if (actionType === 3) {
-              navigation.navigate('ServiceRequestCreationStack', {
-                serviceReqData: val,
-                isUpdate: true,
-              });
+              navigation.navigate('AddEditUser', {type: 'View'});
             } else {
               setIsShowDelete({
                 id: val.request_id,

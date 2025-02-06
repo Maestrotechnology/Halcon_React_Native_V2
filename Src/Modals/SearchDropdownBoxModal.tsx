@@ -101,8 +101,6 @@ const SearchDropdownBoxModal = ({
       .then(res => {
         const response = res.data;
         if (response.status === 1) {
-          console.log(response.data, 'RESPONSE===');
-
           if (isMount) {
             setoptionsList(response.data || []);
             globalDataList.current = response.data || [];

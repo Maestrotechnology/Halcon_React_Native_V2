@@ -35,6 +35,8 @@ const TextInputBox = ({
   hasVerify = false,
   onVerifyPress,
   keyboardType,
+  multiline = false,
+  numberOfLines = multiline ? 4 : 1,
 }: TextInputBoxProps) => {
   const [isVisiblePassword, setisVisiblePassword] = useState<boolean>(false);
 
@@ -55,6 +57,7 @@ const TextInputBox = ({
             styles.inputField,
 
             {
+              height: multiline ? 80 : 43,
               width: showIcon ? '87%' : '100%',
               backgroundColor:
                 !isEditable && !disableNonEditableBg
@@ -69,6 +72,9 @@ const TextInputBox = ({
                 }
               : {},
           ]}
+          multiline={multiline}
+          numberOfLines={numberOfLines}
+          textAlignVertical={multiline ? 'top' : 'center'}
           placeholder={placeHolder}
           {...textInputProps}
           placeholderTextColor={COLORS.placeHolderColor}
