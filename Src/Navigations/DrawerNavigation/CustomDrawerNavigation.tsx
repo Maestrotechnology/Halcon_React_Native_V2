@@ -107,7 +107,7 @@ const CustomDrawerNavigation = ({
       id: 8,
       isMenu: true,
       displayName: 'Masters',
-      navigate: 'Dashboard',
+      navigate: 'MastersStack',
       leftIcon: 'userIcon',
       activeIcon: 'userIcon',
       isVisible: true,
@@ -123,7 +123,7 @@ const CustomDrawerNavigation = ({
         {
           id: 82,
           displayName: 'Periodic Tasks',
-          navigate: 'Dashboard',
+          navigate: 'TasksList',
           leftIcon: 'RoleIcon',
           activeIcon: 'RoleIcon',
           isVisible: true,

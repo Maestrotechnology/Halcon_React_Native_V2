@@ -2,6 +2,9 @@
 
 import {ListRenderItem} from 'react-native';
 import {IconType} from '../Utilities/Icons';
+export type ObjectType = {
+  [key: string]: any;
+};
 
 export type LoaderProps = {
   isVisible: boolean;
@@ -208,4 +211,11 @@ export type DateTimeModalPickerProps = {
   is24Hour?: boolean;
   readOnly?: boolean;
   margin?: number;
+};
+
+export type CommonSwitchProps = {
+  isEnabled: boolean;
+  ActiveColor?: string;
+  inActiveColor?: string;
+  onChangeSwitch: (val: boolean) => void;
 };

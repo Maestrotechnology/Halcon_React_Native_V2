@@ -1,6 +1,10 @@
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {ServiceRequestItemsProps, TaskDetailsDataItemsProps} from './api';
+import {
+  ServiceRequestItemsProps,
+  TaskDetailsDataItemsProps,
+  UserRequestListDataProps,
+} from './api';
 
 export type MainStackParamList = {
   DrawerNavigation: undefined;
@@ -49,11 +53,15 @@ export type ServiceRequestStackParamList = {
 };
 export type AddEditUserNavigationProps = {
   type: 'Create' | 'Update' | 'View';
+  lineData?: UserRequestListDataProps;
 };
 export type UserStackStackParamList = {
   UserList: undefined;
   AddEditUser: AddEditUserNavigationProps;
   AccessRoleList: undefined;
+};
+export type MasterStackStackParamList = {
+  TasksList: undefined;
 };
 
 export type PreventiveSRStackParamList = {
@@ -95,9 +103,12 @@ export type DrawerNavigationProps = {
   route: RouteProp<DrawerNavigationParamList, keyof DrawerNavigationParamList>;
   navigation: DrawerNavigationScreensProps<DrawerNavigationParamList>;
 };
+export type MastersScreenScreensNavigationProps =
+  NativeStackScreenProps<MasterStackStackParamList>;
 
 export type UserScreenScreensNavigationProps =
   NativeStackScreenProps<UserStackStackParamList>;
+
 export type ServiceRequestScreensNavigationProps =
   NativeStackScreenProps<ServiceRequestStackParamList>;
 

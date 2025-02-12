@@ -70,11 +70,7 @@ const DropdownBox = ({
             styles.inputContainer,
             {
               backgroundColor: COLORS.white,
-              borderColor: errorText
-                ? COLORS.red
-                : isDisabled
-                ? COLORS.secondary
-                : COLORS.primary,
+              borderColor: errorText ? COLORS.red : COLORS.primary,
             },
           ]}>
           <View style={styles.inputField}>

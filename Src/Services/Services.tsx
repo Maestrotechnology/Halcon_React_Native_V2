@@ -1,3 +1,5 @@
+import {ObjectType} from '../Components/types';
+import {JSONHeaderType} from '../Utilities/Constants';
 import axios from './Axios';
 
 // Authentication Services
@@ -185,11 +187,7 @@ export const createTaskDetailService = (data: any) => {
 };
 
 export const updateTaskDetailService = (data: any) => {
-  return axios.post('edit_intervention', data, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  return axios.post('edit_intervention', data, JSONHeaderType);
 };
 
 export const closeWorkService = (data: FormData) => {
@@ -256,4 +254,32 @@ export const updateWorkOrderService = (data: FormData) => {
 
 export const listUserService = (data: FormData, page: number) => {
   return axios.post(`/user/list_user?page=${page}&size=20`, data);
+};
+
+export const CreateUserService = (data: ObjectType) => {
+  return axios.post(`/user/create_user`, data, JSONHeaderType);
+};
+
+export const UpdateUserService = (data: ObjectType) => {
+  return axios.post(`/user/update_user`, data, JSONHeaderType);
+};
+export const deleteUserService = (data: FormData) => {
+  return axios.post('/user/delete_user', data);
+};
+
+// User
+
+export const listTasksService = (data: FormData, page: number) => {
+  return axios.post(`/masters/list_tasks?page=${page}&size=20`, data);
+};
+
+export const CreateTasksService = (data: ObjectType) => {
+  return axios.post(`/masters/create_tasks`, data, JSONHeaderType);
+};
+
+export const UpdateTasksService = (data: ObjectType) => {
+  return axios.post(`/masters/update_tasks`, data, JSONHeaderType);
+};
+export const deleteTasksService = (data: FormData) => {
+  return axios.post('/masters/delete_tasks', data);
 };

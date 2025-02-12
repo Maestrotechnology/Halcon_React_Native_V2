@@ -19,12 +19,21 @@ export interface SearchDropdownBoxModalProps {
   fieldName?: string;
 }
 
+export type FilterModalProps<T> = {
+  filterData: T | null;
+  onApplyFilter: (val: T | null) => void;
+  onClose: () => void;
+  initialValue?: T;
+};
+export type TaskListFilterProps = {
+  task_name?: string;
+};
 export type SearchDropdownBoxModalRenderOptionsProps = {
   item: any;
   index: number;
 };
 export type UserListFilterdataProps = {
-  role_id: null | null;
+  role_id: {role_id: null} | null;
   username: string;
 };
 export type UserListFilterModalProps = {

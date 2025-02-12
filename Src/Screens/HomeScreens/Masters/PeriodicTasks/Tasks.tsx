@@ -1,46 +1,49 @@
 import {StyleSheet, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import HOCView from '../../../Components/HOCView';
-import {UseToken} from '../../../Utilities/StoreData';
+import {UseToken} from '../../../../Utilities/StoreData';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useIsFocused} from '@react-navigation/native';
 import {
-  deleteServiceRequestService,
-  deleteUserService,
-  listUserService,
-} from '../../../Services/Services';
-import Toast from '../../../Components/Toast';
-import {
-  DeleteServiceRequestApiResposneProps,
-  UserRequestListDataProps,
   ApiResponse,
   DeleteUserApiResposneProps,
-} from '../../../@types/api';
-import TableView from '../../../Components/TableView';
-import {actionListProps} from '../../../Components/types';
-import {FONTSIZES} from '../../../Utilities/Constants';
-import CustomButton from '../../../Components/CustomButton';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {UserListFilterdataProps} from '../../../@types/modals';
-import GlobaModal from '../../../Components/GlobalModal';
-import ConfirmationModal from '../../../Modals/ConfirmationModal';
-import {CommonStyles} from '../../../Utilities/CommonStyles';
-import UserFilterModal from '../../../Modals/Filter/UserFilterModal';
-import {useIsFocused} from '@react-navigation/native';
-import {getCatchMessage} from '../../../Utilities/GeneralUtilities';
+  UserRequestListDataProps,
+} from '../../../../@types/api';
+import {actionListProps} from '../../../../Components/types';
+import {TaskListFilterProps} from '../../../../@types/modals';
+import {
+  deleteTasksService,
+  listTasksService,
+} from '../../../../Services/Services';
+import {getCatchMessage} from '../../../../Utilities/GeneralUtilities';
+import Toast from '../../../../Components/Toast';
+import HOCView from '../../../../Components/HOCView';
+import {FONTSIZES} from '../../../../Utilities/Constants';
+import {CommonStyles} from '../../../../Utilities/CommonStyles';
+import CustomButton from '../../../../Components/CustomButton';
+import TableView from '../../../../Components/TableView';
+import GlobaModal from '../../../../Components/GlobalModal';
+import ConfirmationModal from '../../../../Modals/ConfirmationModal';
+import TaskListFilterModal from '../../../../Modals/Filter/TaskListFilterModal';
 
 var isMount = true;
 var currentPage = 1;
 var totalPages = 1;
 
-const UserList = ({navigation, route}: any) => {
+const TasksList = ({navigation, route}: any) => {
   const token = UseToken();
   const {bottom} = useSafeAreaInsets();
   const focused = useIsFocused();
   const [isListLoader, setisListLoader] = useState<boolean>(true);
+  const [modifyModal, setModifyModal] = useState({
+    show: false,
+    lineData: null,
+    type: '',
+  });
   const [isRefreshing, setisRefreshing] = useState<boolean>(false);
   const [isEndRefreshing, setisEndRefreshing] = useState<boolean>(false);
   const [isLoading, setisLoading] = useState<boolean>(false);
   const [permissionLoader, setPermissionLoader] = useState(false);
-  const [UserList, setUserList] = useState<UserRequestListDataProps[]>([]);
+  const [TasksList, setTasksList] = useState<UserRequestListDataProps[]>([]);
   const [actionsList, setActionList] = useState<actionListProps[]>([
     {
       id: 1,
@@ -55,24 +58,9 @@ const UserList = ({navigation, route}: any) => {
       isShow: true,
       disableKey: 'disableEditIcon',
     },
-    {
-      id: 3,
-      name: 'updateIcon',
-      // isShow: ServiceRequestPermissions.update ? true : false,
-      isShow: true,
-      disableKey: 'disableUpdateIcon',
-    },
-    {
-      id: 4,
-      name: 'viewIcon',
-      // isShow: ServiceRequestPermissions.edit ? true : false,
-      isShow: true,
-      disableKey: 'disableEditIcon',
-    },
   ]);
-  const [filterData, setfilterData] = useState<UserListFilterdataProps | null>({
-    role_id: null,
-    username: '',
+  const [filterData, setfilterData] = useState<TaskListFilterProps | null>({
+    task_name: '',
   });
   const [isShowFilter, setisShowFilter] = useState<boolean>(false);
   const [isShowDelete, setIsShowDelete] = useState({
@@ -86,7 +74,7 @@ const UserList = ({navigation, route}: any) => {
     totalPages = 1;
 
     if (token) {
-      handleGetUserList(1);
+      handleGetTasksList(1);
     }
     return () => {
       isMount = false;
@@ -95,20 +83,18 @@ const UserList = ({navigation, route}: any) => {
     };
   }, [token, route, focused]);
 
-  const handleGetUserList = (
+  const handleGetTasksList = (
     page: number = 1,
-    filter: UserListFilterdataProps | null = filterData,
+    filter: TaskListFilterProps | null = filterData,
   ) => {
     const formData = new FormData();
     formData.append('token', token);
-    if (filter?.role_id) {
-      formData.append('role_id', filter?.role_id?.role_id);
-    }
-    if (filter?.username) {
-      formData.append('username', filter?.username);
+
+    if (filter?.task_name) {
+      formData.append('task_name', filter?.task_name);
     }
 
-    listUserService(formData, page)
+    listTasksService(formData, page)
       .then(res => {
         const response: ApiResponse<UserRequestListDataProps> = res.data;
 
@@ -116,9 +102,9 @@ const UserList = ({navigation, route}: any) => {
           if (page === 1) {
             totalPages = response.data?.total_page || 1;
 
-            setUserList(response.data?.items || []);
+            setTasksList(response.data?.items || []);
           } else {
-            setUserList(prev => [...prev, ...response.data?.items]);
+            setTasksList(prev => [...prev, ...response.data?.items]);
           }
         } else if (response.status === 0) {
           Toast.error(response.msg);
@@ -143,7 +129,7 @@ const UserList = ({navigation, route}: any) => {
         setisEndRefreshing(true);
       }
 
-      handleGetUserList(currentPage);
+      handleGetTasksList(currentPage);
     }
   };
 
@@ -153,7 +139,7 @@ const UserList = ({navigation, route}: any) => {
     }
     totalPages = 1;
     currentPage = 1;
-    handleGetUserList(1);
+    handleGetTasksList(1);
   };
 
   const handleDeleteServiceRequest = (user_id: number) => {
@@ -164,13 +150,13 @@ const UserList = ({navigation, route}: any) => {
     let formData = new FormData();
     formData.append('token', token);
     formData.append('user_id', user_id);
-    deleteUserService(formData)
+    deleteTasksService(formData)
       .then(res => {
         const response: DeleteUserApiResposneProps = res.data;
 
         if (response.status === 1) {
           if (isMount) {
-            setUserList(prev =>
+            setTasksList(prev =>
               [...prev].filter(ele => ele.user_id !== user_id),
             );
           }
@@ -190,10 +176,10 @@ const UserList = ({navigation, route}: any) => {
   };
 
   const handleCheckAccessToAdd = () => {
-    navigation.navigate('AddEditUser', {type: 'Create'});
+    setModifyModal({show: true, type: 'Create', lineData: null});
   };
 
-  const onApplyFilter = (data: UserListFilterdataProps | null) => {
+  const onApplyFilter = (data: TaskListFilterProps | null) => {
     if (isMount) {
       setisListLoader(true);
       setfilterData(data);
@@ -201,7 +187,7 @@ const UserList = ({navigation, route}: any) => {
 
     currentPage = 1;
     totalPages = 1;
-    handleGetUserList(1, data);
+    handleGetTasksList(1, data);
   };
 
   const closeFilterModal = () => {
@@ -217,19 +203,19 @@ const UserList = ({navigation, route}: any) => {
   return (
     <HOCView
       isListLoading={isListLoader}
-      secondaryHeaderTitle="User"
+      secondaryHeaderTitle="Task"
       isShowSecondaryHeaderBtn
       secondaryBtnTextStyle={{fontSize: FONTSIZES.small}}
       onHeaderBtnPress={() => {
         handleCheckAccessToAdd();
       }}
       headerProps={{
-        headerTitle: 'User',
+        headerTitle: 'Task',
       }}
-      secondaryBtnTitle="Add User"
+      secondaryBtnTitle="Add Task"
       isLoading={isLoading}
       isBtnLoading={permissionLoader}>
-      {/* {UserList?.length > 0 ? ( */}
+      {/* {TasksList?.length > 0 ? ( */}
       <View style={CommonStyles.flexRow}>
         <CustomButton
           onPress={() => {
@@ -244,14 +230,10 @@ const UserList = ({navigation, route}: any) => {
       <View style={{marginBottom: bottom, flex: 1}}>
         <TableView
           rowData={[
-            {key: 'name', label: 'Name'},
-            {key: 'username', label: 'User Name'},
-            {key: 'email', label: 'Email'},
-            {key: 'role_name', label: 'Role'},
-            {key: 'mobile_no', label: 'Mobile No'},
-            {key: 'status', label: 'Status'},
+            {key: 'task_name', label: 'Task Name'},
+            {key: 'control_key', label: 'Control Key'},
           ]}
-          dataList={[...UserList]?.map(ele => ({
+          dataList={[...TasksList]?.map(ele => ({
             ...ele,
             // disableEditIcon: ele?.request_status === 3 ? true : false,
             // disableUpdateIcon: ele?.request_status === 3 ? true : false,
@@ -286,10 +268,10 @@ const UserList = ({navigation, route}: any) => {
       </View>
       {isShowFilter && (
         <GlobaModal
-          title="User Filter"
+          title="Task Filter"
           visible={isShowFilter}
           onClose={closeFilterModal}>
-          <UserFilterModal
+          <TaskListFilterModal
             filterData={filterData}
             onApplyFilter={onApplyFilter}
             onClose={closeFilterModal}
@@ -302,7 +284,7 @@ const UserList = ({navigation, route}: any) => {
           <ConfirmationModal
             onClose={handleCloseDelete}
             visible={isShowDelete?.status}
-            msg="Are you sure want to delete this User?"
+            msg="Are you sure want to delete this Task?"
             onConfirmPress={() => {
               handleDeleteServiceRequest(isShowDelete?.id);
             }}
@@ -313,6 +295,6 @@ const UserList = ({navigation, route}: any) => {
   );
 };
 
-export default UserList;
+export default TasksList;
 
 const styles = StyleSheet.create({});

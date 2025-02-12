@@ -1,4 +1,7 @@
 import moment from 'moment';
+import {ObjectType} from '../Components/types';
+import store from '../Store/Store/Index';
+import {openLoader} from '../Store/Slices/LoaderSlice';
 
 export const JSONtoformdata = (object: any) => {
   const formData = new FormData();
@@ -28,4 +31,18 @@ export const secondsToHourMinutes = (time: string) => {
     hours: hours?.toString()?.padStart(2, '0'),
     minutes: minutes?.toString()?.padStart(2, '0'),
   };
+};
+export const FilterValidObj = (obj: ObjectType) => {
+  const finalObj: ObjectType = {};
+  for (const key in obj) {
+    const value = obj[key];
+
+    if (value !== undefined && value !== null && value !== '') {
+      finalObj[key] = typeof value === 'string' ? value.trim() : value;
+    }
+  }
+  return finalObj;
+};
+export const isLoading = (isLoading: boolean) => {
+  return store.dispatch(openLoader(isLoading));
 };

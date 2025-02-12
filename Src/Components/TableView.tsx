@@ -3,22 +3,18 @@ import {
   View,
   RefreshControl,
   FlatList,
-  ScrollView,
   ActivityIndicator,
-  Text,
-} from "react-native";
-import React, { useRef } from "react";
-import { TouchableOpacity } from "react-native";
-import StyledText from "./StyledText";
-import { COLORS, FONTSIZES, WINDOW_WIDTH } from "../Utilities/Constants";
-import { FONTS } from "../Utilities/Fonts";
-import { ICONS } from "../Utilities/Icons";
-import lodash from "lodash";
-import { TableViewProps } from "./types";
-import { getTrimedText } from "../Utilities/GeneralUtilities";
-import ListEmptyComponent from "./ListEmptyComponent";
-import CheckBox from "./CheckBox";
-
+} from 'react-native';
+import React, {useRef} from 'react';
+import {TouchableOpacity} from 'react-native';
+import StyledText from './StyledText';
+import {COLORS, WINDOW_WIDTH} from '../Utilities/Constants';
+import {FONTS} from '../Utilities/Fonts';
+import {ICONS} from '../Utilities/Icons';
+import {TableViewProps} from './types';
+import ListEmptyComponent from './ListEmptyComponent';
+import CommonSwitch from './CommonSwitch';
+import lodash from 'lodash';
 export type TableItemProps = {
   item: any;
   index: number;
@@ -40,8 +36,8 @@ const TableView = ({
   onRefresh,
   isDisabled = false,
   removeActionsIds = [],
-  removeActionItemKey = "",
-  removeActionRefKey = "",
+  removeActionItemKey = '',
+  removeActionRefKey = '',
   viewAction,
   showFullText,
   selectable,
@@ -57,24 +53,24 @@ const TableView = ({
     ? lodash.debounce(onEndReached, 500)
     : undefined;
 
-  const ItemSeparator = ({ my = 5 }: { my?: number }) => {
+  const ItemSeparator = ({my = 5}: {my?: number}) => {
     return (
       <View
         style={{
           height: 1,
           marginVertical: my,
           marginHorizontal: 10,
-          backgroundColor: "rgba(0,0,0,0.05)",
+          backgroundColor: 'rgba(0,0,0,0.05)',
         }}
       />
     );
   };
 
   const getDisplayData = (value: any) => {
-    if ((value && value !== "") || value === 0) {
+    if ((value && value !== '') || value === 0) {
       return value;
     } else {
-      return "-";
+      return '-';
     }
   };
 
@@ -84,37 +80,33 @@ const TableView = ({
         <View
           style={[
             styles.headingContainer,
-            { backgroundColor: "transparent", marginBottom: 5 },
-          ]}
-        >
-          <View style={[styles.heading, { width: 50, alignItems: "center" }]}>
+            {backgroundColor: 'transparent', marginBottom: 5},
+          ]}>
+          <View style={[styles.heading, {width: 50, alignItems: 'center'}]}>
             <StyledText
               style={[
                 styles.headingtext,
                 {
-                  textAlign: "center",
+                  textAlign: 'center',
                   color: COLORS.black,
                 },
-              ]}
-            >
-              {checkedKey ? "" : "S.No"}
+              ]}>
+              {checkedKey ? '' : 'S.No'}
             </StyledText>
           </View>
           {headingList?.map((title, index) => {
             return (
               <View
                 key={index.toString()}
-                style={[styles.heading, { width: columnWidth }]}
-              >
+                style={[styles.heading, {width: columnWidth}]}>
                 <StyledText
                   style={[
                     styles.headingtext,
                     {
-                      textAlign: "left",
+                      textAlign: 'left',
                       color: COLORS.black,
                     },
-                  ]}
-                >
+                  ]}>
                   {title}
                 </StyledText>
               </View>
@@ -124,18 +116,16 @@ const TableView = ({
             <View
               style={[
                 styles.heading,
-                { width: columnWidth, alignItems: "center" },
-              ]}
-            >
+                {width: columnWidth, alignItems: 'center'},
+              ]}>
               <StyledText
                 style={[
                   styles.headingtext,
                   {
-                    textAlign: "center",
+                    textAlign: 'center',
                     color: COLORS.black,
                   },
-                ]}
-              >
+                ]}>
                 Actions
               </StyledText>
             </View>
@@ -156,7 +146,7 @@ const TableView = ({
     ) {
       if (item[removeActionItemKey] === removeActionRefKey) {
         let actionData = [...actionsList].filter(
-          (ele) => !removeActionsIds.includes(ele.id)
+          ele => !removeActionsIds.includes(ele.id),
         );
         return [...actionData];
       } else {
@@ -166,7 +156,7 @@ const TableView = ({
     return [...actionsList];
   };
 
-  const renderCardItem = ({ item, index }: TableItemProps) => {
+  const renderCardItem = ({item, index}: TableItemProps) => {
     return (
       <>
         <View key={JSON.stringify(item)} style={styles.tableContainer}>
@@ -178,8 +168,7 @@ const TableView = ({
             onPress={() => {
               if (onActionPress) onActionPress(1, item);
             }}
-            activeOpacity={1}
-          >
+            activeOpacity={1}>
             <View style={[styles.flexRow]}>
               <StyledText style={styles.headerLabel}>
                 S.No &ensp;:&ensp;
@@ -194,24 +183,40 @@ const TableView = ({
                     {
                       flex: 1,
                     },
-                  ]}
-                >
+                  ]}>
                   <StyledText style={styles.headerLabel}>
                     {cardItem?.label} &ensp;:&ensp;
                   </StyledText>
-                  <View style={{ flex: 1 }}>
-                    <StyledText
-                      numberOfLines={1}
-                      textProps={{
-                        numberOfLines: 1,
-                      }}
-                      style={{
-                        ...styles.valueLabel,
-                        color: item?.color ? item?.color : "#000",
-                      }}
-                    >
-                      {item?.[cardItem?.key]}
-                    </StyledText>
+                  <View style={{flex: 1}}>
+                    {cardItem?.key === 'status' ? (
+                      <View style={styles.StatusActiveView}>
+                        {item?.[cardItem?.key] == 1 ? (
+                          <StyledText style={{color: COLORS.green}}>
+                            Active
+                          </StyledText>
+                        ) : (
+                          <StyledText style={{color: COLORS.red}}>
+                            Inactive
+                          </StyledText>
+                        )}
+                        <CommonSwitch
+                          onChangeSwitch={() => {}}
+                          isEnabled={item?.[cardItem?.key]}
+                        />
+                      </View>
+                    ) : (
+                      <StyledText
+                        numberOfLines={1}
+                        textProps={{
+                          numberOfLines: 1,
+                        }}
+                        style={{
+                          ...styles.valueLabel,
+                          color: item?.color ? item?.color : '#000',
+                        }}>
+                        {item?.[cardItem?.key]}
+                      </StyledText>
+                    )}
                   </View>
                 </View>
               );
@@ -237,7 +242,7 @@ const TableView = ({
                     styles.actionListContainer,
                     styles.actionIcons,
                     {
-                      display: isSHowIcon ? "flex" : "none",
+                      display: isSHowIcon ? 'flex' : 'none',
                       opacity:
                         ele?.isDisabled || item?.actionDisable || false
                           ? 0.5
@@ -248,13 +253,7 @@ const TableView = ({
                   onPress={() => {
                     if (onActionPress) onActionPress(ele.id, item);
                   }}
-                  key={index.toString()}
-                >
-                  {/* {ele?.activekey && item[ele?.activekey] ? (
-                    <ActiveIcon width={width} height={height} />
-                  ) : !ele?.disableKey || item[ele?.disableKey] ? (
-                    <Icon width={width} height={height} />
-                  ) : null} */}
+                  key={index.toString()}>
                   <Icon width={width} height={height} />
                 </TouchableOpacity>
               );
@@ -265,154 +264,8 @@ const TableView = ({
     );
   };
 
-  const renderTableItem = ({ item, index }: TableItemProps) => {
-    return (
-      <>
-        <View style={[styles.headingContainer]}>
-          <TouchableOpacity
-            style={{
-              flexDirection: "row",
-            }}
-            activeOpacity={0.7}
-            disabled={isDisabled}
-            onPress={() => {
-              if (onPressItem) onPressItem(item);
-            }}
-          >
-            <View
-              key={"S.No"}
-              style={[styles.heading, { width: 50, alignItems: "center" }]}
-            >
-              {selectedIds && checkedKey ? (
-                <CheckBox
-                  disabled={!selectable}
-                  onChange={(value) => {
-                    if (onCheckPress && selectable) {
-                      onCheckPress(item);
-                    }
-                  }}
-                  checked={selectedIds?.includes(item[checkedKey])}
-                />
-              ) : (
-                <StyledText style={{ fontSize: 12 }}>
-                  {index + 1 < 10 ? `0${index + 1}` : (index + 1).toString()}
-                </StyledText>
-              )}
-            </View>
-            {itemKeysList?.map((keyName, keyIndex) => {
-              return (
-                <View
-                  key={keyIndex.toString()}
-                  style={[
-                    styles.heading,
-                    {
-                      width: columnWidth,
-                      alignItems: keyName?.center ? "center" : "flex-start",
-                    },
-                  ]}
-                >
-                  <StyledText
-                    style={{
-                      fontSize: 12,
-                      color: "rgba(0, 0, 0, 0.6)",
-                      textAlign: keyName?.center ? "center" : "left",
-                    }}
-                  >
-                    {showFullText
-                      ? item[keyName?.key]
-                      : getTrimedText(
-                          getDisplayData(item[keyName?.key]).toString(),
-                          25
-                        )}
-                  </StyledText>
-                </View>
-              );
-            })}
-          </TouchableOpacity>
-          {
-            // (getActionsList(item))
-          }
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-              alignItems: "center",
-              // flex: 1,
-            }}
-          >
-            {isActionAvailable ? (
-              <>
-                {viewAction ? (
-                  <TouchableOpacity
-                    onPress={() => {
-                      if (onActionPress) onActionPress(1, item);
-                    }}
-                    style={styles.viewActionContainer}
-                  >
-                    <StyledText style={{ color: COLORS.primary, fontSize: 11 }}>
-                      View Details
-                    </StyledText>
-                  </TouchableOpacity>
-                ) : (
-                  actionsList &&
-                  [...getActionsList(item)].map((ele, index) => {
-                    let isSHowIcon = ele.isShow ?? true;
-                    // @ts-ignore
-                    const Icon = ICONS[ele?.name];
-                    const ActiveIcon = ele?.activename
-                      ? ICONS[ele?.activename]
-                      : ICONS[ele?.name];
-                    const width = ele.width ?? 18;
-                    const height = ele.height ?? 18;
-                    return (
-                      <TouchableOpacity
-                        disabled={
-                          ele?.isDisabled || item?.actionDisable || false
-                        }
-                        style={[
-                          styles.actionListContainer,
-                          {
-                            display: isSHowIcon ? "flex" : "none",
-                            opacity:
-                              ele?.isDisabled || item?.actionDisable || false
-                                ? 0.5
-                                : 1,
-                          },
-                        ]}
-                        onPress={() => {
-                          if (onActionPress) onActionPress(ele.id, item);
-                        }}
-                        key={index.toString()}
-                      >
-                        {ele?.activekey && item[ele?.activekey] ? (
-                          <ActiveIcon width={width} height={height} />
-                        ) : !ele?.disableKey || item[ele?.disableKey] ? (
-                          <Icon width={width} height={height} />
-                        ) : null}
-                      </TouchableOpacity>
-                    );
-                  })
-                )}
-              </>
-            ) : (
-              false
-            )}
-          </View>
-        </View>
-        {dataList.length - 1 !== index && <ItemSeparator />}
-      </>
-    );
-  };
-
   return (
-    // <View>
-    //   <ScrollView
-    //     contentContainerStyle={{
-    //       minWidth: '100%',
-    //     }}
-    //     style={{flexGrow: 0, width: '100%'}}
-    //     horizontal>
-    <View style={{ flex: 1 }}>
+    <View style={{flex: 1}}>
       <FlatList
         data={dataList}
         bounces={false}
@@ -420,8 +273,7 @@ const TableView = ({
         initialNumToRender={30}
         showsVerticalScrollIndicator={false}
         renderItem={customRenderer ? customRenderer : renderCardItem}
-        style={{ flexGrow: 0 }}
-        // ListHeaderComponent={renderTableHeader}
+        style={{flexGrow: 0}}
         refreshControl={
           <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
         }
@@ -432,8 +284,8 @@ const TableView = ({
         }}
         ListFooterComponent={() => {
           return isEndRefresh ? (
-            <View style={{ width: "100%" }}>
-              <ActivityIndicator size={"small"} color={COLORS.darkBlue} />
+            <View style={{width: '100%'}}>
+              <ActivityIndicator size={'small'} color={COLORS.darkBlue} />
             </View>
           ) : null;
         }}
@@ -442,7 +294,6 @@ const TableView = ({
           if (onEndReached) {
             isScrollBeginRef.current = true;
             onEndReached();
-            // debounceOnEndReached();
           }
         }}
         onMomentumScrollBegin={() => {
@@ -451,8 +302,6 @@ const TableView = ({
         keyExtractor={(item: any, index: number) => JSON.stringify(item)}
       />
     </View>
-    //   </ScrollView>
-    // </View>
   );
 };
 
@@ -464,21 +313,19 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 15,
     padding: 15,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     flex: 1,
-    // maxWidth: WINDOW_WIDTH - 30,
   },
   headingContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     paddingVertical: 8,
     borderRadius: 15,
   },
   heading: {
-    // width: (WINDOW_WIDTH - 40) / 4,
-    justifyContent: "center",
-    alignItems: "flex-start",
+    justifyContent: 'center',
+    alignItems: 'flex-start',
     paddingHorizontal: 5,
   },
   headingtext: {
@@ -489,7 +336,6 @@ const styles = StyleSheet.create({
   actionListContainer: {
     width: 15,
     height: 15,
-    // marginHorizontal: 8,
   },
   viewActionContainer: {
     borderWidth: 1.5,
@@ -510,13 +356,18 @@ const styles = StyleSheet.create({
     width: 33,
     height: 33,
     borderRadius: 100,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   flexRow: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  StatusActiveView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
   },
 });

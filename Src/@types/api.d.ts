@@ -1,3 +1,17 @@
+export type ApiResponse<T> = {
+  status: number;
+  msg: string;
+  data: PaginationData<T>;
+  items: PaginationData<T>;
+  total_page?: number;
+};
+export interface PaginationData<T> {
+  page: number;
+  size: number;
+  total_count: number;
+  total_page: number;
+  items: T[];
+}
 export type DashboardCountApiResponseProps = {
   data: DashboardChartProps[];
   msg: string;
@@ -29,10 +43,10 @@ export type DashboardCardsApiDataProps = {
 };
 
 export type DashboardCardKeyProps =
-  | "ongoing"
-  | "completed"
-  | "total"
-  | "pending";
+  | 'ongoing'
+  | 'completed'
+  | 'total'
+  | 'pending';
 
 export type DashboardChartDetailsApiResponseProps = {
   status: number;
@@ -178,6 +192,27 @@ export type DashboardChartProps = {
   on_going: number;
   completed: number;
 };
+// User List Response
+
+export type DeleteUserApiResposneProps = {
+  msg: string;
+  status: number;
+};
+export interface UserRequestListDataProps {
+  address: string;
+  city: string;
+  country: string;
+  created_by: number;
+  email: string;
+  mobile_no: any;
+  name: string;
+  role_id: number;
+  role_name: string;
+  state: string;
+  status: number;
+  user_id: number;
+  username: string;
+}
 
 export type ServiceRequestListApiResponseProps = {
   status: number;
@@ -309,7 +344,7 @@ export type CreateServiceReqApiResponseProps = {
   status: number;
 };
 
-export type FileUploadApiResponseProps = { msg: string; status: number };
+export type FileUploadApiResponseProps = {msg: string; status: number};
 
 export type ViewServiceRequestApiResponseProps = {
   data: ViewServiceRequestDataProps;
@@ -451,7 +486,7 @@ export type TaskDetailsListDataProps = {
 export type TaskDetailsDataItemsProps = {
   endDatetime: string;
   end_status: number;
-  intervention_by: { name: string; user_id: number; user_type: number }[];
+  intervention_by: {name: string; user_id: number; user_type: number}[];
   intervention_end_date: string;
   intervention_start_date: string;
   report_id: number;

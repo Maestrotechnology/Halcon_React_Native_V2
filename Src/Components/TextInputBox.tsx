@@ -82,7 +82,7 @@ const TextInputBox = ({
         />
       );
     },
-    [],
+    [isVisiblePassword],
   );
   return (
     <View style={[styles.textInputBoxContainer, customContainerStyle]}>
@@ -197,7 +197,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   inputContainer: {
-    height: 45,
     width: '100%',
     borderRadius: 8,
     marginVertical: 5,
