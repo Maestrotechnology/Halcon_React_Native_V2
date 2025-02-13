@@ -77,7 +77,7 @@ const CustomDrawerNavigation = ({
       //   : false,
     },
     {
-      id: 7,
+      id: 2,
       isMenu: true,
       displayName: 'User Management',
       navigate: 'UserManagementStack',
@@ -86,7 +86,7 @@ const CustomDrawerNavigation = ({
       isVisible: true,
       children: [
         {
-          id: 71,
+          id: 21,
           displayName: 'User',
           navigate: 'UserList',
           leftIcon: 'RoleIcon',
@@ -94,7 +94,7 @@ const CustomDrawerNavigation = ({
           isVisible: true,
         },
         {
-          id: 72,
+          id: 22,
           displayName: 'Role Access',
           navigate: 'AccessRoleList',
           leftIcon: 'RoleIcon',
@@ -104,7 +104,7 @@ const CustomDrawerNavigation = ({
       ],
     },
     {
-      id: 8,
+      id: 3,
       isMenu: true,
       displayName: 'Masters',
       navigate: 'MastersStack',
@@ -113,7 +113,7 @@ const CustomDrawerNavigation = ({
       isVisible: true,
       children: [
         {
-          id: 81,
+          id: 31,
           displayName: 'Machines',
           navigate: 'Dashboard',
           leftIcon: 'RoleIcon',
@@ -121,7 +121,7 @@ const CustomDrawerNavigation = ({
           isVisible: true,
         },
         {
-          id: 82,
+          id: 32,
           displayName: 'Periodic Tasks',
           navigate: 'TasksList',
           leftIcon: 'RoleIcon',
@@ -129,7 +129,7 @@ const CustomDrawerNavigation = ({
           isVisible: true,
         },
         {
-          id: 83,
+          id: 33,
           displayName: 'Policy',
           navigate: 'Dashboard',
           leftIcon: 'RoleIcon',
@@ -137,7 +137,7 @@ const CustomDrawerNavigation = ({
           isVisible: true,
         },
         {
-          id: 84,
+          id: 34,
           displayName: 'Division',
           navigate: 'Dashboard',
           leftIcon: 'RoleIcon',
@@ -145,7 +145,7 @@ const CustomDrawerNavigation = ({
           isVisible: true,
         },
         {
-          id: 85,
+          id: 35,
           displayName: 'Holiday',
           navigate: 'Dashboard',
           leftIcon: 'RoleIcon',
@@ -156,7 +156,7 @@ const CustomDrawerNavigation = ({
     },
 
     {
-      id: 2,
+      id: 4,
       displayName: 'Downtime SR',
       navigate: 'ServiceRequestStack',
       leftIcon: 'service_req_icon',
@@ -164,7 +164,7 @@ const CustomDrawerNavigation = ({
       isVisible: true,
     },
     {
-      id: 3,
+      id: 5,
       displayName: 'Preventive SR',
       navigate: 'PreventiveSRStack',
       leftIcon: 'preventive_icon',
@@ -269,6 +269,7 @@ const CustomDrawerNavigation = ({
       </View>
     );
   };
+
   const RenderSubMenu = ({
     item,
     index,
@@ -285,8 +286,8 @@ const CustomDrawerNavigation = ({
           {
             paddingHorizontal: 28,
             display: item?.isVisible ? 'flex' : 'none',
-            backgroundColor:
-              state?.index === item?.id - 1 ? COLORS.orange : 'transparent',
+            // backgroundColor:
+            //   state?.index === mainItem?.id - 1 ? COLORS.orange : 'transparent',
           },
         ]}
         onPress={() => {
@@ -388,7 +389,9 @@ const CustomDrawerNavigation = ({
           {
             display: item?.isVisible ? 'flex' : 'none',
             backgroundColor:
-              state?.index === item?.id - 1 ? COLORS.orange : 'transparent',
+              state?.index === item?.id - 1 && !item?.isMenu
+                ? COLORS.orange
+                : 'transparent',
             marginBottom: 10,
           },
         ]}
@@ -397,7 +400,14 @@ const CustomDrawerNavigation = ({
         }}
         activeOpacity={activeOpacityValue}>
         <>
-          <View style={styles.LineContainer}>
+          <View
+            style={[
+              styles.LineContainer,
+              {
+                backgroundColor:
+                  state?.index === item?.id - 1 ? COLORS.orange : 'transparent',
+              },
+            ]}>
             <View style={[styles.rowStyle]}>
               <SVGIcon
                 icon={
@@ -414,7 +424,7 @@ const CustomDrawerNavigation = ({
                   marginLeft: 10,
                   fontSize: FONTSIZES.medium,
                   color:
-                    state?.index === item?.id - 1
+                    state?.index === item?.id - 1 && !item?.isMenu
                       ? COLORS.white
                       : COLORS.textSecondary,
                 }}>

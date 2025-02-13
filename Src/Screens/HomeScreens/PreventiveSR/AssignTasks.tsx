@@ -9,7 +9,7 @@ import {
   createTaskMappingService,
   preventiveTaskListService,
 } from '../../../Services/Services';
-import {JSONtoformdata} from '../../../Utilities/Methods';
+import {ConvertJSONtoFormData} from '../../../Utilities/Methods';
 import {usePreventiveRequestContext} from '../../../Utilities/Contexts';
 import Toast from '../../../Components/Toast';
 import {useDispatch} from 'react-redux';
@@ -46,7 +46,7 @@ const AssignTasks = ({navigation}: any) => {
       machine_id: preventiveViewData?.machine_id,
     };
 
-    preventiveTaskListService(JSONtoformdata(data), page, size)
+    preventiveTaskListService(ConvertJSONtoFormData(data), page, size)
       .then(res => {
         const response: any = res.data;
         if (response.status === 1) {

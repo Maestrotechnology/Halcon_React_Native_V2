@@ -266,20 +266,23 @@ export const UpdateUserService = (data: ObjectType) => {
 export const deleteUserService = (data: FormData) => {
   return axios.post('/user/delete_user', data);
 };
+export const ChangeStatusUserService = (data: FormData) => {
+  return axios.post('/user/update_status', data);
+};
 
-// User
+// Task
 
 export const listTasksService = (data: FormData, page: number) => {
   return axios.post(`/masters/list_tasks?page=${page}&size=20`, data);
 };
 
-export const CreateTasksService = (data: ObjectType) => {
-  return axios.post(`/masters/create_tasks`, data, JSONHeaderType);
+export const CreateTasksService = (data: FormData) => {
+  return axios.post(`/masters/create_task`, data);
 };
 
-export const UpdateTasksService = (data: ObjectType) => {
-  return axios.post(`/masters/update_tasks`, data, JSONHeaderType);
+export const UpdateTasksService = (data: FormData) => {
+  return axios.post(`/masters/update_task`, data);
 };
 export const deleteTasksService = (data: FormData) => {
-  return axios.post('/masters/delete_tasks', data);
+  return axios.post('/masters/delete_task', data);
 };

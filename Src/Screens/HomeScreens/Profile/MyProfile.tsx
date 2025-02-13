@@ -32,7 +32,7 @@ import {
   updateProfileService,
   verifyProfileEmailAndPhoneService,
 } from '../../../Services/Services';
-import {JSONtoformdata} from '../../../Utilities/Methods';
+import {ConvertJSONtoFormData} from '../../../Utilities/Methods';
 import {
   generateUniqueId,
   getCatchMessage,
@@ -175,7 +175,7 @@ const MyProfile = () => {
       alternative_mobile: values.alternativemobile,
       image: selectedImage ? selectedImage : '',
     };
-    updateProfileService(JSONtoformdata(data))
+    updateProfileService(ConvertJSONtoFormData(data))
       .then(res => {
         if (res?.data?.msg) {
           Toast.success(res?.data?.msg);
@@ -195,7 +195,7 @@ const MyProfile = () => {
     const data = {
       token: token,
     };
-    getProfileService(JSONtoformdata(data)).then(response => {
+    getProfileService(ConvertJSONtoFormData(data)).then(response => {
       if (response?.data?.status === 1) {
         dispatch(StoreUserProfileData(response.data.data));
       }
@@ -215,7 +215,7 @@ const MyProfile = () => {
       };
     }
 
-    verifyProfileEmailAndPhoneService(JSONtoformdata(data))
+    verifyProfileEmailAndPhoneService(ConvertJSONtoFormData(data))
       .then(res => {
         if (res?.data?.status) {
           setVerificationModal({

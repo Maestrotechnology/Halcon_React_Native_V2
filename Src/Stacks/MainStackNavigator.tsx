@@ -5,7 +5,7 @@ import {COLORS, IS_IOS} from '../Utilities/Constants';
 import DrawerNavigation from '../Navigations/DrawerNavigation';
 import {MainStackParamList} from '../@types/navigation';
 import {getProfileService} from '../Services/Services';
-import {JSONtoformdata} from '../Utilities/Methods';
+import {ConvertJSONtoFormData} from '../Utilities/Methods';
 import {StoreUserProfileData} from '../Store/Slices/LoginSlice';
 import {useDispatch} from 'react-redux';
 import {GetDeepLinkData, UseToken} from '../Utilities/StoreData';
@@ -65,7 +65,7 @@ const MainStackNavigator = () => {
     const data = {
       token: token,
     };
-    getProfileService(JSONtoformdata(data)).then(response => {
+    getProfileService(ConvertJSONtoFormData(data)).then(response => {
       if (response?.data?.status === 1) {
         dispatch(StoreUserProfileData(response.data.data));
       }

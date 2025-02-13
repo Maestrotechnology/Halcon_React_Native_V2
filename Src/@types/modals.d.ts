@@ -27,6 +27,7 @@ export type FilterModalProps<T> = {
 };
 export type TaskListFilterProps = {
   task_name?: string;
+  control_key?: string;
 };
 export type SearchDropdownBoxModalRenderOptionsProps = {
   item: any;
@@ -63,4 +64,12 @@ export type ServiceRequestListFilterModalProps = {
 
 export type ServiceRequestFilterInitialProp = {
   type: number;
+};
+
+export type addEditModalProps<T> = {
+  onApplyChanges: () => void;
+  onClose: () => void;
+  type: 'Create' | 'Update' | 'View' | '';
+  initialValue?: T;
+  lineData: T | null;
 };

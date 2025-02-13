@@ -13,7 +13,7 @@ import {
   updatePreventiveTaskService,
   viewPreventiveSRService,
 } from '../../../Services/Services';
-import {JSONtoformdata} from '../../../Utilities/Methods';
+import {ConvertJSONtoFormData} from '../../../Utilities/Methods';
 import {
   PreventiveSRListApiProps,
   PreventiveTaskListProps,
@@ -158,7 +158,7 @@ const UpdatePreventiveRequest = ({route, navigation}: any) => {
       request_id: route?.params?.data,
     };
 
-    viewPreventiveSRService(JSONtoformdata(data), page, size)
+    viewPreventiveSRService(ConvertJSONtoFormData(data), page, size)
       .then(res => {
         const response: PreventiveViewApiProps = res?.data;
         if (res?.data?.status) {

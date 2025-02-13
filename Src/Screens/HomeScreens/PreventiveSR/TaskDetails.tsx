@@ -19,7 +19,7 @@ import {
   PreventiveTaskListApiProps,
   PreventiveTaskListProps,
 } from '../../../@types/api';
-import {JSONtoformdata} from '../../../Utilities/Methods';
+import {ConvertJSONtoFormData} from '../../../Utilities/Methods';
 import GlobaModal from '../../../Components/GlobalModal';
 import ConfirmationModal from '../../../Modals/ConfirmationModal';
 import {getCatchMessage} from '../../../Utilities/GeneralUtilities';
@@ -88,7 +88,7 @@ const TaskDetails = forwardRef(function TaskDetails(
       preventiveRequestId: reqId,
     };
 
-    preventiveTaskListService(JSONtoformdata(data), page, size)
+    preventiveTaskListService(ConvertJSONtoFormData(data), page, size)
       .then(res => {
         const response: PreventiveTaskListApiProps = res.data;
         if (response.status === 1) {
@@ -125,7 +125,7 @@ const TaskDetails = forwardRef(function TaskDetails(
       token: token,
       preventiveTaskId: confirmationModal?.id,
     };
-    deletePreventiveTaskServices(JSONtoformdata(data))
+    deletePreventiveTaskServices(ConvertJSONtoFormData(data))
       .then(res => {
         if (res?.data?.status) {
           Toast.success(res?.data?.msg);

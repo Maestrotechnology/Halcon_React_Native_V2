@@ -40,6 +40,7 @@ export type TableViewProps = {
   onCheckPress?: (val: any) => void;
   rowData: TableRowDataProps[];
   customRenderer?: ListRenderItem<any> | null | undefined;
+  onChangeStatus?: (status: number, data: any) => void;
 };
 
 export type TableRowDataProps = {

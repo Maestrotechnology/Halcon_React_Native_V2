@@ -1,24 +1,14 @@
-import {
-  Linking,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import React, { useEffect, useState } from "react";
+import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import {
   getDashboardCardsService,
   getDashboardMonthlyReportService,
   getMachineListService,
   getPreventiveRequestReportService,
   getServiceRequestReportService,
-} from "../../Services/Services";
-import Toast from "../../Components/Toast";
-import {
-  GetPermissions,
-  GetUserData,
-  UseToken,
-} from "../../Utilities/StoreData";
+} from '../../Services/Services';
+import Toast from '../../Components/Toast';
+import {GetPermissions, GetUserData, UseToken} from '../../Utilities/StoreData';
 import {
   DashboardCardKeyProps,
   DashboardCardsApiResponseProps,
@@ -27,20 +17,20 @@ import {
   DashboardCountApiResponseProps,
   DashboardMonthlyReportProps,
   ServiceRequestReportDataProps,
-} from "../../@types/api";
-import HOCView from "../../Components/HOCView";
-import StyledText from "../../Components/StyledText";
-import { IconType } from "../../Utilities/Icons";
-import SVGIcon from "../../Components/SVGIcon";
-import { COLORS, FONTSIZES, WINDOW_WIDTH } from "../../Utilities/Constants";
-import { BarChart, LineChart, barDataItem } from "react-native-gifted-charts";
-import TableView from "../../Components/TableView";
-import moment from "moment";
-import { FONTS } from "../../Utilities/Fonts";
-import { useNavigation } from "@react-navigation/native";
-import { JSONtoformdata } from "../../Utilities/Methods";
-import { getCatchMessage } from "../../Utilities/GeneralUtilities";
-import { CommonStyles } from "../../Utilities/CommonStyles";
+} from '../../@types/api';
+import HOCView from '../../Components/HOCView';
+import StyledText from '../../Components/StyledText';
+import {IconType} from '../../Utilities/Icons';
+import SVGIcon from '../../Components/SVGIcon';
+import {COLORS, FONTSIZES, WINDOW_WIDTH} from '../../Utilities/Constants';
+import {BarChart, LineChart, barDataItem} from 'react-native-gifted-charts';
+import TableView from '../../Components/TableView';
+import moment from 'moment';
+import {FONTS} from '../../Utilities/Fonts';
+import {useNavigation} from '@react-navigation/native';
+import {ConvertJSONtoFormData} from '../../Utilities/Methods';
+import {getCatchMessage} from '../../Utilities/GeneralUtilities';
+import {CommonStyles} from '../../Utilities/CommonStyles';
 
 var isMount = true;
 var currentPage = 1;
@@ -127,84 +117,84 @@ const Dashboard = () => {
   // ]);
   const [CardData, setCardData] = useState<DashboardCardDataProp[]>([
     {
-      displayName: "Total SR",
+      displayName: 'Total SR',
       value: 0,
-      key: "totalOngoingSR",
-      icon: "service_req_icon",
+      key: 'totalOngoingSR',
+      icon: 'service_req_icon',
       type: 0,
     },
     {
-      displayName: "Preventive SR",
+      displayName: 'Preventive SR',
       value: 0,
-      key: "pendingSR",
-      icon: "preventive_icon",
+      key: 'pendingSR',
+      icon: 'preventive_icon',
     },
     {
-      displayName: "Ongoing SR",
+      displayName: 'Ongoing SR',
       value: 0,
-      key: "totalCompletedDataSR",
-      icon: "onGoingServiceIcon",
+      key: 'totalCompletedDataSR',
+      icon: 'onGoingServiceIcon',
       type: 2,
     },
     {
-      displayName: "Completed SR",
+      displayName: 'Completed SR',
       value: 0,
-      key: "totalCompletedDataSR",
-      icon: "completedServiceIcon",
+      key: 'totalCompletedDataSR',
+      icon: 'completedServiceIcon',
       type: 3,
     },
   ]);
   const [dashboardCards, setDashboardCards] = useState<DashboardCardProp[]>([
     {
-      displayName: "Service Request",
+      displayName: 'Service Request',
       total: 0,
-      icon: "serviceReqActiveIcon",
-      bg_color: "#F6D5CC",
-      icon_bg: "#FF7E5C",
+      icon: 'serviceReqActiveIcon',
+      bg_color: '#F6D5CC',
+      icon_bg: '#FF7E5C',
       data: [
         {
-          displayName: "On Going",
+          displayName: 'On Going',
           value: 0,
-          key: "ongoing",
+          key: 'ongoing',
           type: 2,
         },
         {
-          displayName: "Pending",
+          displayName: 'Pending',
           value: 0,
-          key: "pending",
+          key: 'pending',
           type: 1,
         },
         {
-          displayName: "Completed",
+          displayName: 'Completed',
           value: 0,
-          key: "completed",
+          key: 'completed',
           type: 3,
         },
       ],
     },
     {
-      displayName: "Preventive SR",
+      displayName: 'Preventive SR',
       total: 0,
-      icon: "preventiveActiveIcon",
-      bg_color: "#C5E3ED",
-      icon_bg: "#39BFEA",
+      icon: 'preventiveActiveIcon',
+      bg_color: '#C5E3ED',
+      icon_bg: '#39BFEA',
       data: [
         {
-          displayName: "On Going",
+          displayName: 'On Going',
           value: 0,
-          key: "ongoing",
+          key: 'ongoing',
           type: 2,
         },
         {
-          displayName: "Pending",
+          displayName: 'Pending',
           value: 0,
-          key: "pending",
+          key: 'pending',
           type: 1,
         },
         {
-          displayName: "Completed",
+          displayName: 'Completed',
           value: 0,
-          key: "completed",
+          key: 'completed',
           type: 3,
         },
       ],
@@ -212,13 +202,13 @@ const Dashboard = () => {
   ]);
 
   const data1 = [
-    { value: 10, label: "Jul" },
-    { value: 20, label: "Aug" },
-    { value: 10, label: "Sep" },
-    { value: 20, label: "Oct" },
-    { value: 10, label: "Nov" },
-    { value: 20, label: "Dec" },
-    { value: 10, label: "Jan" },
+    {value: 10, label: 'Jul'},
+    {value: 20, label: 'Aug'},
+    {value: 10, label: 'Sep'},
+    {value: 20, label: 'Oct'},
+    {value: 10, label: 'Nov'},
+    {value: 20, label: 'Dec'},
+    {value: 10, label: 'Jan'},
   ];
   useEffect(() => {
     isMount = true;
@@ -245,29 +235,29 @@ const Dashboard = () => {
     const data = {
       token,
     };
-    getDashboardMonthlyReportService(JSONtoformdata(data))
-      .then((res) => {
+    getDashboardMonthlyReportService(ConvertJSONtoFormData(data))
+      .then(res => {
         if (res?.data?.status) {
           setMonthlyReport(res?.data?.data || null);
         }
       })
-      .catch((err) => getCatchMessage(err));
+      .catch(err => getCatchMessage(err));
   };
 
   const handleGetDashboardCards = () => {
     const data = {
       token: token,
     };
-    getDashboardCardsService(JSONtoformdata(data))
-      .then((res) => {
+    getDashboardCardsService(ConvertJSONtoFormData(data))
+      .then(res => {
         const response: DashboardCardsApiResponseProps = res?.data;
         if (response?.status) {
-          setDashboardCards((pre) => [
+          setDashboardCards(pre => [
             {
               ...pre[0],
               total: response?.data?.SR?.total,
               data: [
-                ...pre[0]?.data?.map((ele) => ({
+                ...pre[0]?.data?.map(ele => ({
                   ...ele,
                   value: response?.data?.SR[ele?.key],
                 })),
@@ -277,7 +267,7 @@ const Dashboard = () => {
               ...pre[1],
               total: response?.data?.PreventiveSR?.total,
               data: [
-                ...pre[1]?.data?.map((ele) => ({
+                ...pre[1]?.data?.map(ele => ({
                   ...ele,
                   value: response?.data?.PreventiveSR[ele?.key],
                 })),
@@ -304,7 +294,7 @@ const Dashboard = () => {
           // ]);
         }
       })
-      .catch((err) => getCatchMessage(err))
+      .catch(err => getCatchMessage(err))
       .finally(() => {});
   };
 
@@ -365,8 +355,8 @@ const Dashboard = () => {
       is_top: 1,
     };
 
-    getMachineListService(JSONtoformdata(data), page, size)
-      .then((res) => {
+    getMachineListService(ConvertJSONtoFormData(data), page, size)
+      .then(res => {
         const response: DashboardChartDetailsApiResponseProps = res.data;
         if (response.status === 1) {
           totalPages = response.data.total_page;
@@ -376,17 +366,14 @@ const Dashboard = () => {
             }
           } else {
             if (isMount) {
-              setmachineServiceList((prev) => [
-                ...prev,
-                ...response.data.items,
-              ]);
+              setmachineServiceList(prev => [...prev, ...response.data.items]);
             }
           }
         } else if (response.status === 0) {
           Toast.error(response.msg);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         Toast.error(err.message);
       });
   };
@@ -408,27 +395,27 @@ const Dashboard = () => {
   const getChartColor = () => {
     if (showPreventiveReport) {
       return {
-        color1: "#39BFEA",
-        fill: "#5BCAEE",
+        color1: '#39BFEA',
+        fill: '#5BCAEE',
       };
     }
     return {
-      color1: "#F45C26",
-      fill: "#e2a089",
+      color1: '#F45C26',
+      fill: '#e2a089',
     };
   };
 
   const getMachineList = () => {
-    return [...machineServiceList]?.map((ele) => ({
+    return [...machineServiceList]?.map(ele => ({
       ...ele,
       CompletedServiceCount: `${ele?.CompletedServiceCount}/${ele?.TotalServiceCount}`,
       completedPreventive: `${ele?.completedPreventive}/${ele?.totalPreventive}`,
     }));
   };
 
-  const getChartData = (type: "preventive" | "service") => {
+  const getChartData = (type: 'preventive' | 'service') => {
     const tempdata =
-      type === "preventive"
+      type === 'preventive'
         ? monthlyReport?.preventiveRequest || []
         : monthlyReport?.serviceRequest || [];
     const finalArr = [...tempdata]?.reduce((pre: barDataItem[], curr) => {
@@ -438,7 +425,7 @@ const Dashboard = () => {
           return ele;
         } else if (index === 1) {
           const value =
-            type === "preventive"
+            type === 'preventive'
               ? // @ts-ignore
                 curr?.total_preventive || 0
               : // @ts-ignore
@@ -446,10 +433,10 @@ const Dashboard = () => {
           newArray.push({
             value: value,
             spacing: 3,
-            label: moment(curr?.created_at, "YYYY-MM-DD").format("MMM"),
+            label: moment(curr?.created_at, 'YYYY-MM-DD').format('MMM'),
             labelWidth: 30,
-            labelTextStyle: { color: "gray" },
-            frontColor: "#017efa",
+            labelTextStyle: {color: 'gray'},
+            frontColor: '#017efa',
             topLabelComponent: value
               ? () => (
                   <Text
@@ -457,8 +444,7 @@ const Dashboard = () => {
                       color: COLORS.black,
                       fontSize: 12,
                       height: 20,
-                    }}
-                  >
+                    }}>
                     {value}
                   </Text>
                 )
@@ -473,7 +459,7 @@ const Dashboard = () => {
         const currValue = curr[ele];
         newArray.push({
           value: currValue || 0,
-          frontColor: index === 2 ? "#4ab58e" : "#fab101",
+          frontColor: index === 2 ? '#4ab58e' : '#fab101',
           topLabelComponent:
             currValue || 0
               ? () => (
@@ -482,8 +468,7 @@ const Dashboard = () => {
                       color: COLORS.black,
                       fontSize: 12,
                       height: 20,
-                    }}
-                  >
+                    }}>
                     {currValue}
                   </Text>
                 )
@@ -507,22 +492,22 @@ const Dashboard = () => {
   };
 
   const handleNavigation = (date: string) => {
-    const start_date = moment(date, "YYYY-MM-DD")
-      .startOf("month")
-      .format("YYYY-MM-DD");
-    const end_date = moment(date, "YYYY-MM-DD")
-      .endOf("month")
-      .format("YYYY-MM-DD");
+    const start_date = moment(date, 'YYYY-MM-DD')
+      .startOf('month')
+      .format('YYYY-MM-DD');
+    const end_date = moment(date, 'YYYY-MM-DD')
+      .endOf('month')
+      .format('YYYY-MM-DD');
 
     if (!showPreventiveReport) {
-      navigation.navigate("ServiceRequestStack", {
+      navigation.navigate('ServiceRequestStack', {
         date: {
           start_date,
           end_date,
         },
       });
     } else {
-      navigation.navigate("PreventiveSRStack", {
+      navigation.navigate('PreventiveSRStack', {
         date: {
           start_date,
           end_date,
@@ -535,9 +520,8 @@ const Dashboard = () => {
     <HOCView
       isEnableScrollView
       headerProps={{
-        headerTitle: "Dashboard",
-      }}
-    >
+        headerTitle: 'Dashboard',
+      }}>
       {/* Dashboard Cards */}
       {/* <View style={styles.cardContainer}>
         {[...dashboardCards]?.map((card, cardIndex) => {
@@ -648,59 +632,53 @@ const Dashboard = () => {
                 padding: 8,
                 marginBottom: 10,
               }}
-              key={cardGroup?.displayName}
-            >
+              key={cardGroup?.displayName}>
               <TouchableOpacity
                 activeOpacity={0.7}
                 style={{
                   ...styles.cardItemContainer,
-                  width: "100%",
-                  flexDirection: "row",
+                  width: '100%',
+                  flexDirection: 'row',
                   marginBottom: 0,
-                }}
-              >
+                }}>
                 <View
                   style={{
                     ...styles.iconConainer,
                     backgroundColor: cardGroup?.icon_bg,
-                  }}
-                >
+                  }}>
                   <SVGIcon width={20} icon={cardGroup?.icon} />
                 </View>
                 <View style={styles.cardTextContainer}>
                   <StyledText
                     style={{
-                      color: "#242425",
+                      color: '#242425',
                       fontSize: 14,
                       fontFamily: FONTS.poppins.medium,
-                    }}
-                  >
-                    {cardGroup?.displayName}{" "}
+                    }}>
+                    {cardGroup?.displayName}{' '}
                     <StyledText
                       style={{
                         color: COLORS.black,
                         fontSize: FONTSIZES.small,
                         fontFamily: FONTS.poppins.regular,
-                      }}
-                    >
-                      {`(${moment(new Date()).format("MMMM")})`}
+                      }}>
+                      {`(${moment(new Date()).format('MMMM')})`}
                     </StyledText>
                   </StyledText>
 
                   <StyledText
                     style={{
-                      color: "#232323",
+                      color: '#232323',
                       fontSize: 18,
                       fontFamily: FONTS.poppins.semibold,
-                    }}
-                  >
+                    }}>
                     {cardGroup?.total}
                   </StyledText>
                 </View>
               </TouchableOpacity>
               <View
                 style={{
-                  width: "100%",
+                  width: '100%',
                   height: 1,
                   backgroundColor: COLORS.white,
                   marginBottom: 10,
@@ -708,50 +686,46 @@ const Dashboard = () => {
               />
               <View
                 style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-around",
-                }}
-              >
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-around',
+                }}>
                 {cardGroup?.data?.map((card, cardIndex) => {
                   return (
                     <TouchableOpacity
                       key={JSON.stringify(card)}
                       onPress={() => {
                         if (cardGroupIndex === 0) {
-                          navigation.navigate("ServiceRequestStack", {
+                          navigation.navigate('ServiceRequestStack', {
                             serviceType: card?.type,
                           });
                         } else {
-                          navigation.navigate("PreventiveSRStack", {
+                          navigation.navigate('PreventiveSRStack', {
                             preventiveType: card?.type,
                           });
                         }
                       }}
                       style={{
-                        width: "30%",
+                        width: '30%',
                         backgroundColor: COLORS.white,
                         padding: 8,
                         borderRadius: 10,
-                      }}
-                    >
+                      }}>
                       <View style={styles.cardTextContainer}>
                         <StyledText
                           style={{
-                            color: "#8A8A8A",
+                            color: '#8A8A8A',
                             fontSize: FONTSIZES.tiny,
                             fontFamily: FONTS.poppins.medium,
-                          }}
-                        >
+                          }}>
                           {card?.displayName}
                         </StyledText>
                         <StyledText
                           style={{
-                            color: "#232323",
+                            color: '#232323',
                             fontSize: FONTSIZES.medium,
                             fontFamily: FONTS.poppins.semibold,
-                          }}
-                        >
+                          }}>
                           {card?.value}
                         </StyledText>
                       </View>
@@ -774,14 +748,11 @@ const Dashboard = () => {
               ...styles.cardItemContainer,
               borderRadius: 10,
               backgroundColor: COLORS.white,
-            }}
-          >
-            <View
-              style={{ ...CommonStyles.flexRow, justifyContent: "flex-end" }}
-            >
+            }}>
+            <View style={{...CommonStyles.flexRow, justifyContent: 'flex-end'}}>
               <TouchableOpacity
                 onPress={() => {
-                  setShowPreventiveReport((pre) => !pre);
+                  setShowPreventiveReport(pre => !pre);
                 }}
                 style={{
                   ...styles.reportBtn,
@@ -789,34 +760,30 @@ const Dashboard = () => {
                     ? COLORS.primary
                     : COLORS.borderColor,
                   marginRight: 10,
-                }}
-              >
+                }}>
                 <StyledText
                   style={{
                     ...styles.reportBtnText,
                     paddingTop: 1,
-                  }}
-                >
+                  }}>
                   Service
                 </StyledText>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  setShowPreventiveReport((pre) => !pre);
+                  setShowPreventiveReport(pre => !pre);
                 }}
                 style={{
                   ...styles.reportBtn,
                   backgroundColor: showPreventiveReport
                     ? COLORS.primary
                     : COLORS.borderColor,
-                }}
-              >
+                }}>
                 <StyledText
                   style={{
                     ...styles.reportBtnText,
                     paddingTop: 1,
-                  }}
-                >
+                  }}>
                   Preventive
                 </StyledText>
               </TouchableOpacity>
@@ -860,9 +827,9 @@ const Dashboard = () => {
           /> */}
 
             <BarChart
-              key={showPreventiveReport ? "preventive" : "service"}
+              key={showPreventiveReport ? 'preventive' : 'service'}
               data={getChartData(
-                showPreventiveReport ? "preventive" : "service"
+                showPreventiveReport ? 'preventive' : 'service',
               )}
               barWidth={18}
               spacing={5}
@@ -872,7 +839,7 @@ const Dashboard = () => {
               // hideRules
               xAxisThickness={0}
               yAxisThickness={0}
-              yAxisTextStyle={{ color: "gray" }}
+              yAxisTextStyle={{color: 'gray'}}
               noOfSections={3}
               // maxValue={75}
             />
@@ -927,32 +894,32 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 100,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     marginRight: 10,
   },
   cardItemContainer: {
     marginBottom: 10,
-    display: "flex",
+    display: 'flex',
     paddingVertical: 10,
     paddingHorizontal: 5,
   },
   cardContainer: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
   },
   cardTextContainer: {
     // width: WINDOW_WIDTH / 2 - 90,
   },
   reportBtn: {
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     height: 30,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingHorizontal: 10,
     borderRadius: 6,
     minWidth: 80,
@@ -965,7 +932,7 @@ const styles = StyleSheet.create({
   subHeader: {
     paddingBottom: 5,
     fontFamily: FONTS.poppins.semibold,
-    color: "#231F20",
+    color: '#231F20',
     fontSize: 17,
   },
   customDataPoint: {

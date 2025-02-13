@@ -1,47 +1,47 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
-import HOCView from "../../../Components/HOCView";
+import {StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import HOCView from '../../../Components/HOCView';
 import {
   deletePreventiveRequestService,
   getPreventiveSRListService,
-} from "../../../Services/Services";
-import { GetUserPermissions, UseToken } from "../../../Utilities/StoreData";
+} from '../../../Services/Services';
+import {GetUserPermissions, UseToken} from '../../../Utilities/StoreData';
 import {
   PreventiveSRListApiDataProps,
   PreventiveSRListApiProps,
   PreventiveSRListDataProps,
-} from "../../../@types/api";
-import Toast from "../../../Components/Toast";
-import TableView from "../../../Components/TableView";
-import moment from "moment";
-import { useDispatch } from "react-redux";
-import { openLoader } from "../../../Store/Slices/LoaderSlice";
-import { useNavigation } from "@react-navigation/native";
-import { JSONtoformdata } from "../../../Utilities/Methods";
-import GlobaModal from "../../../Components/GlobalModal";
-import ConfirmationModal from "../../../Modals/ConfirmationModal";
-import { getCatchMessage } from "../../../Utilities/GeneralUtilities";
-import { PreventivePermissionProps } from "../../../Utilities/Reducertype";
-import ServiceRequestListFilterModal from "../../../Modals/Filter/ServiceRequestListFilterModal";
+} from '../../../@types/api';
+import Toast from '../../../Components/Toast';
+import TableView from '../../../Components/TableView';
+import moment from 'moment';
+import {useDispatch} from 'react-redux';
+import {openLoader} from '../../../Store/Slices/LoaderSlice';
+import {useNavigation} from '@react-navigation/native';
+import {ConvertJSONtoFormData} from '../../../Utilities/Methods';
+import GlobaModal from '../../../Components/GlobalModal';
+import ConfirmationModal from '../../../Modals/ConfirmationModal';
+import {getCatchMessage} from '../../../Utilities/GeneralUtilities';
+import {PreventivePermissionProps} from '../../../Utilities/Reducertype';
+import ServiceRequestListFilterModal from '../../../Modals/Filter/ServiceRequestListFilterModal';
 import {
   ServiceRequestFilterDataProps,
   ServiceRequestFilterInitialProp,
-} from "../../../@types/modals";
-import CustomButton from "../../../Components/CustomButton";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { usePreventiveRequestContext } from "../../../Utilities/Contexts";
-import { CommonStyles } from "../../../Utilities/CommonStyles";
-import { requestStatusOptions } from "../../../Utilities/StaticDropdownOptions";
+} from '../../../@types/modals';
+import CustomButton from '../../../Components/CustomButton';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {usePreventiveRequestContext} from '../../../Utilities/Contexts';
+import {CommonStyles} from '../../../Utilities/CommonStyles';
+import {requestStatusOptions} from '../../../Utilities/StaticDropdownOptions';
 
 var isMount = true;
 var currentPage = 1;
 var totalPages = 1;
 
-const PreventiveSR = ({ route }: any) => {
-  const { setselectedId, setIsView } = usePreventiveRequestContext();
+const PreventiveSR = ({route}: any) => {
+  const {setselectedId, setIsView} = usePreventiveRequestContext();
   const token = UseToken();
   const dispatch = useDispatch();
-  const { bottom } = useSafeAreaInsets();
+  const {bottom} = useSafeAreaInsets();
   // @ts-ignore
   // const PreventivePermissions: PreventivePermissionProps =
   //   GetUserPermissions('preventive_sr');
@@ -62,15 +62,15 @@ const PreventiveSR = ({ route }: any) => {
       machine: null,
       reqStatus: route?.params?.preventiveType
         ? [...requestStatusOptions]?.find(
-            (ele) => ele?.id === route?.params?.preventiveType
+            ele => ele?.id === route?.params?.preventiveType,
           ) || null
         : null,
       sort_type: null,
       work_center: null,
-      report_no: "",
-      from_date: route?.params?.date ? route?.params?.date?.start_date : "",
+      report_no: '',
+      from_date: route?.params?.date ? route?.params?.date?.start_date : '',
       //  moment(new Date()).startOf("month").format("YYYY-MM-DD")
-      to_date: route?.params?.date ? route?.params?.date?.end_date : "",
+      to_date: route?.params?.date ? route?.params?.date?.end_date : '',
       // moment(new Date()).endOf("month").format("YYYY-MM-DD")
     });
   const [StateFilterData, setStateFilterData] =
@@ -84,11 +84,11 @@ const PreventiveSR = ({ route }: any) => {
     if (token) {
       handleGetPreventiveServiceList(1);
       // @ts-ignore
-      setfilterData((pre) => ({
+      setfilterData(pre => ({
         ...pre,
         reqStatus:
           [...requestStatusOptions]?.find(
-            (ele) => ele?.id === route?.params?.preventiveType || 0
+            ele => ele?.id === route?.params?.preventiveType || 0,
           ) || null,
       }));
     }
@@ -111,41 +111,41 @@ const PreventiveSR = ({ route }: any) => {
   const handleGetPreventiveServiceList = (
     page = 1,
     requestStatus = 0,
-    data = filterData
+    data = filterData,
   ) => {
     const formData = new FormData();
-    formData.append("token", token);
+    formData.append('token', token);
     if (requestStatus || data?.reqStatus) {
       formData.append(
-        "request_status",
-        requestStatus ? requestStatus : data?.reqStatus?.id
+        'request_status',
+        requestStatus ? requestStatus : data?.reqStatus?.id,
       );
     }
     if (data?.machine) {
-      formData.append("machine_id", data?.machine.machine_id);
+      formData.append('machine_id', data?.machine.machine_id);
     }
     // if (data?.priority) {
     //   formData.append('priority', data?.priority.id);
     // }
 
     if (data?.from_date) {
-      formData.append("start_date", `${data?.from_date} 00:00`);
+      formData.append('start_date', `${data?.from_date} 00:00`);
     }
     if (data?.to_date) {
-      formData.append("end_date", `${data?.to_date} 23:59`);
+      formData.append('end_date', `${data?.to_date} 23:59`);
     }
     if (data?.division) {
-      formData.append("division_id", data?.division?.division_id);
+      formData.append('division_id', data?.division?.division_id);
     }
     if (route?.params?.preventive_id) {
-      formData.append("preventive_id", route?.params?.requestId);
+      formData.append('preventive_id', route?.params?.requestId);
     }
     if (!data && !requestStatus) {
       setStateFilterData(null);
     }
 
     getPreventiveSRListService(formData, page)
-      .then((res) => {
+      .then(res => {
         const response: PreventiveSRListApiProps = res.data;
         if (response.status === 1) {
           if (page === 1) {
@@ -155,14 +155,14 @@ const PreventiveSR = ({ route }: any) => {
             }
           } else {
             if (isMount) {
-              setPreventiveList((prev) => [...prev, ...response.data.items]);
+              setPreventiveList(prev => [...prev, ...response.data.items]);
             }
           }
         } else if (response.status === 0) {
           Toast.error(response.msg);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         Toast.error(err.message);
       })
       .finally(() => {
@@ -179,8 +179,8 @@ const PreventiveSR = ({ route }: any) => {
       token: token,
       request_id: deletePreventiveModal?.id,
     };
-    deletePreventiveRequestService(JSONtoformdata(data))
-      .then((res) => {
+    deletePreventiveRequestService(ConvertJSONtoFormData(data))
+      .then(res => {
         if (res?.data?.status) {
           Toast.success(res?.data?.msg);
           handleGetPreventiveServiceList();
@@ -188,16 +188,16 @@ const PreventiveSR = ({ route }: any) => {
           Toast.error(res?.data?.msg);
         }
       })
-      .catch((err) => getCatchMessage(err))
+      .catch(err => getCatchMessage(err))
       .finally(() => {
         dispatch(openLoader(false));
       });
   };
 
   const getPreventiveList = () => {
-    return [...preventiveList]?.map((ele) => ({
+    return [...preventiveList]?.map(ele => ({
       ...ele,
-      req_date: moment(ele?.req_date).format("YYYY-MM-DD hh:mm A"),
+      req_date: moment(ele?.req_date).format('YYYY-MM-DD hh:mm A'),
       disableUpdateKey: ele?.request_status === 3 ? true : false,
     }));
   };
@@ -222,7 +222,7 @@ const PreventiveSR = ({ route }: any) => {
   };
 
   const handleClose = () => {
-    setDeletePreventiveModal((pre) => ({ ...pre, status: false }));
+    setDeletePreventiveModal(pre => ({...pre, status: false}));
   };
 
   const onApplyFilter = (data: ServiceRequestFilterDataProps | null) => {
@@ -242,16 +242,14 @@ const PreventiveSR = ({ route }: any) => {
     <HOCView
       isListLoading={isLoading}
       headerProps={{
-        headerTitle: "Preventive Request",
-      }}
-    >
+        headerTitle: 'Preventive Request',
+      }}>
       <View
         style={{
           ...CommonStyles.flexRow,
-          justifyContent: "flex-end",
+          justifyContent: 'flex-end',
           paddingBottom: 15,
-        }}
-      >
+        }}>
         {preventiveList?.length > 0 ? (
           <CustomButton
             onPress={() => {
@@ -259,11 +257,10 @@ const PreventiveSR = ({ route }: any) => {
             }}
             type="secondary"
             style={{
-              width: "30%",
-              alignSelf: "flex-end",
+              width: '30%',
+              alignSelf: 'flex-end',
               // , marginRight: 8
-            }}
-          >
+            }}>
             Filter
           </CustomButton>
         ) : null}
@@ -279,16 +276,16 @@ const PreventiveSR = ({ route }: any) => {
         </CustomButton> */}
       </View>
 
-      <View style={{ flex: 1, marginBottom: bottom }}>
+      <View style={{flex: 1, marginBottom: bottom}}>
         <TableView
           dataList={[...getPreventiveList()]}
           rowData={[
-            { key: "equipment_id", label: "Machine Id" },
-            { key: "machine_name", label: "Machine Name" },
-            { key: "work_center_name", label: "Work Center" },
-            { key: "division_description", label: "Division Id" },
-            { key: "schedule_date", label: "Request Date" },
-            { key: "request_status_name", label: "Request Status" },
+            {key: 'equipment_id', label: 'Machine Id'},
+            {key: 'machine_name', label: 'Machine Name'},
+            {key: 'work_center_name', label: 'Work Center'},
+            {key: 'division_description', label: 'Division Id'},
+            {key: 'schedule_date', label: 'Request Date'},
+            {key: 'request_status_name', label: 'Request Status'},
           ]}
           isActionAvailable
           viewPortColumnDivisionCount={4.5}
@@ -307,24 +304,24 @@ const PreventiveSR = ({ route }: any) => {
             // },
             {
               id: 3,
-              name: "deleteIcon",
+              name: 'deleteIcon',
               width: 14,
               isShow: true,
               // isShow: PreventivePermissions?.delete ? true : false,
             },
             {
               id: 2,
-              name: "updateIcon",
+              name: 'updateIcon',
               width: 16,
               isShow: true,
-              disableKey: "disableUpdateKey",
+              disableKey: 'disableUpdateKey',
               // isShow: PreventivePermissions?.update ? true : false,
             },
           ]}
           onActionPress={(type: number, val: PreventiveSRListDataProps) => {
             if (type === 1) {
               setIsView(true);
-              navigation.navigate("UpdatePreventiveRequest", {
+              navigation.navigate('UpdatePreventiveRequest', {
                 type: 1,
                 data: val?.request_id,
                 preventiveType: 1,
@@ -339,7 +336,7 @@ const PreventiveSR = ({ route }: any) => {
               return;
             }
             setselectedId(val?.request_id);
-            navigation.navigate("UpdatePreventiveRequest", {
+            navigation.navigate('UpdatePreventiveRequest', {
               type: type,
               data: val?.request_id,
             });
@@ -352,8 +349,7 @@ const PreventiveSR = ({ route }: any) => {
         <GlobaModal
           title="Preventive Request Filter"
           visible={isShowFilter}
-          onClose={closeFilterModal}
-        >
+          onClose={closeFilterModal}>
           <ServiceRequestListFilterModal
             filterData={filterData}
             onApplyFilter={onApplyFilter}
@@ -367,8 +363,7 @@ const PreventiveSR = ({ route }: any) => {
       {deletePreventiveModal.status && (
         <GlobaModal
           visible={deletePreventiveModal.status}
-          onClose={handleClose}
-        >
+          onClose={handleClose}>
           <ConfirmationModal
             onClose={handleClose}
             visible={deletePreventiveModal.status}

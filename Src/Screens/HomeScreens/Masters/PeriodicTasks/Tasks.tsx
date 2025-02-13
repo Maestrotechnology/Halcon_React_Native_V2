@@ -3,11 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {UseToken} from '../../../../Utilities/StoreData';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useIsFocused} from '@react-navigation/native';
-import {
-  ApiResponse,
-  DeleteUserApiResposneProps,
-  UserRequestListDataProps,
-} from '../../../../@types/api';
+import {TaskListDataProps} from '../../../../@types/api';
 import {actionListProps} from '../../../../Components/types';
 import {TaskListFilterProps} from '../../../../@types/modals';
 import {
@@ -24,26 +20,25 @@ import TableView from '../../../../Components/TableView';
 import GlobaModal from '../../../../Components/GlobalModal';
 import ConfirmationModal from '../../../../Modals/ConfirmationModal';
 import TaskListFilterModal from '../../../../Modals/Filter/TaskListFilterModal';
+import {addEdittaskProps} from '../../../../@types/general';
+import AddEditTaskModal from '../../../../Modals/ModifyModals/AddEditTaskModal';
+import {MastersStackNavigationProps} from '../../../../@types/navigation';
+import {ApiResponse, DeleteApiResposneProps} from '../../../../@types/Global';
 
 var isMount = true;
 var currentPage = 1;
 var totalPages = 1;
 
-const TasksList = ({navigation, route}: any) => {
+const TasksList = ({route}: MastersStackNavigationProps) => {
   const token = UseToken();
   const {bottom} = useSafeAreaInsets();
   const focused = useIsFocused();
   const [isListLoader, setisListLoader] = useState<boolean>(true);
-  const [modifyModal, setModifyModal] = useState({
-    show: false,
-    lineData: null,
-    type: '',
-  });
   const [isRefreshing, setisRefreshing] = useState<boolean>(false);
   const [isEndRefreshing, setisEndRefreshing] = useState<boolean>(false);
   const [isLoading, setisLoading] = useState<boolean>(false);
   const [permissionLoader, setPermissionLoader] = useState(false);
-  const [TasksList, setTasksList] = useState<UserRequestListDataProps[]>([]);
+  const [TasksList, setTasksList] = useState<TaskListDataProps[]>([]);
   const [actionsList, setActionList] = useState<actionListProps[]>([
     {
       id: 1,
@@ -63,6 +58,11 @@ const TasksList = ({navigation, route}: any) => {
     task_name: '',
   });
   const [isShowFilter, setisShowFilter] = useState<boolean>(false);
+  const [addEdittask, setAddEditTask] = useState<addEdittaskProps>({
+    type: '',
+    lineData: null,
+    show: false,
+  });
   const [isShowDelete, setIsShowDelete] = useState({
     id: -1,
     status: false,
@@ -89,14 +89,13 @@ const TasksList = ({navigation, route}: any) => {
   ) => {
     const formData = new FormData();
     formData.append('token', token);
-
     if (filter?.task_name) {
       formData.append('task_name', filter?.task_name);
     }
 
     listTasksService(formData, page)
       .then(res => {
-        const response: ApiResponse<UserRequestListDataProps> = res.data;
+        const response: ApiResponse<TaskListDataProps> = res.data;
 
         if (response.status === 1) {
           if (page === 1) {
@@ -128,7 +127,6 @@ const TasksList = ({navigation, route}: any) => {
       if (isMount) {
         setisEndRefreshing(true);
       }
-
       handleGetTasksList(currentPage);
     }
   };
@@ -142,22 +140,22 @@ const TasksList = ({navigation, route}: any) => {
     handleGetTasksList(1);
   };
 
-  const handleDeleteServiceRequest = (user_id: number) => {
+  const handleDeleteTask = (task_id: number) => {
     handleCloseDelete();
     if (isMount) {
       setisLoading(true);
     }
     let formData = new FormData();
     formData.append('token', token);
-    formData.append('user_id', user_id);
+    formData.append('task_id', task_id);
     deleteTasksService(formData)
       .then(res => {
-        const response: DeleteUserApiResposneProps = res.data;
+        const response: DeleteApiResposneProps = res.data;
 
         if (response.status === 1) {
           if (isMount) {
             setTasksList(prev =>
-              [...prev].filter(ele => ele.user_id !== user_id),
+              [...prev].filter(ele => ele.task_id !== task_id),
             );
           }
           Toast.success(response.msg);
@@ -176,7 +174,7 @@ const TasksList = ({navigation, route}: any) => {
   };
 
   const handleCheckAccessToAdd = () => {
-    setModifyModal({show: true, type: 'Create', lineData: null});
+    setAddEditTask({show: true, type: 'Create', lineData: null});
   };
 
   const onApplyFilter = (data: TaskListFilterProps | null) => {
@@ -193,6 +191,11 @@ const TasksList = ({navigation, route}: any) => {
   const closeFilterModal = () => {
     if (isMount) {
       setisShowFilter(false);
+    }
+  };
+  const closeTaskModal = () => {
+    if (isMount) {
+      setAddEditTask({lineData: null, show: false, type: ''});
     }
   };
 
@@ -215,7 +218,6 @@ const TasksList = ({navigation, route}: any) => {
       secondaryBtnTitle="Add Task"
       isLoading={isLoading}
       isBtnLoading={permissionLoader}>
-      {/* {TasksList?.length > 0 ? ( */}
       <View style={CommonStyles.flexRow}>
         <CustomButton
           onPress={() => {
@@ -226,7 +228,6 @@ const TasksList = ({navigation, route}: any) => {
           Filter
         </CustomButton>
       </View>
-      {/* ) : null} */}
       <View style={{marginBottom: bottom, flex: 1}}>
         <TableView
           rowData={[
@@ -235,8 +236,6 @@ const TasksList = ({navigation, route}: any) => {
           ]}
           dataList={[...TasksList]?.map(ele => ({
             ...ele,
-            // disableEditIcon: ele?.request_status === 3 ? true : false,
-            // disableUpdateIcon: ele?.request_status === 3 ? true : false,
           }))}
           onEndReached={onEndReached}
           onRefresh={onRefresh}
@@ -244,24 +243,16 @@ const TasksList = ({navigation, route}: any) => {
           isRefreshing={isRefreshing}
           isActionAvailable
           actionsList={actionsList}
-          onActionPress={(
-            actionType: number,
-            val: UserRequestListDataProps,
-          ) => {
+          onActionPress={(actionType: number, val: TaskListDataProps) => {
             if (actionType === 1) {
               setIsShowDelete({
-                id: val.user_id,
+                id: val.task_id || -1,
                 status: true,
               });
             } else if (actionType === 2) {
-              navigation.navigate('AddEditUser', {
-                type: 'Update',
-                lineData: val,
-              });
+              setAddEditTask({type: 'Update', lineData: val, show: true});
             } else if (actionType === 3) {
-              navigation.navigate('AddEditUser', {type: 'View'});
-            } else if (actionType === 4) {
-              navigation.navigate('AddEditUser', {type: 'View', lineData: val});
+              setAddEditTask({type: 'View', lineData: val, show: true});
             }
           }}
         />
@@ -278,6 +269,21 @@ const TasksList = ({navigation, route}: any) => {
           />
         </GlobaModal>
       )}
+      {addEdittask?.show && (
+        <GlobaModal
+          title={`${addEdittask?.type} Task`}
+          visible={addEdittask?.show}
+          onClose={closeTaskModal}>
+          <AddEditTaskModal
+            lineData={addEdittask?.lineData}
+            type={addEdittask?.type}
+            onApplyChanges={() => {
+              handleGetTasksList(1);
+            }}
+            onClose={closeTaskModal}
+          />
+        </GlobaModal>
+      )}
 
       {isShowDelete?.status && (
         <GlobaModal visible={isShowDelete?.status} onClose={handleCloseDelete}>
@@ -286,7 +292,7 @@ const TasksList = ({navigation, route}: any) => {
             visible={isShowDelete?.status}
             msg="Are you sure want to delete this Task?"
             onConfirmPress={() => {
-              handleDeleteServiceRequest(isShowDelete?.id);
+              handleDeleteTask(isShowDelete?.id);
             }}
           />
         </GlobaModal>

@@ -4,7 +4,7 @@ import {useState} from 'react';
 import {useDispatch} from 'react-redux';
 import * as Yup from 'yup';
 import {openLoader} from '../Store/Slices/LoaderSlice';
-import {JSONtoformdata} from '../Utilities/Methods';
+import {ConvertJSONtoFormData} from '../Utilities/Methods';
 import {
   resendOtpService,
   verifyOtpProfileService,
@@ -70,7 +70,7 @@ const VerificationModal = ({
         ? {...tempdata, phone: verifymail}
         : {...tempdata, email: verifymail};
 
-    verifyOtpProfileService(JSONtoformdata(data))
+    verifyOtpProfileService(ConvertJSONtoFormData(data))
       .then(res => {
         if (res?.data?.status) {
           Toast.success(res?.data?.msg);
@@ -97,7 +97,7 @@ const VerificationModal = ({
         ? {...tempdata, email: verifymail}
         : {...tempdata, mobile_no: verifymail};
 
-    verifyProfileEmailAndPhoneService(JSONtoformdata(data))
+    verifyProfileEmailAndPhoneService(ConvertJSONtoFormData(data))
       .then(res => {
         if (res?.data?.status) {
           Toast.success(res?.data?.msg);

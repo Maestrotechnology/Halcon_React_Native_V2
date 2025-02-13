@@ -14,7 +14,7 @@ import * as Yup from 'yup';
 import {forgotPasswordService} from '../../Services/Services';
 import Toast from '../../Components/Toast';
 import {getCatchMessage} from '../../Utilities/GeneralUtilities';
-import {JSONtoformdata} from '../../Utilities/Methods';
+import {ConvertJSONtoFormData} from '../../Utilities/Methods';
 
 const ForgotPassword = () => {
   const dispatch = useDispatch();
@@ -49,7 +49,7 @@ const ForgotPassword = () => {
     const data = {
       email: values.email,
     };
-    forgotPasswordService(JSONtoformdata(data))
+    forgotPasswordService(ConvertJSONtoFormData(data))
       .then(res => {
         if (res?.data?.status) {
           navigation.replace('OtpVerification', {

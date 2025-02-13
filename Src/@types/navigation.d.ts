@@ -103,10 +103,10 @@ export type DrawerNavigationProps = {
   route: RouteProp<DrawerNavigationParamList, keyof DrawerNavigationParamList>;
   navigation: DrawerNavigationScreensProps<DrawerNavigationParamList>;
 };
-export type MastersScreenScreensNavigationProps =
+export type MastersStackNavigationProps =
   NativeStackScreenProps<MasterStackStackParamList>;
 
-export type UserScreenScreensNavigationProps =
+export type UserScreensNavigationProps =
   NativeStackScreenProps<UserStackStackParamList>;
 
 export type ServiceRequestScreensNavigationProps =

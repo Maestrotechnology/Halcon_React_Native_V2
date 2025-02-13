@@ -5,7 +5,7 @@ import CustomButton from '../Components/CustomButton';
 import {useDispatch} from 'react-redux';
 import {UseToken} from '../Utilities/StoreData';
 import {logoutService} from '../Services/Services';
-import {JSONtoformdata} from '../Utilities/Methods';
+import {ConvertJSONtoFormData} from '../Utilities/Methods';
 import Toast from '../Components/Toast';
 import {getCatchMessage} from '../Utilities/GeneralUtilities';
 import {clearStorage} from '../Utilities/SecureStorage';

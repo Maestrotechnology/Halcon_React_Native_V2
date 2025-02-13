@@ -1,19 +1,14 @@
 import {StyleSheet, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
+import Toast from '../../../Components/Toast';
 import HOCView from '../../../Components/HOCView';
 import {UseToken} from '../../../Utilities/StoreData';
 import {
-  deleteServiceRequestService,
+  ChangeStatusUserService,
   deleteUserService,
   listUserService,
 } from '../../../Services/Services';
-import Toast from '../../../Components/Toast';
-import {
-  DeleteServiceRequestApiResposneProps,
-  UserRequestListDataProps,
-  ApiResponse,
-  DeleteUserApiResposneProps,
-} from '../../../@types/api';
+import {UserRequestListDataProps} from '../../../@types/api';
 import TableView from '../../../Components/TableView';
 import {actionListProps} from '../../../Components/types';
 import {FONTSIZES} from '../../../Utilities/Constants';
@@ -26,12 +21,14 @@ import {CommonStyles} from '../../../Utilities/CommonStyles';
 import UserFilterModal from '../../../Modals/Filter/UserFilterModal';
 import {useIsFocused} from '@react-navigation/native';
 import {getCatchMessage} from '../../../Utilities/GeneralUtilities';
+import {UserScreensNavigationProps} from '../../../@types/navigation';
+import {ApiResponse, DeleteApiResposneProps} from '../../../@types/Global';
 
 var isMount = true;
 var currentPage = 1;
 var totalPages = 1;
 
-const UserList = ({navigation, route}: any) => {
+const UserList = ({navigation, route}: UserScreensNavigationProps) => {
   const token = UseToken();
   const {bottom} = useSafeAreaInsets();
   const focused = useIsFocused();
@@ -142,7 +139,6 @@ const UserList = ({navigation, route}: any) => {
       if (isMount) {
         setisEndRefreshing(true);
       }
-
       handleGetUserList(currentPage);
     }
   };
@@ -156,7 +152,37 @@ const UserList = ({navigation, route}: any) => {
     handleGetUserList(1);
   };
 
-  const handleDeleteServiceRequest = (user_id: number) => {
+  const handleChangeUserStatus = (
+    status: number,
+    lineData: UserRequestListDataProps,
+  ) => {
+    setisLoading(true);
+
+    let formData = new FormData();
+    formData.append('token', token);
+    formData.append('user_id', lineData?.user_id);
+    formData.append('active', status);
+
+    ChangeStatusUserService(formData)
+      .then(res => {
+        const response: DeleteApiResposneProps = res.data;
+
+        if (response.status === 1) {
+          handleGetUserList(1, filterData);
+        } else if (response.status === 0) {
+          Toast.error(response.msg);
+        }
+      })
+      .catch(err => {
+        Toast.error(err.message);
+      })
+      .finally(() => {
+        if (isMount) {
+          setisLoading(false);
+        }
+      });
+  };
+  const handleDelete = (user_id: number) => {
     handleCloseDelete();
     if (isMount) {
       setisLoading(true);
@@ -166,7 +192,7 @@ const UserList = ({navigation, route}: any) => {
     formData.append('user_id', user_id);
     deleteUserService(formData)
       .then(res => {
-        const response: DeleteUserApiResposneProps = res.data;
+        const response: DeleteApiResposneProps = res.data;
 
         if (response.status === 1) {
           if (isMount) {
@@ -229,7 +255,6 @@ const UserList = ({navigation, route}: any) => {
       secondaryBtnTitle="Add User"
       isLoading={isLoading}
       isBtnLoading={permissionLoader}>
-      {/* {UserList?.length > 0 ? ( */}
       <View style={CommonStyles.flexRow}>
         <CustomButton
           onPress={() => {
@@ -240,7 +265,6 @@ const UserList = ({navigation, route}: any) => {
           Filter
         </CustomButton>
       </View>
-      {/* ) : null} */}
       <View style={{marginBottom: bottom, flex: 1}}>
         <TableView
           rowData={[
@@ -253,8 +277,6 @@ const UserList = ({navigation, route}: any) => {
           ]}
           dataList={[...UserList]?.map(ele => ({
             ...ele,
-            // disableEditIcon: ele?.request_status === 3 ? true : false,
-            // disableUpdateIcon: ele?.request_status === 3 ? true : false,
           }))}
           onEndReached={onEndReached}
           onRefresh={onRefresh}
@@ -262,6 +284,12 @@ const UserList = ({navigation, route}: any) => {
           isRefreshing={isRefreshing}
           isActionAvailable
           actionsList={actionsList}
+          onChangeStatus={(
+            status: number,
+            lineData: UserRequestListDataProps,
+          ) => {
+            handleChangeUserStatus(status, lineData);
+          }}
           onActionPress={(
             actionType: number,
             val: UserRequestListDataProps,
@@ -304,7 +332,7 @@ const UserList = ({navigation, route}: any) => {
             visible={isShowDelete?.status}
             msg="Are you sure want to delete this User?"
             onConfirmPress={() => {
-              handleDeleteServiceRequest(isShowDelete?.id);
+              handleDelete(isShowDelete?.id);
             }}
           />
         </GlobaModal>

@@ -245,7 +245,7 @@ export function getCatchMsg(error: getCatchMsgType) {
 //   return finalObj;
 // };
 
-// export const ConvertJSONtoFormData = (obj: ObjectType, isFilter = true) => {
+// export const ConvertConvertJSONtoFormData = (obj: ObjectType, isFilter = true) => {
 //   const formData = new FormData();
 //   for (const key in obj) {
 //     const value = obj[key];

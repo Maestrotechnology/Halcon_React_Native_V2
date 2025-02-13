@@ -1,17 +1,3 @@
-export type ApiResponse<T> = {
-  status: number;
-  msg: string;
-  data: PaginationData<T>;
-  items: PaginationData<T>;
-  total_page?: number;
-};
-export interface PaginationData<T> {
-  page: number;
-  size: number;
-  total_count: number;
-  total_page: number;
-  items: T[];
-}
 export type DashboardCountApiResponseProps = {
   data: DashboardChartProps[];
   msg: string;
@@ -192,27 +178,6 @@ export type DashboardChartProps = {
   on_going: number;
   completed: number;
 };
-// User List Response
-
-export type DeleteUserApiResposneProps = {
-  msg: string;
-  status: number;
-};
-export interface UserRequestListDataProps {
-  address: string;
-  city: string;
-  country: string;
-  created_by: number;
-  email: string;
-  mobile_no: any;
-  name: string;
-  role_id: number;
-  role_name: string;
-  state: string;
-  status: number;
-  user_id: number;
-  username: string;
-}
 
 export type ServiceRequestListApiResponseProps = {
   status: number;
@@ -740,3 +705,26 @@ export type ServiceRequestSubscriptionProps = {
   status: number;
   subscription_expiry: string;
 };
+
+// User List Response
+export interface UserRequestListDataProps {
+  address: string;
+  city: string;
+  country: string;
+  created_by: number;
+  email: string;
+  mobile_no: any;
+  name: string;
+  role_id: number;
+  role_name: string;
+  state: string;
+  status: number;
+  user_id: number;
+  username: string;
+}
+export interface TaskListDataProps {
+  task_id: number | null;
+  task_name: string;
+  control_key?: string;
+  created_at?: string;
+}

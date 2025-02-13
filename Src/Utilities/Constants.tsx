@@ -135,3 +135,21 @@ export const JSONHeaderType = {
     'Content-Type': 'application/json',
   },
 };
+
+export const INPUT_SIZE = {
+  INPUT_LENGTH: 100,
+  Medium: 250,
+  Long: 500,
+  Fifty: 50,
+
+  TEXT_AREA_LENGTH: 1000,
+  INVOICE_NUMBER: 50,
+  AMOUNT_LENGTH: 11,
+  Opening_Balance: 11,
+  Contact: 10,
+  Description: 50,
+  Name: 100,
+  Material_Code: 100,
+  Notes: 100,
+  Unit: 100,
+};

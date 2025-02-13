@@ -10,6 +10,9 @@ import {IconType} from '../Utilities/Icons';
 import {
   DashboardChartDetailsApiResponseProps,
   DashboardChartProps,
+  TaskDetailsDataItemsProps,
+  TaskDetailsListDataProps,
+  TaskListDataProps,
 } from './api';
 import {FormikErrors} from 'formik';
 import {SearchDropdownBoxModalProps} from './modals';
@@ -304,4 +307,10 @@ export type ColorPickerModalProps = {
   onClose: () => void;
   onSelect: (val: string) => void;
   title?: string;
+};
+
+export type addEdittaskProps = {
+  type: 'Create' | 'Update' | 'View' | '';
+  lineData: TaskListDataProps | null;
+  show: boolean;
 };

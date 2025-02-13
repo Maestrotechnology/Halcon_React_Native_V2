@@ -1,68 +1,68 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
-import HOCView from "../../../Components/HOCView";
-import { GetUserPermissions, UseToken } from "../../../Utilities/StoreData";
+import {StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import HOCView from '../../../Components/HOCView';
+import {GetUserPermissions, UseToken} from '../../../Utilities/StoreData';
 import {
   checkSubscriptionService,
   deleteServiceRequestService,
   exportServiceRequestService,
   getServiceRequestListService,
-} from "../../../Services/Services";
-import Toast from "../../../Components/Toast";
+} from '../../../Services/Services';
+import Toast from '../../../Components/Toast';
 import {
   DeleteServiceRequestApiResposneProps,
   ServiceRequestItemsProps,
   ServiceRequestListApiResponseProps,
   ServiceRequestSubscriptionProps,
-} from "../../../@types/api";
-import TableView from "../../../Components/TableView";
-import { ItemKeyListProps, actionListProps } from "../../../Components/types";
+} from '../../../@types/api';
+import TableView from '../../../Components/TableView';
+import {ItemKeyListProps, actionListProps} from '../../../Components/types';
 import {
   AlertBox,
   downloadPdf,
   getCatchMessage,
-} from "../../../Utilities/GeneralUtilities";
-import { ServiceRequestScreensNavigationProps } from "../../../@types/navigation";
-import { FONTSIZES } from "../../../Utilities/Constants";
-import CustomButton from "../../../Components/CustomButton";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ServiceRequestPermissionProps } from "../../../Utilities/Reducertype";
+} from '../../../Utilities/GeneralUtilities';
+import {ServiceRequestScreensNavigationProps} from '../../../@types/navigation';
+import {FONTSIZES} from '../../../Utilities/Constants';
+import CustomButton from '../../../Components/CustomButton';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {ServiceRequestPermissionProps} from '../../../Utilities/Reducertype';
 import {
   ServiceRequestFilterDataProps,
   ServiceRequestFilterInitialProp,
-} from "../../../@types/modals";
-import GlobaModal from "../../../Components/GlobalModal";
-import ServiceRequestListFilterModal from "../../../Modals/Filter/ServiceRequestListFilterModal";
-import ConfirmationModal from "../../../Modals/ConfirmationModal";
-import { CommonStyles } from "../../../Utilities/CommonStyles";
-import moment from "moment";
-import { JSONtoformdata } from "../../../Utilities/Methods";
-import { useDispatch } from "react-redux";
-import { openLoader } from "../../../Store/Slices/LoaderSlice";
+} from '../../../@types/modals';
+import GlobaModal from '../../../Components/GlobalModal';
+import ServiceRequestListFilterModal from '../../../Modals/Filter/ServiceRequestListFilterModal';
+import ConfirmationModal from '../../../Modals/ConfirmationModal';
+import {CommonStyles} from '../../../Utilities/CommonStyles';
+import moment from 'moment';
+import {ConvertJSONtoFormData} from '../../../Utilities/Methods';
+import {useDispatch} from 'react-redux';
+import {openLoader} from '../../../Store/Slices/LoaderSlice';
 
 var isMount = true;
 var currentPage = 1;
 var totalPages = 1;
 
 const itemHeaderList = [
-  "Service Number",
-  "Machine",
-  "Priority",
-  "Request Status",
+  'Service Number',
+  'Machine',
+  'Priority',
+  'Request Status',
 ];
 const itemKeyList: ItemKeyListProps[] = [
-  { key: "serviceNumber" },
-  { key: "machineName" },
-  { key: "priority" },
-  { key: "requestStatus" },
+  {key: 'serviceNumber'},
+  {key: 'machineName'},
+  {key: 'priority'},
+  {key: 'requestStatus'},
 ];
 
-const ServiceRequest = ({ navigation, route }: any) =>
+const ServiceRequest = ({navigation, route}: any) =>
   // ServiceRequestScreensNavigationProps
   {
     const token = UseToken();
     const dispatch = useDispatch();
-    const { bottom } = useSafeAreaInsets();
+    const {bottom} = useSafeAreaInsets();
     // @ts-ignore
     // const ServiceRequestPermissions: ServiceRequestPermissionProps =
     //   GetUserPermissions('service_request');
@@ -84,23 +84,23 @@ const ServiceRequest = ({ navigation, route }: any) =>
       // },
       {
         id: 4,
-        name: "deleteIcon",
+        name: 'deleteIcon',
         // isShow: ServiceRequestPermissions.delete ? true : false,
         isShow: true,
       },
       {
         id: 3,
-        name: "editIcon",
+        name: 'editIcon',
         // isShow: ServiceRequestPermissions.edit ? true : false,
         isShow: true,
-        disableKey: "disableEditIcon",
+        disableKey: 'disableEditIcon',
       },
       {
         id: 2,
-        name: "updateIcon",
+        name: 'updateIcon',
         // isShow: ServiceRequestPermissions.update ? true : false,
         isShow: true,
-        disableKey: "disableUpdateIcon",
+        disableKey: 'disableUpdateIcon',
       },
     ]);
     const [filterData, setfilterData] =
@@ -108,26 +108,26 @@ const ServiceRequest = ({ navigation, route }: any) =>
         machine: route?.params?.machineId
           ? {
               // @ts-ignore
-              machine_id: route?.params?.machineId || "",
-              machine_name: "",
+              machine_id: route?.params?.machineId || '',
+              machine_name: '',
             }
           : null,
         sort_type: null,
         reqStatus: route?.params?.serviceType
           ? {
               // @ts-ignore
-              id: route?.params?.serviceType || "",
-              name: "",
+              id: route?.params?.serviceType || '',
+              name: '',
             }
           : null,
         division: null,
         work_center: null,
         from_date: route?.params?.date
           ? route?.params?.date?.start_date
-          : moment(new Date()).subtract(1, "month").format("YYYY-MM-DD"),
+          : moment(new Date()).subtract(1, 'month').format('YYYY-MM-DD'),
         to_date: route?.params?.date
           ? route?.params?.date?.end_date
-          : moment(new Date()).format("YYYY-MM-DD"),
+          : moment(new Date()).format('YYYY-MM-DD'),
       });
     const [StateFilterData, setStateFilterData] =
       useState<null | ServiceRequestFilterInitialProp>(null);
@@ -163,41 +163,41 @@ const ServiceRequest = ({ navigation, route }: any) =>
 
     const handleGetServiceRequestList = (
       page: number = 1,
-      filter: ServiceRequestFilterDataProps | null = filterData
+      filter: ServiceRequestFilterDataProps | null = filterData,
     ) => {
       const formData = new FormData();
-      formData.append("token", token);
+      formData.append('token', token);
       if (filter?.machine) {
-        formData.append("machine_id", filter?.machine.machine_id);
+        formData.append('machine_id', filter?.machine.machine_id);
       }
       if (filter?.division) {
-        formData.append("division_id", filter?.division.division_id);
+        formData.append('division_id', filter?.division.division_id);
       }
       if (filter?.reqStatus) {
-        formData.append("request_status", filter?.reqStatus.id);
+        formData.append('request_status', filter?.reqStatus.id);
       }
       if (filter?.from_date) {
-        formData.append("from_date", `${filter?.from_date} 00:00:00`);
+        formData.append('from_date', `${filter?.from_date} 00:00:00`);
       }
       if (filter?.to_date) {
-        formData.append("to_date", `${filter?.to_date} 23:59:59`);
+        formData.append('to_date', `${filter?.to_date} 23:59:59`);
       }
       if (filter?.sort_type) {
-        formData.append("sort_type", filter?.sort_type?.id);
+        formData.append('sort_type', filter?.sort_type?.id);
       }
       if (filter?.work_center) {
-        formData.append("work_center_id", filter?.work_center.work_center_id);
+        formData.append('work_center_id', filter?.work_center.work_center_id);
       }
-      formData.append("report_no", filter?.report_no || "");
+      formData.append('report_no', filter?.report_no || '');
       if (!filter) {
         setStateFilterData(null);
       }
       if (route?.params?.requestId) {
-        formData.append("request_id", route?.params?.requestId);
+        formData.append('request_id', route?.params?.requestId);
       }
 
       getServiceRequestListService(formData, page)
-        .then((res) => {
+        .then(res => {
           const response: ServiceRequestListApiResponseProps = res.data;
           if (response.status === 1) {
             if (page === 1) {
@@ -209,17 +209,14 @@ const ServiceRequest = ({ navigation, route }: any) =>
             } else {
               // if (isMount) {
 
-              setserviceRequestList((prev) => [
-                ...prev,
-                ...response.data?.items,
-              ]);
+              setserviceRequestList(prev => [...prev, ...response.data?.items]);
               // }
             }
           } else if (response.status === 0) {
             Toast.error(response.msg);
           }
         })
-        .catch((err) => {
+        .catch(err => {
           Toast.error(err.message);
         })
         .finally(() => {
@@ -236,24 +233,24 @@ const ServiceRequest = ({ navigation, route }: any) =>
       const data = {
         token,
         from_date: moment(new Date())
-          .subtract(1, "month")
-          .format("YYYY-MM-DD HH:mm:s"),
-        to_date: moment(new Date()).format("YYYY-MM-DD HH:mm:s"),
+          .subtract(1, 'month')
+          .format('YYYY-MM-DD HH:mm:s'),
+        to_date: moment(new Date()).format('YYYY-MM-DD HH:mm:s'),
       };
-      exportServiceRequestService(JSONtoformdata(data))
-        .then((res) => {
-          if (typeof res?.data === "string") {
+      exportServiceRequestService(ConvertJSONtoFormData(data))
+        .then(res => {
+          if (typeof res?.data === 'string') {
             downloadPdf(
               res?.data,
               `Service Request${moment(new Date()).format(
-                "YYYY-MM-DD hh:mm A"
+                'YYYY-MM-DD hh:mm A',
               )}`,
-              "pdf_download",
-              setisLoading
+              'pdf_download',
+              setisLoading,
             );
           }
         })
-        .catch((err) => getCatchMessage(err))
+        .catch(err => getCatchMessage(err))
         .finally(() => {
           dispatch(openLoader(false));
         });
@@ -285,16 +282,16 @@ const ServiceRequest = ({ navigation, route }: any) =>
         setisLoading(true);
       }
       let formData = new FormData();
-      formData.append("token", token);
-      formData.append("request_id", reqId);
+      formData.append('token', token);
+      formData.append('request_id', reqId);
       deleteServiceRequestService(formData)
-        .then((res) => {
+        .then(res => {
           const response: DeleteServiceRequestApiResposneProps = res.data;
 
           if (response.status === 1) {
             if (isMount) {
-              setserviceRequestList((prev) =>
-                [...prev].filter((ele) => ele.request_id !== reqId)
+              setserviceRequestList(prev =>
+                [...prev].filter(ele => ele.request_id !== reqId),
               );
             }
             Toast.success(response.msg);
@@ -302,7 +299,7 @@ const ServiceRequest = ({ navigation, route }: any) =>
             Toast.error(response.msg);
           }
         })
-        .catch((err) => {
+        .catch(err => {
           Toast.error(err.message);
         })
         .finally(() => {
@@ -317,27 +314,27 @@ const ServiceRequest = ({ navigation, route }: any) =>
       const data = {
         token,
       };
-      checkSubscriptionService(JSONtoformdata(data))
-        .then((res) => {
+      checkSubscriptionService(ConvertJSONtoFormData(data))
+        .then(res => {
           if (res?.data?.status) {
             const {
               is_subscription,
               available_machine_credits,
             }: ServiceRequestSubscriptionProps = res?.data;
             if (is_subscription === 1) {
-              navigation.navigate("ServiceRequestCreationStack", {
+              navigation.navigate('ServiceRequestCreationStack', {
                 isCreate: true,
               });
             } else {
               Toast.error(
-                "You do not have Subscription. Please subscribe to get access via web portal."
+                'You do not have Subscription. Please subscribe to get access via web portal.',
               );
             }
           } else {
             Toast.error(res?.data?.msg);
           }
         })
-        .catch((err) => getCatchMessage(err))
+        .catch(err => getCatchMessage(err))
         .finally(() => {
           setPermissionLoader(false);
         });
@@ -361,7 +358,7 @@ const ServiceRequest = ({ navigation, route }: any) =>
     };
 
     const handleCloseDelete = () => {
-      setIsShowDelete((pre) => ({ ...pre, status: false }));
+      setIsShowDelete(pre => ({...pre, status: false}));
     };
 
     return (
@@ -369,17 +366,16 @@ const ServiceRequest = ({ navigation, route }: any) =>
         isListLoading={isListLoader}
         secondaryHeaderTitle="Downtime SR"
         isShowSecondaryHeaderBtn
-        secondaryBtnTextStyle={{ fontSize: FONTSIZES.small }}
+        secondaryBtnTextStyle={{fontSize: FONTSIZES.small}}
         onHeaderBtnPress={() => {
           handleCheckAccessToAdd();
         }}
         headerProps={{
-          headerTitle: "Downtime SR",
+          headerTitle: 'Downtime SR',
         }}
         secondaryBtnTitle="Add Downtime SR"
         isLoading={isLoading}
-        isBtnLoading={permissionLoader}
-      >
+        isBtnLoading={permissionLoader}>
         {serviceRequestList?.length > 0 ? (
           <View style={CommonStyles.flexRow}>
             <CustomButton
@@ -387,8 +383,7 @@ const ServiceRequest = ({ navigation, route }: any) =>
                 setisShowFilter(true);
               }}
               type="secondary"
-              style={{ width: "30%", marginVertical: 8 }}
-            >
+              style={{width: '30%', marginVertical: 8}}>
               Filter
             </CustomButton>
             <CustomButton
@@ -396,28 +391,27 @@ const ServiceRequest = ({ navigation, route }: any) =>
                 handleExportService();
               }}
               type="export"
-              style={{ width: "30%", marginVertical: 8, marginLeft: 8 }}
-            >
+              style={{width: '30%', marginVertical: 8, marginLeft: 8}}>
               Export
             </CustomButton>
           </View>
         ) : null}
-        <View style={{ marginBottom: bottom, flex: 1 }}>
+        <View style={{marginBottom: bottom, flex: 1}}>
           <TableView
             rowData={[
-              { key: "equipment_id", label: "Machine Id" },
-              { key: "machine_name", label: "Machine Name" },
+              {key: 'equipment_id', label: 'Machine Id'},
+              {key: 'machine_name', label: 'Machine Name'},
               // {key: 'work_center_name', label: 'Work Center'},
-              { key: "division_description", label: "Division Id" },
-              { key: "machine_status_name", label: "Machine Status" },
+              {key: 'division_description', label: 'Division Id'},
+              {key: 'machine_status_name', label: 'Machine Status'},
               // {key: 'report_no', label: 'Report Number'},
-              { key: "date_of_error_occur", label: "Error Occurred At" },
-              { key: "requested_date", label: "Request Date" },
-              { key: "completed_date", label: "Completed Date" },
+              {key: 'date_of_error_occur', label: 'Error Occurred At'},
+              {key: 'requested_date', label: 'Request Date'},
+              {key: 'completed_date', label: 'Completed Date'},
               // {key: 'total_down_time', label: 'Total Down Time'},
-              { key: "request_status_name", label: "Request Status" },
+              {key: 'request_status_name', label: 'Request Status'},
             ]}
-            dataList={[...serviceRequestList]?.map((ele) => ({
+            dataList={[...serviceRequestList]?.map(ele => ({
               ...ele,
               disableEditIcon: ele?.request_status === 3 ? true : false,
               disableUpdateIcon: ele?.request_status === 3 ? true : false,
@@ -430,20 +424,20 @@ const ServiceRequest = ({ navigation, route }: any) =>
             actionsList={actionsList}
             onActionPress={(
               actionType: number,
-              val: ServiceRequestItemsProps
+              val: ServiceRequestItemsProps,
             ) => {
               if (actionType === 1) {
-                navigation.navigate("ServiceRequestCreationStack", {
+                navigation.navigate('ServiceRequestCreationStack', {
                   serviceReqData: val,
                   isView: true,
                 });
               } else if (actionType === 2) {
-                navigation.navigate("ServiceRequestCreationStack", {
+                navigation.navigate('ServiceRequestCreationStack', {
                   serviceReqData: val,
                   isServiceUpdate: true,
                 });
               } else if (actionType === 3) {
-                navigation.navigate("ServiceRequestCreationStack", {
+                navigation.navigate('ServiceRequestCreationStack', {
                   serviceReqData: val,
                   isUpdate: true,
                 });
@@ -466,8 +460,7 @@ const ServiceRequest = ({ navigation, route }: any) =>
           <GlobaModal
             title="Service Request Filter"
             visible={isShowFilter}
-            onClose={closeFilterModal}
-          >
+            onClose={closeFilterModal}>
             <ServiceRequestListFilterModal
               filterData={filterData}
               onApplyFilter={onApplyFilter}
@@ -481,8 +474,7 @@ const ServiceRequest = ({ navigation, route }: any) =>
         {isShowDelete?.status && (
           <GlobaModal
             visible={isShowDelete?.status}
-            onClose={handleCloseDelete}
-          >
+            onClose={handleCloseDelete}>
             <ConfirmationModal
               onClose={handleCloseDelete}
               visible={isShowDelete?.status}

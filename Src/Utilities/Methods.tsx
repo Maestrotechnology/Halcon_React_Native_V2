@@ -3,20 +3,20 @@ import {ObjectType} from '../Components/types';
 import store from '../Store/Store/Index';
 import {openLoader} from '../Store/Slices/LoaderSlice';
 
-export const JSONtoformdata = (object: any) => {
+export const ConvertJSONtoFormData = (obj: ObjectType, isFilter = true) => {
   const formData = new FormData();
-  for (const key in object) {
-    if (object[key] !== '') {
-      formData.append(
-        key,
-        typeof object[key] === 'string' ? object[key]?.trim() : object[key],
-      );
+  for (const key in obj) {
+    const value = obj[key];
+    if (
+      !isFilter ||
+      (value !== undefined && value !== null && value !== '' && value)
+    ) {
+      formData.append(key, typeof value === 'string' ? value.trim() : value);
     }
   }
 
   return formData;
 };
-
 export const secondsToMinutesAndSeconds = (millis: number) => {
   var minutes = Math.floor(millis / 60);
   var seconds = (millis % 60).toFixed(0);

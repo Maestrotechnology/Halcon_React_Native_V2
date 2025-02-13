@@ -21,7 +21,7 @@ import {
 import {storeUserSession} from '../../Utilities/SecureStorage';
 import Toast from '../../Components/Toast';
 import {getCatchMessage} from '../../Utilities/GeneralUtilities';
-import {JSONtoformdata} from '../../Utilities/Methods';
+import {ConvertJSONtoFormData} from '../../Utilities/Methods';
 import instance from '../../Services/Axios';
 import {FONTS} from '../../Utilities/Fonts';
 import CheckBox from '../../Components/CheckBox';
@@ -78,7 +78,7 @@ const Login = () => {
       device_id: '',
     };
 
-    loginService(JSONtoformdata(data))
+    loginService(ConvertJSONtoFormData(data))
       .then(res => {
         if (res?.data?.status) {
           instance.defaults.baseURL = `${res?.data?.base_url}/`;

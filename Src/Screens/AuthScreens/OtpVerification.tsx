@@ -7,7 +7,7 @@ import {useNavigation} from '@react-navigation/native';
 import CustomButton from '../../Components/CustomButton';
 import {useDispatch} from 'react-redux';
 import {resendOtpService, verifyOtpService} from '../../Services/Services';
-import {JSONtoformdata} from '../../Utilities/Methods';
+import {ConvertJSONtoFormData} from '../../Utilities/Methods';
 import Toast from '../../Components/Toast';
 import {
   getCatchMessage,
@@ -51,7 +51,7 @@ const OtpVerification = ({route, resetkey}: any) => {
       otp: values.otp,
     };
 
-    verifyOtpService(JSONtoformdata(data))
+    verifyOtpService(ConvertJSONtoFormData(data))
       .then(res => {
         if (res?.data?.status) {
           Toast.success(res?.data?.msg);
@@ -74,7 +74,7 @@ const OtpVerification = ({route, resetkey}: any) => {
     const data = {
       reset_key: resetKey,
     };
-    resendOtpService(JSONtoformdata(data))
+    resendOtpService(ConvertJSONtoFormData(data))
       .then(res => {
         if (res?.data?.status) {
           Toast.success(res?.data?.msg);

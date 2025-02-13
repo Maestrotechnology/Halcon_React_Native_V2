@@ -2,7 +2,7 @@ import {StyleSheet} from 'react-native';
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
-  UserScreenScreensNavigationProps,
+  UserScreensNavigationProps,
   UserStackStackParamList,
 } from '../@types/navigation';
 import UserList from '../Screens/HomeScreens/UserManagement/UserList';
@@ -11,7 +11,7 @@ import AddEditUser from '../Screens/HomeScreens/UserManagement/AddEditUser';
 
 const Stack = createNativeStackNavigator<UserStackStackParamList>();
 
-const UserManagementStack = ({route}: UserScreenScreensNavigationProps) => {
+const UserManagementStack = ({route}: UserScreensNavigationProps) => {
   return (
     <Stack.Navigator
       screenOptions={{

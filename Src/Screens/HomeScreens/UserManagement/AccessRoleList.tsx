@@ -36,7 +36,7 @@ import ServiceRequestListFilterModal from '../../../Modals/Filter/ServiceRequest
 import ConfirmationModal from '../../../Modals/ConfirmationModal';
 import {CommonStyles} from '../../../Utilities/CommonStyles';
 import moment from 'moment';
-import {JSONtoformdata} from '../../../Utilities/Methods';
+import {ConvertJSONtoFormData} from '../../../Utilities/Methods';
 import {useDispatch} from 'react-redux';
 import {openLoader} from '../../../Store/Slices/LoaderSlice';
 
@@ -237,7 +237,7 @@ const AccessRoleList = ({navigation, route}: any) =>
           .format('YYYY-MM-DD HH:mm:s'),
         to_date: moment(new Date()).format('YYYY-MM-DD HH:mm:s'),
       };
-      exportServiceRequestService(JSONtoformdata(data))
+      exportServiceRequestService(ConvertJSONtoFormData(data))
         .then(res => {
           if (typeof res?.data === 'string') {
             downloadPdf(
@@ -314,7 +314,7 @@ const AccessRoleList = ({navigation, route}: any) =>
       const data = {
         token,
       };
-      checkSubscriptionService(JSONtoformdata(data))
+      checkSubscriptionService(ConvertJSONtoFormData(data))
         .then(res => {
           if (res?.data?.status) {
             const {

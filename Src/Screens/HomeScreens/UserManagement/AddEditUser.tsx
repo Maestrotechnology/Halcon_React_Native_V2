@@ -1,11 +1,10 @@
 import {RouteProp, useIsFocused, useRoute} from '@react-navigation/native';
 import {
-  UserScreenScreensNavigationProps,
+  UserScreensNavigationProps,
   UserStackStackParamList,
 } from '../../../@types/navigation';
 import {GetUserData, UseToken} from '../../../Utilities/StoreData';
-import StyledText from '../../../Components/StyledText';
-import {FONTS} from '../../../Utilities/Fonts';
+
 import {
   COLORS,
   EMAIL_REGEX,
@@ -24,6 +23,7 @@ import {CreateUserService, UpdateUserService} from '../../../Services/Services';
 import {FilterValidObj, isLoading} from '../../../Utilities/Methods';
 import Toast from '../../../Components/Toast';
 import {getCatchMessage} from '../../../Utilities/GeneralUtilities';
+import {UserAddEditDataProps} from '../../../@types/apirequestDatas';
 const UserValidation = Yup.object().shape({
   isupdate: Yup.boolean(),
   name: Yup.string().trim().required('* Name is required.'),
@@ -56,7 +56,7 @@ const UserValidation = Yup.object().shape({
   role_id: Yup.mixed().required('* Role is required'),
 });
 
-const AddEditUser = ({navigation}: UserScreenScreensNavigationProps) => {
+const AddEditUser = ({navigation}: UserScreensNavigationProps) => {
   const focused = useIsFocused();
   const userData = GetUserData();
   const token = UseToken();
@@ -68,7 +68,7 @@ const AddEditUser = ({navigation}: UserScreenScreensNavigationProps) => {
   const {type} = route?.params;
 
   const {values, errors, touched, setFieldValue, handleSubmit, setValues} =
-    useFormik({
+    useFormik<UserAddEditDataProps>({
       initialValues: {
         isupdate: false,
         name: '',
@@ -147,6 +147,7 @@ const AddEditUser = ({navigation}: UserScreenScreensNavigationProps) => {
     const updateData = route?.params?.lineData;
 
     setValues({
+      password: '',
       isupdate: true,
       name: updateData?.name || '',
       username: updateData?.username || '',
@@ -236,6 +237,7 @@ const AddEditUser = ({navigation}: UserScreenScreensNavigationProps) => {
           onSelect={val => {
             setFieldValue('role_id', val);
           }}
+          isEnableRightIcon={type !== 'View'}
           isDisabled={!isEditable}
           isRequired
           errorText={errors.role_id && touched.role_id ? errors.role_id : ''}

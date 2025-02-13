@@ -45,6 +45,7 @@ const TableView = ({
   checkedKey,
   onCheckPress,
   customRenderer,
+  onChangeStatus,
 }: TableViewProps) => {
   const isScrollBeginRef = useRef(true);
   const columnWidth: number =
@@ -200,7 +201,9 @@ const TableView = ({
                           </StyledText>
                         )}
                         <CommonSwitch
-                          onChangeSwitch={() => {}}
+                          onChangeSwitch={status => {
+                            onChangeStatus?.(status ? 1 : 0, item);
+                          }}
                           isEnabled={item?.[cardItem?.key]}
                         />
                       </View>

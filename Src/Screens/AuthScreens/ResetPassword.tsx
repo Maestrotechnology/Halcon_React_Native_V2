@@ -11,7 +11,7 @@ import Toast from '../../Components/Toast';
 import {getCatchMessage} from '../../Utilities/GeneralUtilities';
 import AuthHocView from '../../Components/AuthHocView';
 import {useNavigation} from '@react-navigation/native';
-import {JSONtoformdata} from '../../Utilities/Methods';
+import {ConvertJSONtoFormData} from '../../Utilities/Methods';
 import {openLoader} from '../../Store/Slices/LoaderSlice';
 import StyledText from '../../Components/StyledText';
 
@@ -48,7 +48,7 @@ const ResetPassword = ({route}: any) => {
       new_password: values.new_password,
     };
 
-    resetPasswordService(JSONtoformdata(data))
+    resetPasswordService(ConvertJSONtoFormData(data))
       .then(res => {
         if (res?.data?.status) {
           Toast.success(res?.data?.msg);
