@@ -286,3 +286,17 @@ export const UpdateTasksService = (data: FormData) => {
 export const deleteTasksService = (data: FormData) => {
   return axios.post('/masters/delete_task', data);
 };
+// Policy
+
+export const listPolicyService = (data: FormData, page: number) => {
+  return axios.post(`/masters/listPolicy?page=${page}&size=20`, data);
+};
+
+export const UpdatePlicyService = (data: FormData) => {
+  return axios.post(`/masters/updatePolicy`, data);
+};
+
+// Dropdown Lists
+export const RoleDropdownListService = (data: FormData) => {
+  return axios.post('dropdown/dropdown_role', data);
+};

@@ -1,29 +1,26 @@
 import {StyleSheet, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {UseToken} from '../../../../Utilities/StoreData';
+import {UseToken} from '../../../Utilities/StoreData';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useIsFocused} from '@react-navigation/native';
-import {TaskListDataProps} from '../../../../@types/api';
-import {actionListProps} from '../../../../Components/types';
-import {TaskListFilterProps} from '../../../../@types/modals';
-import {
-  deleteTasksService,
-  listTasksService,
-} from '../../../../Services/Services';
-import {getCatchMessage} from '../../../../Utilities/GeneralUtilities';
-import Toast from '../../../../Components/Toast';
-import HOCView from '../../../../Components/HOCView';
-import {FONTSIZES} from '../../../../Utilities/Constants';
-import {CommonStyles} from '../../../../Utilities/CommonStyles';
-import CustomButton from '../../../../Components/CustomButton';
-import TableView from '../../../../Components/TableView';
-import GlobaModal from '../../../../Components/GlobalModal';
-import ConfirmationModal from '../../../../Modals/ConfirmationModal';
-import TaskListFilterModal from '../../../../Modals/Filter/TaskListFilterModal';
-import {addEdittaskProps} from '../../../../@types/general';
-import AddEditTaskModal from '../../../../Modals/ModifyModals/AddEditTaskModal';
-import {MastersStackNavigationProps} from '../../../../@types/navigation';
-import {ApiResponse, DeleteApiResposneProps} from '../../../../@types/Global';
+import {TaskListDataProps} from '../../../@types/api';
+import {actionListProps} from '../../../Components/types';
+import {TaskListFilterProps} from '../../../@types/modals';
+import {deleteTasksService, listTasksService} from '../../../Services/Services';
+import {getCatchMessage} from '../../../Utilities/GeneralUtilities';
+import Toast from '../../../Components/Toast';
+import HOCView from '../../../Components/HOCView';
+import {FONTSIZES} from '../../../Utilities/Constants';
+import {CommonStyles} from '../../../Utilities/CommonStyles';
+import CustomButton from '../../../Components/CustomButton';
+import TableView from '../../../Components/TableView';
+import GlobaModal from '../../../Components/GlobalModal';
+import ConfirmationModal from '../../../Modals/ConfirmationModal';
+import TaskListFilterModal from '../../../Modals/Filter/TaskListFilterModal';
+import {addEdittaskProps} from '../../../@types/general';
+import AddEditTaskModal from '../../../Modals/ModifyModals/AddEditTaskModal';
+import {MastersStackNavigationProps} from '../../../@types/navigation';
+import {ApiResponse, DeleteApiResposneProps} from '../../../@types/Global';
 
 var isMount = true;
 var currentPage = 1;

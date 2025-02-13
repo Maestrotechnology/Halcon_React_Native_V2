@@ -5,7 +5,8 @@ import {
   MastersStackNavigationProps,
   MasterStackStackParamList,
 } from '../@types/navigation';
-import TasksList from '../Screens/HomeScreens/Masters/PeriodicTasks/Tasks';
+import TasksList from '../Screens/HomeScreens/Masters/Tasks';
+import Policy from '../Screens/HomeScreens/Masters/Policy';
 
 const Stack = createNativeStackNavigator<MasterStackStackParamList>();
 
@@ -17,6 +18,7 @@ const MastersStack = ({route, navigation}: MastersStackNavigationProps) => {
         animation: 'fade',
       }}>
       <Stack.Screen name="TasksList" component={TasksList} />
+      <Stack.Screen name="Policy" component={Policy} />
     </Stack.Navigator>
   );
 };

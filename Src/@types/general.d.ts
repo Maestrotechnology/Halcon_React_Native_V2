@@ -10,6 +10,7 @@ import {IconType} from '../Utilities/Icons';
 import {
   DashboardChartDetailsApiResponseProps,
   DashboardChartProps,
+  PolicyListDataProps,
   TaskDetailsDataItemsProps,
   TaskDetailsListDataProps,
   TaskListDataProps,
@@ -110,6 +111,8 @@ export interface CustomHeaderProps {
   onRightIconPress?: () => void;
   isRightIconEnable?: boolean;
   containerStyle?: StyleProp<ViewStyle>;
+  isEnableTickIcon?: boolean;
+  onPressTickIcon?: () => void;
 }
 
 export type StyledTextProps = {
@@ -163,6 +166,10 @@ export interface DropdownBoxProps
   onIconPress?: () => void;
   isEnableRightIcon?: boolean;
   bigListProps?: SearchDropdownBoxModalProps;
+  ContainerStyle?: StyleProp<ViewStyle>;
+  multiSelect?: boolean;
+  uniqueKey?: 'role_id';
+  onMultipleSelect?: (item: any[]) => void;
 }
 
 export type TextInputBoxProps = {
@@ -312,5 +319,10 @@ export type ColorPickerModalProps = {
 export type addEdittaskProps = {
   type: 'Create' | 'Update' | 'View' | '';
   lineData: TaskListDataProps | null;
+  show: boolean;
+};
+
+export type UpdatePolicyProps = {
+  lineData: PolicyListDataProps | null;
   show: boolean;
 };

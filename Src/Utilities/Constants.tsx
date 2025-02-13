@@ -21,9 +21,10 @@ export const COLORS = {
   orange: '#F25922',
   white: '#FFF9F8',
   black: '#262626',
+  // darkBlue: '#1a2c41',
   gray: '#3E4751',
   blue: '#0E69B1',
-  darkBlue: '#1A2C41',
+  darkBlue: '#1a2c41',
   backgroundColor: '#F7E4DD',
   lightWhite: '#D1CBCE',
   hashColor: '#878484',
@@ -153,3 +154,21 @@ export const INPUT_SIZE = {
   Notes: 100,
   Unit: 100,
 };
+
+export const PolicyColorList = [
+  {
+    backgroundColor: '#ffe4cc',
+    borderColor: '#ffb38a',
+    color: '##dd763e',
+  },
+  {
+    backgroundColor: '#d8ffdb',
+    borderColor: '#93ffb0',
+    color: '#008022',
+  },
+  {
+    backgroundColor: '#d8f9ff',
+    borderColor: '#83eeef',
+    color: '#007071',
+  },
+];

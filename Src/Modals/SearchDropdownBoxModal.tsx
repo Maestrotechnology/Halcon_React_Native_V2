@@ -26,7 +26,11 @@ import {
   getWorkCenterDropdownListService,
 } from '../Services/Services';
 import Toast from '../Components/Toast';
-import {MachineDropdownListApiResponseProps} from '../@types/api';
+import {
+  MachineDropdownListApiResponseProps,
+  RoleItemProps,
+} from '../@types/api';
+import {ObjectType} from '../Components/types';
 
 var isMount = true;
 var currentPage = 1;
@@ -44,6 +48,10 @@ const SearchDropdownBoxModal = ({
   onClose,
   onSelect,
   fieldName,
+  multiSelect = false,
+  value,
+  uniqueKey,
+  onMultipleSelect,
 }: SearchDropdownBoxModalProps) => {
   const token = UseToken();
   const isScrollBeginRef = useRef<boolean>(true);
@@ -54,6 +62,9 @@ const SearchDropdownBoxModal = ({
   const [optionsList, setoptionsList] = useState<any[]>([...options]);
   const [isEndRefreshing, setisEndReached] = useState<boolean>(false);
   const [isRefresh, setisRefresh] = useState<boolean>(false);
+  const [selectedValues, setSelectedValues] = useState(
+    multiSelect ? [...value] : value,
+  );
   const [isListLoading, setisListLoading] = useState<boolean>(
     apiType ? true : false,
   );
@@ -100,10 +111,15 @@ const SearchDropdownBoxModal = ({
     getRoleDropdownListService(formData)
       .then(res => {
         const response = res.data;
+
         if (response.status === 1) {
           if (isMount) {
-            setoptionsList(response.data || []);
-            globalDataList.current = response.data || [];
+            let finalList = response?.data?.map((item: RoleItemProps) => ({
+              ...item,
+              unique_id: item?.role_id,
+            }));
+            setoptionsList(finalList || []);
+            globalDataList.current = finalList || [];
           }
         } else if (response.status === 0) {
           Toast.error(response.msg);
@@ -268,15 +284,43 @@ const SearchDropdownBoxModal = ({
     item,
     index,
   }: SearchDropdownBoxModalRenderOptionsProps) => {
+    const handleSelectItem = (item: any) => {
+      if (multiSelect) {
+        if (
+          selectedValues?.find(
+            (elem: ObjectType) =>
+              elem?.[`${uniqueKey}`] === item?.[`${uniqueKey}`],
+          )
+        ) {
+          setSelectedValues(
+            selectedValues?.filter(
+              (data: ObjectType) =>
+                data?.[`${uniqueKey}`] !== item?.[`${uniqueKey}`],
+            ),
+          );
+        } else {
+          setSelectedValues((pre: any) => [...pre, item]);
+        }
+      } else {
+        if (onSelect) onSelect(item);
+        if (onClose) onClose();
+      }
+    };
     return (
       <TouchableOpacity
         onPress={() => {
-          if (onSelect) onSelect(item);
-          if (onClose) onClose();
+          handleSelectItem(item);
         }}
         style={{
           padding: 8,
-          backgroundColor: COLORS.white,
+          backgroundColor: multiSelect
+            ? selectedValues?.some(
+                (elem: ObjectType) =>
+                  elem?.[`${uniqueKey}`] === item?.[`${uniqueKey}`],
+              )
+              ? COLORS.orange
+              : COLORS.white
+            : COLORS.white,
           marginVertical: 7,
           borderRadius: 8,
           ...BOX_SHADOW,
@@ -285,6 +329,12 @@ const SearchDropdownBoxModal = ({
         <StyledText>{item[fieldName]}</StyledText>
       </TouchableOpacity>
     );
+  };
+
+  const handleMultipleSelectedDatas = () => {
+    if (onMultipleSelect) onMultipleSelect(selectedValues);
+
+    if (onClose) onClose();
   };
 
   return (
@@ -296,6 +346,10 @@ const SearchDropdownBoxModal = ({
           if (onClose) onClose();
         },
         isRightIconEnable: false,
+        isEnableTickIcon: multiSelect,
+        onPressTickIcon: () => {
+          handleMultipleSelectedDatas();
+        },
       }}
       isShowSecondaryHeader={false}
       paddingVertical={5}

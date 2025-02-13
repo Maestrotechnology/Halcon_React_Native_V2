@@ -722,9 +722,23 @@ export interface UserRequestListDataProps {
   user_id: number;
   username: string;
 }
+// Task List
 export interface TaskListDataProps {
   task_id: number | null;
   task_name: string;
   control_key?: string;
   created_at?: string;
+}
+// Policy List
+export interface PolicyListDataProps {
+  id: number;
+  type: number;
+  policy_type?: number;
+  description: string;
+  variable_value?: string;
+  role: Role[];
+}
+export interface RoleItemProps {
+  role_id: number;
+  role_name: string;
 }

@@ -131,7 +131,7 @@ const CustomDrawerNavigation = ({
         {
           id: 33,
           displayName: 'Policy',
-          navigate: 'Dashboard',
+          navigate: 'Policy',
           leftIcon: 'RoleIcon',
           activeIcon: 'RoleIcon',
           isVisible: true,

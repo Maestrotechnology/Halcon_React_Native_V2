@@ -62,6 +62,7 @@ export type UserStackStackParamList = {
 };
 export type MasterStackStackParamList = {
   TasksList: undefined;
+  Policy: undefined;
 };
 
 export type PreventiveSRStackParamList = {

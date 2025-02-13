@@ -7,6 +7,7 @@ import SVGIcon from './SVGIcon';
 import ItemSelectionMiniList from './ItemSelectionMiniList';
 import {DropdownBoxProps} from '../@types/general';
 import SearchDropdownBoxModal from '../Modals/SearchDropdownBoxModal';
+import {ObjectType} from './types';
 
 const DropdownBox = ({
   value,
@@ -34,6 +35,10 @@ const DropdownBox = ({
   isEnableRightIcon = true,
   isLocalSearch = false,
   bigListProps,
+  ContainerStyle,
+  multiSelect = false,
+  uniqueKey,
+  onMultipleSelect,
 }: DropdownBoxProps) => {
   const [isOpenModal, setisOpenModal] = useState<boolean>(false);
 
@@ -43,7 +48,9 @@ const DropdownBox = ({
 
   const getValue = () => {
     if (value) {
-      if (fieldName) {
+      if (multiSelect) {
+        return value?.map((item: ObjectType) => item?.[fieldName])?.toString();
+      } else if (fieldName) {
         return value[fieldName];
       }
       return value;
@@ -68,6 +75,7 @@ const DropdownBox = ({
           disabled={isDisabled}
           style={[
             styles.inputContainer,
+            ContainerStyle,
             {
               backgroundColor: COLORS.white,
               borderColor: errorText ? COLORS.red : COLORS.primary,
@@ -142,12 +150,16 @@ const DropdownBox = ({
             onClose={() => {
               setisOpenModal(false);
             }}
+            multiSelect={multiSelect}
             onSelect={value => {
               if (onSelect) {
                 onSelect(value);
               }
               setisOpenModal(false);
             }}
+            onMultipleSelect={onMultipleSelect}
+            uniqueKey={uniqueKey}
+            value={value}
             {...bigListProps}
           />
         )}

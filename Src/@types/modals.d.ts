@@ -17,6 +17,10 @@ export interface SearchDropdownBoxModalProps {
   onClose?: () => void;
   onSelect?: (val: any) => void;
   fieldName?: string;
+  multiSelect?: boolean;
+  value?: any;
+  uniqueKey?: 'role_id';
+  onMultipleSelect?: (items: any[]) => void;
 }
 
 export type FilterModalProps<T> = {
