@@ -1,27 +1,30 @@
 import {StyleSheet, View} from 'react-native';
 import React, {useEffect} from 'react';
+import * as Yup from 'yup';
 import {useFormik} from 'formik';
 import CustomButton from '../../Components/CustomButton';
 import TextInputBox from '../../Components/TextInputBox';
 import {COLORS, INPUT_SIZE} from '../../Utilities/Constants';
 import {ConvertJSONtoFormData, isLoading} from '../../Utilities/Methods';
-import {CreateTasksService, UpdateTasksService} from '../../Services/Services';
+import {
+  CreateWorkCenterService,
+  UpdateWorkCenterService,
+} from '../../Services/Services';
 import {getCatchMessage} from '../../Utilities/GeneralUtilities';
 import Toast from '../../Components/Toast';
 import {UseToken} from '../../Utilities/StoreData';
-import {TaskListDataProps} from '../../@types/api';
-import * as Yup from 'yup';
 import {AddEditModalProps} from '../../@types/Global';
+import {WorkCenterListFilterProps} from '../../@types/modals';
 
 const validationSchema = Yup.object().shape({
-  task_name: Yup.string().trim().required('* Task Name is required.'),
+  name: Yup.string().trim().required('* Work Center Name is required.'),
 });
-const AddEditTaskModal = ({
+const AddEditWorkCenterModal = ({
   onApplyChanges,
   onClose,
   type,
   lineData,
-}: AddEditModalProps<TaskListDataProps>) => {
+}: AddEditModalProps<WorkCenterListFilterProps>) => {
   const token = UseToken();
   const {
     setFieldValue,
@@ -32,30 +35,28 @@ const AddEditTaskModal = ({
     initialValues,
     errors,
     touched,
-  } = useFormik<TaskListDataProps>({
+  } = useFormik<WorkCenterListFilterProps>({
     initialValues: {
-      task_id: lineData?.task_id || 0,
-      task_name: '',
-      control_key: '',
+      name: '',
     },
     validationSchema,
     onSubmit(values) {
       if (type === 'Create') {
-        handleAddTask(values);
+        handleAddWorkCenter(values);
       } else if (type === 'Update') {
-        handleUpdateTask(values);
+        handleUpdateWorkCenter(values);
       }
     },
   });
 
-  const handleAddTask = (values: any) => {
+  const handleAddWorkCenter = (values: WorkCenterListFilterProps) => {
     isLoading(true);
     let finalObj = {
       ...values,
       token: token,
     };
 
-    CreateTasksService(ConvertJSONtoFormData(finalObj))
+    CreateWorkCenterService(ConvertJSONtoFormData(finalObj))
       .then(async res => {
         if (res.data.status === 1) {
           Toast.success(res?.data?.msg);
@@ -72,15 +73,14 @@ const AddEditTaskModal = ({
   };
 
   // update user
-  const handleUpdateTask = (values: any) => {
+  const handleUpdateWorkCenter = (values: WorkCenterListFilterProps) => {
     isLoading(true);
     let finalObj = {
       ...values,
       token: token,
-      task_id: lineData?.task_id,
     };
 
-    UpdateTasksService(ConvertJSONtoFormData(finalObj))
+    UpdateWorkCenterService(ConvertJSONtoFormData(finalObj))
       .then(async res => {
         if (res.data.status === 1) {
           Toast.success(res?.data?.msg);
@@ -106,9 +106,9 @@ const AddEditTaskModal = ({
   return (
     <View>
       <TextInputBox
-        value={values?.task_name}
+        value={values?.name}
         onChangeText={(val: string) => {
-          setFieldValue('task_name', val);
+          setFieldValue('name', val);
         }}
         customInputBoxContainerStyle={{
           borderColor: COLORS.primary,
@@ -117,28 +117,12 @@ const AddEditTaskModal = ({
           maxLength: INPUT_SIZE.Name,
         }}
         isRequired
-        placeHolder="Enter Task Name"
-        title="Task Name"
+        placeHolder="Enter Work Center Name"
+        title="Work Center Name"
         isEditable={type !== 'View'}
-        errorText={
-          errors?.task_name && touched?.task_name ? errors?.task_name : ''
-        }
+        errorText={errors?.name && touched?.name ? errors?.name : ''}
       />
-      <TextInputBox
-        value={values?.control_key}
-        onChangeText={(val: string) => {
-          setFieldValue('control_key', val);
-        }}
-        customInputBoxContainerStyle={{
-          borderColor: COLORS.primary,
-        }}
-        textInputProps={{
-          maxLength: INPUT_SIZE.Fifty,
-        }}
-        placeHolder="Enter Control Key"
-        title="Control Key"
-        isEditable={type !== 'View'}
-      />
+
       <View
         style={{
           flexDirection: 'row',
@@ -166,6 +150,6 @@ const AddEditTaskModal = ({
   );
 };
 
-export default AddEditTaskModal;
+export default AddEditWorkCenterModal;
 
 const styles = StyleSheet.create({});

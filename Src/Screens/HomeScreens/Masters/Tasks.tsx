@@ -17,7 +17,7 @@ import TableView from '../../../Components/TableView';
 import GlobaModal from '../../../Components/GlobalModal';
 import ConfirmationModal from '../../../Modals/ConfirmationModal';
 import TaskListFilterModal from '../../../Modals/Filter/TaskListFilterModal';
-import {addEdittaskProps} from '../../../@types/general';
+import {AddEdittaskProps} from '../../../@types/general';
 import AddEditTaskModal from '../../../Modals/ModifyModals/AddEditTaskModal';
 import {MastersStackNavigationProps} from '../../../@types/navigation';
 import {ApiResponse, DeleteApiResposneProps} from '../../../@types/Global';
@@ -55,7 +55,7 @@ const TasksList = ({route}: MastersStackNavigationProps) => {
     task_name: '',
   });
   const [isShowFilter, setisShowFilter] = useState<boolean>(false);
-  const [addEdittask, setAddEditTask] = useState<addEdittaskProps>({
+  const [addEdittask, setAddEditTask] = useState<AddEdittaskProps>({
     type: '',
     lineData: null,
     show: false,

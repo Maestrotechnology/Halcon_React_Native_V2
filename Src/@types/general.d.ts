@@ -316,7 +316,7 @@ export type ColorPickerModalProps = {
   title?: string;
 };
 
-export type addEdittaskProps = {
+export type AddEdittaskProps = {
   type: 'Create' | 'Update' | 'View' | '';
   lineData: TaskListDataProps | null;
   show: boolean;

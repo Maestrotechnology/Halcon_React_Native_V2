@@ -35,13 +35,17 @@ const CheckBox = ({
         }}>
         <ICONS.doneIcon height={18} fill={COLORS.white} />
       </TouchableOpacity>
-      <StyledText
+      <Text
+        ellipsizeMode="tail"
+        numberOfLines={3}
         style={{
+          flexWrap: 'wrap',
           fontSize: 12,
           color: '#494c50',
+          width: '90%',
         }}>
         {label}
-      </StyledText>
+      </Text>
     </View>
   );
 };
@@ -62,6 +66,6 @@ const styles = StyleSheet.create({
   checkBoxViewContainer: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
 });

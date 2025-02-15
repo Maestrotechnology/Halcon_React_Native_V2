@@ -60,10 +60,7 @@ const AddEditUser = ({navigation}: UserScreensNavigationProps) => {
   const focused = useIsFocused();
   const userData = GetUserData();
   const token = UseToken();
-  const route =
-    useRoute<
-      RouteProp<UserStackStackParamList, keyof UserStackStackParamList>
-    >();
+  const route = useRoute<RouteProp<UserStackStackParamList, 'AddEditUser'>>();
   // @ts-ignore
   const {type} = route?.params;
 

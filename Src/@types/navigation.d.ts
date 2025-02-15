@@ -1,6 +1,8 @@
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
+  AccessRoleListDataProps,
+  MaterialListDataProps,
   ServiceRequestItemsProps,
   TaskDetailsDataItemsProps,
   UserRequestListDataProps,
@@ -51,20 +53,34 @@ export type ServiceRequestStackParamList = {
   ServiceRequest: undefined;
   ServiceRequestCreationStack: ServiceRequestCreationStackParamsDataProps;
 };
-export type AddEditUserNavigationProps = {
-  type: 'Create' | 'Update' | 'View';
-  lineData?: UserRequestListDataProps;
-};
 export type UserStackStackParamList = {
   UserList: undefined;
   AddEditUser: AddEditUserNavigationProps;
   AccessRoleList: undefined;
+  AddEditRole: AddEditRoleNavigationProps;
+};
+export type AddEditUserNavigationProps = {
+  type: 'Create' | 'Update' | 'View';
+  lineData?: UserRequestListDataProps;
+};
+export type AddEditRoleNavigationProps = {
+  type: 'Create' | 'Update' | 'View';
+  lineData?: AccessRoleListDataProps;
 };
 export type MasterStackStackParamList = {
   TasksList: undefined;
   Policy: undefined;
+  Division: undefined;
+  Material: undefined;
+  WorkCenter: undefined;
+  Holiday: undefined;
+  AddEditMaterial: AddEditMaterialNavigationProps;
 };
 
+export type AddEditMaterialNavigationProps = {
+  type: 'Create' | 'Update' | 'View';
+  lineData?: MaterialListDataProps;
+};
 export type PreventiveSRStackParamList = {
   PreventiveSR: undefined;
   UpdatePreventiveRequest: undefined;

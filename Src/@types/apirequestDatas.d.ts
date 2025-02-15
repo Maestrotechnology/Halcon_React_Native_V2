@@ -11,3 +11,8 @@ export type UserAddEditDataProps = {
   city: string;
   country: string;
 };
+
+export type AccessAddEditDataProps = {
+  name: string;
+  description: string;
+};

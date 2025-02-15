@@ -65,7 +65,10 @@ export const addPreventiveRequestService = (data: any) => {
   });
 };
 export const getPreventiveSRListService = (data: FormData, page: number) => {
-  return axios.post(`list_preventive?page=${page}&size=${'20'}`, data);
+  return axios.post(
+    `service_request/list_preventive?page=${page}&size=${'20'}`,
+    data,
+  );
 };
 
 export const viewPreventiveSRService = (
@@ -127,15 +130,15 @@ export const exportServiceRequestService = (data: FormData) => {
 };
 
 export const getServiceRequestListService = (data: FormData, page: number) => {
-  return axios.post(`list_request?page=${page}&size=10`, data);
+  return axios.post(`service_request/list_request?page=${page}&size=10`, data);
 };
 
 export const deleteServiceRequestService = (data: FormData) => {
-  return axios.post('delete_request', data);
+  return axios.post('service_request/delete_request', data);
 };
 
 export const createServiceRequestService = (data: any) => {
-  return axios.post('/create_request', data, {
+  return axios.post('service_request/create_request', data, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -143,7 +146,7 @@ export const createServiceRequestService = (data: any) => {
 };
 
 export const updateServiceRequestService = (data: any) => {
-  return axios.post('update_request', data, {
+  return axios.post('service_request/update_request', data, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -186,7 +189,7 @@ export const createTaskDetailService = (data: any) => {
   });
 };
 
-export const updateTaskDetailService = (data: any) => {
+export const updateTaskDetailService = (data: ObjectType) => {
   return axios.post('edit_intervention', data, JSONHeaderType);
 };
 
@@ -270,6 +273,29 @@ export const ChangeStatusUserService = (data: FormData) => {
   return axios.post('/user/update_status', data);
 };
 
+// Access Roles
+
+export const listAccessRoleService = (data: FormData, page: number) => {
+  return axios.post(`/user/list_role?page=${page}&size=20`, data);
+};
+
+export const CreateAccessRoleService = (data: ObjectType) => {
+  return axios.post(`/user/create_role`, data, JSONHeaderType);
+};
+
+export const UpdateAccessRoleService = (data: ObjectType) => {
+  return axios.post(`/user/update_role`, data, JSONHeaderType);
+};
+export const ViewAccessRoleService = (data: ObjectType) => {
+  return axios.post(`/user/view_role`, data);
+};
+export const deleteAccessRoleService = (data: FormData) => {
+  return axios.post('/user/delete_role', data);
+};
+// export const ChangeStatusAccessRoleService = (data: FormData) => {
+//   return axios.post('/user/update_status', data);
+// };
+
 // Task
 
 export const listTasksService = (data: FormData, page: number) => {
@@ -295,7 +321,71 @@ export const listPolicyService = (data: FormData, page: number) => {
 export const UpdatePlicyService = (data: FormData) => {
   return axios.post(`/masters/updatePolicy`, data);
 };
+// Division
 
+export const listDivisionService = (data: FormData, page: number) => {
+  return axios.post(`/masters/list_divisions?page=${page}&size=20`, data);
+};
+
+export const CreateDivisionService = (data: FormData) => {
+  return axios.post(`/masters/create_division`, data);
+};
+
+export const UpdateDivisionService = (data: FormData) => {
+  return axios.post(`/masters/update_division`, data);
+};
+export const deleteDivisionService = (data: FormData) => {
+  return axios.post('/masters/delete_division', data);
+};
+// Meterial List
+
+export const listMaterialService = (data: FormData, page: number) => {
+  return axios.post(`/masters/list_materials?page=${page}&size=20`, data);
+};
+
+export const CreateMaterialService = (data: ObjectType) => {
+  return axios.post(`/masters/add_material`, data, JSONHeaderType);
+};
+
+export const UpdateMaterialService = (data: ObjectType) => {
+  return axios.post(`/masters/edit_material`, data, JSONHeaderType);
+};
+export const deleteMaterialService = (data: FormData) => {
+  return axios.post('/masters/delete_material', data);
+};
+// Meterial List
+
+export const listWorkCenterService = (data: FormData, page: number) => {
+  return axios.post(`/masters/list_work_center?page=${page}&size=20`, data);
+};
+
+export const CreateWorkCenterService = (data: ObjectType) => {
+  return axios.post(`/masters/create_work_center`, data);
+};
+
+export const UpdateWorkCenterService = (data: ObjectType) => {
+  return axios.post(`/masters/edit_work_center`, data);
+};
+export const deleteWorkCenterService = (data: FormData) => {
+  return axios.post('/masters/delete_work_center', data);
+};
+
+// Holiday List
+
+export const listSpecialHolidayService = (data: FormData, page: number) => {
+  return axios.post(`/masters/list_special_holiday?page=${page}&size=20`, data);
+};
+
+export const CreateSpecialHolidayService = (data: ObjectType) => {
+  return axios.post(`/masters/add_special_holiday`, data);
+};
+
+export const UpdateSpecialHolidayService = (data: ObjectType) => {
+  return axios.post(`/masters/update_specialholiday`, data);
+};
+export const deleteSpecialHolidayService = (data: FormData) => {
+  return axios.post('/masters/delete_specialholiday', data);
+};
 // Dropdown Lists
 export const RoleDropdownListService = (data: FormData) => {
   return axios.post('dropdown/dropdown_role', data);

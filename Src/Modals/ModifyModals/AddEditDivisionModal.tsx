@@ -1,27 +1,30 @@
 import {StyleSheet, View} from 'react-native';
 import React, {useEffect} from 'react';
+import * as Yup from 'yup';
 import {useFormik} from 'formik';
 import CustomButton from '../../Components/CustomButton';
 import TextInputBox from '../../Components/TextInputBox';
 import {COLORS, INPUT_SIZE} from '../../Utilities/Constants';
 import {ConvertJSONtoFormData, isLoading} from '../../Utilities/Methods';
-import {CreateTasksService, UpdateTasksService} from '../../Services/Services';
+import {
+  CreateDivisionService,
+  UpdateDivisionService,
+} from '../../Services/Services';
 import {getCatchMessage} from '../../Utilities/GeneralUtilities';
 import Toast from '../../Components/Toast';
 import {UseToken} from '../../Utilities/StoreData';
-import {TaskListDataProps} from '../../@types/api';
-import * as Yup from 'yup';
+import {DivisionListDataProps} from '../../@types/api';
 import {AddEditModalProps} from '../../@types/Global';
 
 const validationSchema = Yup.object().shape({
-  task_name: Yup.string().trim().required('* Task Name is required.'),
+  description: Yup.string().trim().required('* Division Name is required.'),
 });
-const AddEditTaskModal = ({
+const AddEditDivisionModal = ({
   onApplyChanges,
   onClose,
   type,
   lineData,
-}: AddEditModalProps<TaskListDataProps>) => {
+}: AddEditModalProps<DivisionListDataProps>) => {
   const token = UseToken();
   const {
     setFieldValue,
@@ -32,30 +35,29 @@ const AddEditTaskModal = ({
     initialValues,
     errors,
     touched,
-  } = useFormik<TaskListDataProps>({
+  } = useFormik<DivisionListDataProps>({
     initialValues: {
-      task_id: lineData?.task_id || 0,
-      task_name: '',
-      control_key: '',
+      division_id: lineData?.division_id || 0,
+      description: '',
     },
     validationSchema,
     onSubmit(values) {
       if (type === 'Create') {
-        handleAddTask(values);
+        handleAddDivision(values);
       } else if (type === 'Update') {
-        handleUpdateTask(values);
+        handleUpdateDivision(values);
       }
     },
   });
 
-  const handleAddTask = (values: any) => {
+  const handleAddDivision = (values: DivisionListDataProps) => {
     isLoading(true);
     let finalObj = {
       ...values,
       token: token,
     };
 
-    CreateTasksService(ConvertJSONtoFormData(finalObj))
+    CreateDivisionService(ConvertJSONtoFormData(finalObj))
       .then(async res => {
         if (res.data.status === 1) {
           Toast.success(res?.data?.msg);
@@ -72,15 +74,14 @@ const AddEditTaskModal = ({
   };
 
   // update user
-  const handleUpdateTask = (values: any) => {
+  const handleUpdateDivision = (values: DivisionListDataProps) => {
     isLoading(true);
     let finalObj = {
       ...values,
       token: token,
-      task_id: lineData?.task_id,
     };
 
-    UpdateTasksService(ConvertJSONtoFormData(finalObj))
+    UpdateDivisionService(ConvertJSONtoFormData(finalObj))
       .then(async res => {
         if (res.data.status === 1) {
           Toast.success(res?.data?.msg);
@@ -106,9 +107,9 @@ const AddEditTaskModal = ({
   return (
     <View>
       <TextInputBox
-        value={values?.task_name}
+        value={values?.description}
         onChangeText={(val: string) => {
-          setFieldValue('task_name', val);
+          setFieldValue('description', val);
         }}
         customInputBoxContainerStyle={{
           borderColor: COLORS.primary,
@@ -117,28 +118,14 @@ const AddEditTaskModal = ({
           maxLength: INPUT_SIZE.Name,
         }}
         isRequired
-        placeHolder="Enter Task Name"
-        title="Task Name"
+        placeHolder="Enter Division Name"
+        title="Division Name"
         isEditable={type !== 'View'}
         errorText={
-          errors?.task_name && touched?.task_name ? errors?.task_name : ''
+          errors?.description && touched?.description ? errors?.description : ''
         }
       />
-      <TextInputBox
-        value={values?.control_key}
-        onChangeText={(val: string) => {
-          setFieldValue('control_key', val);
-        }}
-        customInputBoxContainerStyle={{
-          borderColor: COLORS.primary,
-        }}
-        textInputProps={{
-          maxLength: INPUT_SIZE.Fifty,
-        }}
-        placeHolder="Enter Control Key"
-        title="Control Key"
-        isEditable={type !== 'View'}
-      />
+
       <View
         style={{
           flexDirection: 'row',
@@ -166,6 +153,6 @@ const AddEditTaskModal = ({
   );
 };
 
-export default AddEditTaskModal;
+export default AddEditDivisionModal;
 
 const styles = StyleSheet.create({});

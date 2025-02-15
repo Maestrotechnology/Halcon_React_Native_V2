@@ -15,6 +15,7 @@ import {TableViewProps} from './types';
 import ListEmptyComponent from './ListEmptyComponent';
 import CommonSwitch from './CommonSwitch';
 import lodash from 'lodash';
+import {FormateDate} from '../Utilities/Methods';
 export type TableItemProps = {
   item: any;
   index: number;
@@ -46,6 +47,7 @@ const TableView = ({
   onCheckPress,
   customRenderer,
   onChangeStatus,
+  lineTextNumberofLines = 1,
 }: TableViewProps) => {
   const isScrollBeginRef = useRef(true);
   const columnWidth: number =
@@ -164,66 +166,74 @@ const TableView = ({
           <TouchableOpacity
             style={{
               flex: 1,
+              flexDirection: 'column',
+              alignSelf: 'flex-start',
               // maxWidth: WINDOW_WIDTH - 100,
             }}
             onPress={() => {
               if (onActionPress) onActionPress(1, item);
             }}
             activeOpacity={1}>
-            <View style={[styles.flexRow]}>
-              <StyledText style={styles.headerLabel}>
-                S.No &ensp;:&ensp;
-              </StyledText>
-              <StyledText style={styles.valueLabel}>{index + 1}</StyledText>
-            </View>
-            {[...rowData]?.map((cardItem, cardIndex) => {
-              return (
-                <View
-                  style={[
-                    styles.flexRow,
-                    {
-                      flex: 1,
-                    },
-                  ]}>
-                  <StyledText style={styles.headerLabel}>
-                    {cardItem?.label} &ensp;:&ensp;
-                  </StyledText>
-                  <View style={{flex: 1}}>
-                    {cardItem?.key === 'status' ? (
-                      <View style={styles.StatusActiveView}>
-                        {item?.[cardItem?.key] == 1 ? (
-                          <StyledText style={{color: COLORS.green}}>
-                            Active
-                          </StyledText>
-                        ) : (
-                          <StyledText style={{color: COLORS.red}}>
-                            Inactive
-                          </StyledText>
-                        )}
-                        <CommonSwitch
-                          onChangeSwitch={status => {
-                            onChangeStatus?.(status ? 1 : 0, item);
+            <View style={{gap: 10}}>
+              <View style={[styles.flexRow]}>
+                <StyledText style={styles.headerLabel}>
+                  S.No &ensp;:&ensp;
+                </StyledText>
+                <StyledText style={styles.valueLabel}>{index + 1}</StyledText>
+              </View>
+              {[...rowData]?.map((cardItem, cardIndex) => {
+                return (
+                  <View
+                    style={[
+                      styles.flexRow,
+                      {
+                        flex: 1,
+                      },
+                    ]}>
+                    <StyledText style={styles.headerLabel}>
+                      {cardItem?.label} &ensp;:&ensp;
+                    </StyledText>
+                    <View style={{flex: 1}}>
+                      {cardItem?.key === 'status' ? (
+                        <View style={styles.StatusActiveView}>
+                          {item?.[cardItem?.key] == 1 ? (
+                            <StyledText style={{color: COLORS.green}}>
+                              Active
+                            </StyledText>
+                          ) : (
+                            <StyledText style={{color: COLORS.red}}>
+                              Inactive
+                            </StyledText>
+                          )}
+                          <CommonSwitch
+                            onChangeSwitch={status => {
+                              onChangeStatus?.(status ? 1 : 0, item);
+                            }}
+                            isEnabled={item?.[cardItem?.key]}
+                          />
+                        </View>
+                      ) : (
+                        <StyledText
+                          numberOfLines={1}
+                          textProps={{
+                            numberOfLines: lineTextNumberofLines ?? 1,
                           }}
-                          isEnabled={item?.[cardItem?.key]}
-                        />
-                      </View>
-                    ) : (
-                      <StyledText
-                        numberOfLines={1}
-                        textProps={{
-                          numberOfLines: 1,
-                        }}
-                        style={{
-                          ...styles.valueLabel,
-                          color: item?.color ? item?.color : '#000',
-                        }}>
-                        {item?.[cardItem?.key]}
-                      </StyledText>
-                    )}
+                          style={{
+                            ...styles.valueLabel,
+                            color: item?.color ? item?.color : '#000',
+                          }}>
+                          {cardItem?.type === 'date'
+                            ? item?.[cardItem?.key]
+                              ? FormateDate(item?.[cardItem?.key], 'datetime')
+                              : ''
+                            : item?.[cardItem?.key]}
+                        </StyledText>
+                      )}
+                    </View>
                   </View>
-                </View>
-              );
-            })}
+                );
+              })}
+            </View>
           </TouchableOpacity>
           <View style={[styles.actionContainer]}>
             {[...getActionsList(item)].map((ele, index) => {
@@ -366,7 +376,7 @@ const styles = StyleSheet.create({
   flexRow: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   StatusActiveView: {
     flexDirection: 'row',

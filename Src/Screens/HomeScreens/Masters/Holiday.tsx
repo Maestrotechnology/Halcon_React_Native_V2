@@ -1,33 +1,39 @@
 import {StyleSheet, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
+import {UseToken} from '../../../Utilities/StoreData';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useIsFocused} from '@react-navigation/native';
+import {HolidayListDataProps} from '../../../@types/api';
+import {actionListProps} from '../../../Components/types';
+import {HolidayListFilterProps} from '../../../@types/modals';
+import {
+  deleteSpecialHolidayService,
+  listSpecialHolidayService,
+} from '../../../Services/Services';
+import {getCatchMessage} from '../../../Utilities/GeneralUtilities';
 import Toast from '../../../Components/Toast';
 import HOCView from '../../../Components/HOCView';
-import {UseToken} from '../../../Utilities/StoreData';
-import {
-  deleteUserService,
-  listAccessRoleService,
-} from '../../../Services/Services';
-import {AccessRoleListDataProps} from '../../../@types/api';
-import TableView from '../../../Components/TableView';
-import {actionListProps} from '../../../Components/types';
-import {FONTSIZES} from '../../../Utilities/Constants';
+import {FONTSIZES, ReqularDays} from '../../../Utilities/Constants';
+import {CommonStyles} from '../../../Utilities/CommonStyles';
 import CustomButton from '../../../Components/CustomButton';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {RoleListFilterdataProps} from '../../../@types/modals';
+import TableView from '../../../Components/TableView';
 import GlobaModal from '../../../Components/GlobalModal';
 import ConfirmationModal from '../../../Modals/ConfirmationModal';
-import {CommonStyles} from '../../../Utilities/CommonStyles';
-import {useIsFocused} from '@react-navigation/native';
-import {getCatchMessage} from '../../../Utilities/GeneralUtilities';
-import {UserScreensNavigationProps} from '../../../@types/navigation';
-import {ApiResponse, DeleteApiResposneProps} from '../../../@types/Global';
-import AccessRoleFilterModal from '../../../Modals/Filter/AccessRoleFilterModal';
+import {MastersStackNavigationProps} from '../../../@types/navigation';
+import {
+  AddEditModalScreenProsp,
+  ApiResponse,
+  DeleteApiResposneProps,
+} from '../../../@types/Global';
+import HolidayListFilterModal from '../../../Modals/Filter/HolidayListFilterModal';
+import AddEditHolidayModal from '../../../Modals/ModifyModals/AddEditHolidayModal';
+import CheckBox from '../../../Components/CheckBox';
 
 var isMount = true;
 var currentPage = 1;
 var totalPages = 1;
 
-const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
+const Holiday = ({route}: MastersStackNavigationProps) => {
   const token = UseToken();
   const {bottom} = useSafeAreaInsets();
   const focused = useIsFocused();
@@ -36,10 +42,10 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
   const [isEndRefreshing, setisEndRefreshing] = useState<boolean>(false);
   const [isLoading, setisLoading] = useState<boolean>(false);
   const [permissionLoader, setPermissionLoader] = useState(false);
-  const [RoleList, setRoleList] = useState<AccessRoleListDataProps[]>([]);
+  const [HolidayList, setHolidayList] = useState<HolidayListDataProps[]>([]);
   const [actionsList, setActionList] = useState<actionListProps[]>([
     {
-      id: 4,
+      id: 1,
       name: 'deleteIcon',
       // isShow: ServiceRequestPermissions.delete ? true : false,
       isShow: true,
@@ -52,10 +58,17 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
       disableKey: 'disableEditIcon',
     },
   ]);
-  const [filterData, setfilterData] = useState<RoleListFilterdataProps | null>({
-    role_name: '',
+  const [filterData, setfilterData] = useState<HolidayListFilterProps | null>({
+    reason: '',
   });
   const [isShowFilter, setisShowFilter] = useState<boolean>(false);
+  const [addEditWorkCenter, setAddEditWorkCenter] = useState<
+    AddEditModalScreenProsp<HolidayListDataProps>
+  >({
+    type: '',
+    lineData: null,
+    show: false,
+  });
   const [isShowDelete, setIsShowDelete] = useState({
     id: -1,
     status: false,
@@ -67,7 +80,7 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
     totalPages = 1;
 
     if (token) {
-      handleGetRoleList(1);
+      handleGetHolidayList(1);
     }
     return () => {
       isMount = false;
@@ -76,28 +89,27 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
     };
   }, [token, route, focused]);
 
-  const handleGetRoleList = (
+  const handleGetHolidayList = (
     page: number = 1,
-    filter: RoleListFilterdataProps | null = filterData,
+    filter: HolidayListFilterProps | null = filterData,
   ) => {
     const formData = new FormData();
     formData.append('token', token);
-
-    if (filter?.role_name) {
-      formData.append('role_name', filter?.role_name);
+    if (filter?.reason) {
+      formData.append('reason', filter?.reason);
     }
 
-    listAccessRoleService(formData, page)
+    listSpecialHolidayService(formData, page)
       .then(res => {
-        const response: ApiResponse<AccessRoleListDataProps> = res.data;
+        const response: ApiResponse<HolidayListDataProps> = res.data;
 
         if (response.status === 1) {
           if (page === 1) {
             totalPages = response.data?.total_page || 1;
 
-            setRoleList(response.data?.items || []);
+            setHolidayList(response.data?.items || []);
           } else {
-            setRoleList(prev => [...prev, ...response.data?.items]);
+            setHolidayList(prev => [...prev, ...response.data?.items]);
           }
         } else if (response.status === 0) {
           Toast.error(response.msg);
@@ -121,7 +133,7 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
       if (isMount) {
         setisEndRefreshing(true);
       }
-      handleGetRoleList(currentPage);
+      handleGetHolidayList(currentPage);
     }
   };
 
@@ -131,26 +143,24 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
     }
     totalPages = 1;
     currentPage = 1;
-    handleGetRoleList(1);
+    handleGetHolidayList(1);
   };
 
-  const handleDelete = (role_id: number) => {
+  const handleDeleteSpecialHoliday = (id: number) => {
     handleCloseDelete();
     if (isMount) {
       setisLoading(true);
     }
     let formData = new FormData();
     formData.append('token', token);
-    formData.append('role_id', role_id);
-    deleteUserService(formData)
+    formData.append('id', id);
+    deleteSpecialHolidayService(formData)
       .then(res => {
         const response: DeleteApiResposneProps = res.data;
 
         if (response.status === 1) {
           if (isMount) {
-            setRoleList(prev =>
-              [...prev].filter(ele => ele.role_id !== role_id),
-            );
+            setHolidayList(prev => [...prev].filter(ele => ele.id !== id));
           }
           Toast.success(response.msg);
         } else if (response.status === 0) {
@@ -168,10 +178,10 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
   };
 
   const handleCheckAccessToAdd = () => {
-    navigation.navigate('AddEditRole', {type: 'Create'});
+    setAddEditWorkCenter({show: true, type: 'Create', lineData: null});
   };
 
-  const onApplyFilter = (data: RoleListFilterdataProps | null) => {
+  const onApplyFilter = (data: HolidayListFilterProps | null) => {
     if (isMount) {
       setisListLoader(true);
       setfilterData(data);
@@ -179,12 +189,17 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
 
     currentPage = 1;
     totalPages = 1;
-    handleGetRoleList(1, data);
+    handleGetHolidayList(1, data);
   };
 
   const closeFilterModal = () => {
     if (isMount) {
       setisShowFilter(false);
+    }
+  };
+  const closeTaskModal = () => {
+    if (isMount) {
+      setAddEditWorkCenter({lineData: null, show: false, type: ''});
     }
   };
 
@@ -195,16 +210,16 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
   return (
     <HOCView
       isListLoading={isListLoader}
-      secondaryHeaderTitle="Role"
+      secondaryHeaderTitle="Holiday"
       isShowSecondaryHeaderBtn
       secondaryBtnTextStyle={{fontSize: FONTSIZES.small}}
       onHeaderBtnPress={() => {
         handleCheckAccessToAdd();
       }}
       headerProps={{
-        headerTitle: 'Role',
+        headerTitle: 'Holiday',
       }}
-      secondaryBtnTitle="Add Role"
+      secondaryBtnTitle="Add Holiday"
       isLoading={isLoading}
       isBtnLoading={permissionLoader}>
       <View style={CommonStyles.flexRow}>
@@ -218,12 +233,23 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
         </CustomButton>
       </View>
       <View style={{marginBottom: bottom, flex: 1}}>
+        <View>
+          {ReqularDays?.map((days: any) => {
+            return (
+              <CheckBox
+                checked={true}
+                key={days?.holiday_id}
+                label={days?.label}
+              />
+            );
+          })}
+        </View>
         <TableView
           rowData={[
-            {key: 'role_name', label: 'Role Name'},
-            {key: 'role_description', label: 'Description'},
+            {key: 'holiday_date', label: 'Date'},
+            {key: 'reason', label: 'Reason'},
           ]}
-          dataList={[...RoleList]?.map(ele => ({
+          dataList={[...HolidayList]?.map(ele => ({
             ...ele,
           }))}
           onEndReached={onEndReached}
@@ -232,33 +258,52 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
           isRefreshing={isRefreshing}
           isActionAvailable
           actionsList={actionsList}
-          lineTextNumberofLines={3}
-          onActionPress={(actionType: number, val: AccessRoleListDataProps) => {
-            if (actionType === 4) {
+          onActionPress={(actionType: number, val: HolidayListDataProps) => {
+            if (actionType === 1) {
               setIsShowDelete({
-                id: val.role_id,
+                id: val.id || -1,
                 status: true,
               });
             } else if (actionType === 2) {
-              navigation.navigate('AddEditRole', {
+              setAddEditWorkCenter({
                 type: 'Update',
                 lineData: val,
+                show: true,
               });
-            } else if (actionType === 1) {
-              navigation.navigate('AddEditRole', {type: 'View', lineData: val});
+            } else if (actionType === 3) {
+              setAddEditWorkCenter({
+                type: 'View',
+                lineData: val,
+                show: true,
+              });
             }
           }}
         />
       </View>
       {isShowFilter && (
         <GlobaModal
-          title="Role Filter"
+          title="Holiday Filter"
           visible={isShowFilter}
           onClose={closeFilterModal}>
-          <AccessRoleFilterModal
+          <HolidayListFilterModal
             filterData={filterData}
             onApplyFilter={onApplyFilter}
             onClose={closeFilterModal}
+          />
+        </GlobaModal>
+      )}
+      {addEditWorkCenter?.show && (
+        <GlobaModal
+          title={`${addEditWorkCenter?.type} Holiday`}
+          visible={addEditWorkCenter?.show}
+          onClose={closeTaskModal}>
+          <AddEditHolidayModal
+            lineData={addEditWorkCenter?.lineData || null}
+            type={addEditWorkCenter?.type}
+            onApplyChanges={() => {
+              handleGetHolidayList(1);
+            }}
+            onClose={closeTaskModal}
           />
         </GlobaModal>
       )}
@@ -268,9 +313,9 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
           <ConfirmationModal
             onClose={handleCloseDelete}
             visible={isShowDelete?.status}
-            msg="Are you sure want to delete this User?"
+            msg="Are you sure want to delete this Holiday?"
             onConfirmPress={() => {
-              handleDelete(isShowDelete?.id);
+              handleDeleteSpecialHoliday(isShowDelete?.id);
             }}
           />
         </GlobaModal>
@@ -279,6 +324,6 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
   );
 };
 
-export default AccessRoleList;
+export default Holiday;
 
 const styles = StyleSheet.create({});

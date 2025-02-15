@@ -46,3 +46,13 @@ export const FilterValidObj = (obj: ObjectType) => {
 export const isLoading = (isLoading: boolean) => {
   return store.dispatch(openLoader(isLoading));
 };
+
+export const FormateDate = (date: Date, type: 'date' | 'datetime' | 'time') => {
+  const formatMap: Record<typeof type, string> = {
+    date: 'YYYY-MM-DD',
+    datetime: 'YYYY-MM-DD HH:mm:ss',
+    time: 'HH:mm:ss',
+  };
+
+  return moment(date).format(formatMap[type]);
+};

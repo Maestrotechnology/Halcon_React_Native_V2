@@ -1,17 +1,17 @@
 import {StyleSheet, View} from 'react-native';
 import React, {useEffect} from 'react';
 import {useFormik} from 'formik';
-import {TaskListFilterProps} from '../../@types/modals';
+import {WorkCenterListFilterProps} from '../../@types/modals';
 import CustomButton from '../../Components/CustomButton';
 import TextInputBox from '../../Components/TextInputBox';
 import {COLORS} from '../../Utilities/Constants';
 import {FilterModalProps} from '../../@types/Global';
 
-const TaskListFilterModal = ({
+const WorkCenterListFilterModal = ({
   filterData,
   onApplyFilter,
   onClose,
-}: FilterModalProps<TaskListFilterProps>) => {
+}: FilterModalProps<WorkCenterListFilterProps>) => {
   const {
     setFieldValue,
     handleSubmit,
@@ -19,9 +19,9 @@ const TaskListFilterModal = ({
     resetForm,
     values,
     initialValues,
-  } = useFormik<TaskListFilterProps>({
+  } = useFormik<WorkCenterListFilterProps>({
     initialValues: {
-      task_name: '',
+      name: '',
     },
     onSubmit(values) {
       onApplyFilter(values);
@@ -40,15 +40,15 @@ const TaskListFilterModal = ({
   return (
     <View>
       <TextInputBox
-        value={values?.task_name}
+        value={values?.name}
         onChangeText={(val: string) => {
-          setFieldValue('task_name', val);
+          setFieldValue('name', val);
         }}
         customInputBoxContainerStyle={{
           borderColor: COLORS.primary,
         }}
-        placeHolder="Enter User Name"
-        title="Task Name"
+        placeHolder="Enter Work Center Name"
+        title="Work Center Name"
         isEditable
       />
 
@@ -80,6 +80,6 @@ const TaskListFilterModal = ({
   );
 };
 
-export default TaskListFilterModal;
+export default WorkCenterListFilterModal;
 
 const styles = StyleSheet.create({});

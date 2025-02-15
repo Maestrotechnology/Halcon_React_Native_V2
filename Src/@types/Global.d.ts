@@ -16,3 +16,31 @@ export type DeleteApiResposneProps = {
   msg: string;
   status: number;
 };
+
+export type AddEditNavigationScreenProsp<T> = {
+  type: 'Create' | 'Update' | 'View';
+  lineData?: T;
+};
+export type AddEditModalScreenProsp<T> = {
+  type: 'Create' | 'Update' | 'View' | '';
+  lineData?: T | null;
+  show: boolean;
+};
+
+export type TableItemProps<T> = {
+  item: T;
+  index: number;
+};
+export type AddEditModalProps<T> = {
+  onApplyChanges: () => void;
+  onClose: () => void;
+  type: 'Create' | 'Update' | 'View' | '';
+  lineData: T | null;
+};
+
+export type FilterModalProps<T> = {
+  filterData: T | null;
+  onApplyFilter: (val: T | null) => void;
+  onClose: () => void;
+  initialValue?: T;
+};

@@ -742,3 +742,77 @@ export interface RoleItemProps {
   role_id: number;
   role_name: string;
 }
+// Role List
+export interface AccessRoleListDataProps {
+  role_id: number;
+  role_name: string;
+  role_description: string;
+  role_status: number;
+}
+// Division List
+export interface DivisionListDataProps {
+  division_id?: number;
+  description: string;
+  created_at?: string;
+  created_by?: number;
+}
+// Material List
+export interface MaterialListDataProps {
+  material_id?: number;
+  name: string;
+  material_code: string;
+  description: string;
+  unit_id: string;
+  notes: string;
+  created_at?: string;
+  created_by?: number;
+  status?: number;
+}
+// Work Center List
+export interface WorkCenterListDataProps {
+  work_center_id?: number;
+  name: string;
+  description?: any;
+  created_at?: string;
+  created_by?: number;
+  status?: number;
+}
+// Holiday List
+export interface HolidayListDataProps {
+  id?: number;
+  holiday_date: string;
+  reason: string;
+}
+// Access Permission List
+export interface AccessPermissionViewList {
+  status: number;
+  msg: string;
+  data: RolePermissionData;
+}
+
+export interface RolePermissionData {
+  role_id: number;
+  role_name: string;
+  role_description: string;
+  role_permission: RolePermission[];
+}
+
+export interface RolePermission {
+  id: number;
+  name: string;
+  status: number;
+  child: ChildRolePermission[];
+}
+
+export interface ChildRolePermission {
+  id: number;
+  name: string;
+  status: number;
+  child?: InnerChildRolePermission[];
+}
+
+export interface InnerChildRolePermission {
+  id: number;
+  name: string;
+  status: number;
+}

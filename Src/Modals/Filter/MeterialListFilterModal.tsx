@@ -1,17 +1,17 @@
 import {StyleSheet, View} from 'react-native';
 import React, {useEffect} from 'react';
 import {useFormik} from 'formik';
-import {TaskListFilterProps} from '../../@types/modals';
+import {MeterialListFilterdataProps} from '../../@types/modals';
 import CustomButton from '../../Components/CustomButton';
 import TextInputBox from '../../Components/TextInputBox';
 import {COLORS} from '../../Utilities/Constants';
 import {FilterModalProps} from '../../@types/Global';
 
-const TaskListFilterModal = ({
+const MeterialListFilterModal = ({
   filterData,
   onApplyFilter,
   onClose,
-}: FilterModalProps<TaskListFilterProps>) => {
+}: FilterModalProps<MeterialListFilterdataProps>) => {
   const {
     setFieldValue,
     handleSubmit,
@@ -19,9 +19,9 @@ const TaskListFilterModal = ({
     resetForm,
     values,
     initialValues,
-  } = useFormik<TaskListFilterProps>({
+  } = useFormik<MeterialListFilterdataProps>({
     initialValues: {
-      task_name: '',
+      material_name: '',
     },
     onSubmit(values) {
       onApplyFilter(values);
@@ -40,15 +40,15 @@ const TaskListFilterModal = ({
   return (
     <View>
       <TextInputBox
-        value={values?.task_name}
+        value={values?.material_name}
         onChangeText={(val: string) => {
-          setFieldValue('task_name', val);
+          setFieldValue('material_name', val);
         }}
         customInputBoxContainerStyle={{
           borderColor: COLORS.primary,
         }}
-        placeHolder="Enter User Name"
-        title="Task Name"
+        placeHolder="Enter Material Name"
+        title="Material Name"
         isEditable
       />
 
@@ -80,6 +80,6 @@ const TaskListFilterModal = ({
   );
 };
 
-export default TaskListFilterModal;
+export default MeterialListFilterModal;
 
 const styles = StyleSheet.create({});

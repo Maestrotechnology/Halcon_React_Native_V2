@@ -32,6 +32,7 @@ export type UtilityReducerProp = {
 
 export type PermissionReducerProp = {
   permissions: AccessPermissionProps;
+  userPermission: any;
 };
 
 export type userDataProp = {

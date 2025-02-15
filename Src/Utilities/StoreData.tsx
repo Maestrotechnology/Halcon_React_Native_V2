@@ -1,5 +1,5 @@
-import { useSelector } from "react-redux";
-import { ReducerProps, UserPermissionKeyProps } from "./Reducertype";
+import {useSelector} from 'react-redux';
+import {ReducerProps, UserPermissionKeyProps} from './Reducertype';
 
 export const UseToken = () => {
   return useSelector((state: ReducerProps) => state.login.token);
@@ -41,15 +41,22 @@ export const GetBaseUrl = () => {
 
 export const GetPermissions = () => {
   const UserPermissions = useSelector(
-    (state: ReducerProps) => state.permission.permissions
+    (state: ReducerProps) => state.permission.permissions,
   );
 
   return UserPermissions;
 };
 
+export const GetUserAccessPermissions = () => {
+  const UserPermissions = useSelector(
+    (state: ReducerProps) => state.permission.userPermission,
+  );
+
+  return UserPermissions;
+};
 export const GetUserPermissions = (key: UserPermissionKeyProps) => {
   const UserPermissions = useSelector(
-    (state: ReducerProps) => state.permission.permissions
+    (state: ReducerProps) => state.permission.permissions,
   );
   return UserPermissions[key];
 };

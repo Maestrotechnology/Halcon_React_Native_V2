@@ -41,11 +41,13 @@ export type TableViewProps = {
   rowData: TableRowDataProps[];
   customRenderer?: ListRenderItem<any> | null | undefined;
   onChangeStatus?: (status: number, data: any) => void;
+  lineTextNumberofLines?: number;
 };
 
 export type TableRowDataProps = {
   label: string;
   key: string;
+  type?: 'date';
 };
 
 export type ItemKeyListProps = {

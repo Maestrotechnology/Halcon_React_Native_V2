@@ -1,27 +1,31 @@
 import {StyleSheet, View} from 'react-native';
 import React, {useEffect} from 'react';
+import * as Yup from 'yup';
 import {useFormik} from 'formik';
 import CustomButton from '../../Components/CustomButton';
 import TextInputBox from '../../Components/TextInputBox';
 import {COLORS, INPUT_SIZE} from '../../Utilities/Constants';
 import {ConvertJSONtoFormData, isLoading} from '../../Utilities/Methods';
-import {CreateTasksService, UpdateTasksService} from '../../Services/Services';
+import {
+  CreateSpecialHolidayService,
+  UpdateSpecialHolidayService,
+} from '../../Services/Services';
 import {getCatchMessage} from '../../Utilities/GeneralUtilities';
 import Toast from '../../Components/Toast';
 import {UseToken} from '../../Utilities/StoreData';
-import {TaskListDataProps} from '../../@types/api';
-import * as Yup from 'yup';
 import {AddEditModalProps} from '../../@types/Global';
+import {HolidayListDataProps} from '../../@types/api';
+import DateTimePicker from '../../Components/DateTimePicker';
 
 const validationSchema = Yup.object().shape({
-  task_name: Yup.string().trim().required('* Task Name is required.'),
+  holiday_date: Yup.string().trim().required('* Holiday Date is required.'),
 });
-const AddEditTaskModal = ({
+const AddEditHolidayModal = ({
   onApplyChanges,
   onClose,
   type,
   lineData,
-}: AddEditModalProps<TaskListDataProps>) => {
+}: AddEditModalProps<HolidayListDataProps>) => {
   const token = UseToken();
   const {
     setFieldValue,
@@ -32,30 +36,30 @@ const AddEditTaskModal = ({
     initialValues,
     errors,
     touched,
-  } = useFormik<TaskListDataProps>({
+  } = useFormik<HolidayListDataProps>({
     initialValues: {
-      task_id: lineData?.task_id || 0,
-      task_name: '',
-      control_key: '',
+      reason: '',
+      holiday_date: '',
     },
     validationSchema,
     onSubmit(values) {
       if (type === 'Create') {
-        handleAddTask(values);
+        handleAddSpecialHoliday(values);
       } else if (type === 'Update') {
-        handleUpdateTask(values);
+        handleUpdateSpecialHoliday(values);
       }
     },
   });
 
-  const handleAddTask = (values: any) => {
+  const handleAddSpecialHoliday = (values: HolidayListDataProps) => {
     isLoading(true);
     let finalObj = {
       ...values,
+      id: lineData?.id,
       token: token,
     };
 
-    CreateTasksService(ConvertJSONtoFormData(finalObj))
+    CreateSpecialHolidayService(ConvertJSONtoFormData(finalObj))
       .then(async res => {
         if (res.data.status === 1) {
           Toast.success(res?.data?.msg);
@@ -72,15 +76,16 @@ const AddEditTaskModal = ({
   };
 
   // update user
-  const handleUpdateTask = (values: any) => {
+  const handleUpdateSpecialHoliday = (values: HolidayListDataProps) => {
     isLoading(true);
     let finalObj = {
       ...values,
+      special_holiday_id: lineData?.id,
       token: token,
-      task_id: lineData?.task_id,
+      holiday_date: '',
     };
 
-    UpdateTasksService(ConvertJSONtoFormData(finalObj))
+    UpdateSpecialHolidayService(ConvertJSONtoFormData(finalObj))
       .then(async res => {
         if (res.data.status === 1) {
           Toast.success(res?.data?.msg);
@@ -105,10 +110,28 @@ const AddEditTaskModal = ({
   }, []);
   return (
     <View>
+      <DateTimePicker
+        mode="date"
+        format="YYYY-MM-DD"
+        title="Starting Date"
+        value={values.holiday_date}
+        onSelect={date => {
+          setFieldValue('holiday_date', date);
+        }}
+        isDisabled={type !== 'Create'}
+        isRequired
+        errorText={
+          errors?.holiday_date && touched.holiday_date
+            ? errors?.holiday_date
+            : ''
+        }
+        minimumDate={new Date()}
+      />
+
       <TextInputBox
-        value={values?.task_name}
+        value={values?.reason}
         onChangeText={(val: string) => {
-          setFieldValue('task_name', val);
+          setFieldValue('reason', val);
         }}
         customInputBoxContainerStyle={{
           borderColor: COLORS.primary,
@@ -116,29 +139,12 @@ const AddEditTaskModal = ({
         textInputProps={{
           maxLength: INPUT_SIZE.Name,
         }}
-        isRequired
-        placeHolder="Enter Task Name"
-        title="Task Name"
+        placeHolder="Enter Reason"
+        title="Reason"
         isEditable={type !== 'View'}
-        errorText={
-          errors?.task_name && touched?.task_name ? errors?.task_name : ''
-        }
+        errorText={errors?.reason && touched?.reason ? errors?.reason : ''}
       />
-      <TextInputBox
-        value={values?.control_key}
-        onChangeText={(val: string) => {
-          setFieldValue('control_key', val);
-        }}
-        customInputBoxContainerStyle={{
-          borderColor: COLORS.primary,
-        }}
-        textInputProps={{
-          maxLength: INPUT_SIZE.Fifty,
-        }}
-        placeHolder="Enter Control Key"
-        title="Control Key"
-        isEditable={type !== 'View'}
-      />
+
       <View
         style={{
           flexDirection: 'row',
@@ -166,6 +172,6 @@ const AddEditTaskModal = ({
   );
 };
 
-export default AddEditTaskModal;
+export default AddEditHolidayModal;
 
 const styles = StyleSheet.create({});

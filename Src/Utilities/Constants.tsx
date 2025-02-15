@@ -172,3 +172,34 @@ export const PolicyColorList = [
     color: '#007071',
   },
 ];
+
+export const ReqularDays = [
+  {
+    label: 'Monday',
+    holiday_id: 0,
+  },
+  {
+    label: 'Tuesday',
+    holiday_id: 1,
+  },
+  {
+    label: 'Wednesday',
+    holiday_id: 2,
+  },
+  {
+    label: 'Thursday',
+    holiday_id: 3,
+  },
+  {
+    label: 'Friday',
+    holiday_id: 4,
+  },
+  {
+    label: 'Saturday',
+    holiday_id: 5,
+  },
+  {
+    label: 'Sunday',
+    holiday_id: 6,
+  },
+];

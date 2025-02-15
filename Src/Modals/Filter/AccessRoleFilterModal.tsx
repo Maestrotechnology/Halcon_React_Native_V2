@@ -1,17 +1,17 @@
 import {StyleSheet, View} from 'react-native';
 import React, {useEffect} from 'react';
 import {useFormik} from 'formik';
-import {TaskListFilterProps} from '../../@types/modals';
+import {RoleListFilterdataProps} from '../../@types/modals';
 import CustomButton from '../../Components/CustomButton';
 import TextInputBox from '../../Components/TextInputBox';
 import {COLORS} from '../../Utilities/Constants';
 import {FilterModalProps} from '../../@types/Global';
 
-const TaskListFilterModal = ({
+const AccessRoleFilterModal = ({
   filterData,
   onApplyFilter,
   onClose,
-}: FilterModalProps<TaskListFilterProps>) => {
+}: FilterModalProps<RoleListFilterdataProps>) => {
   const {
     setFieldValue,
     handleSubmit,
@@ -19,9 +19,9 @@ const TaskListFilterModal = ({
     resetForm,
     values,
     initialValues,
-  } = useFormik<TaskListFilterProps>({
+  } = useFormik<RoleListFilterdataProps>({
     initialValues: {
-      task_name: '',
+      role_name: '',
     },
     onSubmit(values) {
       onApplyFilter(values);
@@ -40,15 +40,15 @@ const TaskListFilterModal = ({
   return (
     <View>
       <TextInputBox
-        value={values?.task_name}
+        value={values?.role_name}
         onChangeText={(val: string) => {
-          setFieldValue('task_name', val);
+          setFieldValue('role_name', val);
         }}
         customInputBoxContainerStyle={{
           borderColor: COLORS.primary,
         }}
-        placeHolder="Enter User Name"
-        title="Task Name"
+        placeHolder="Enter Role Name"
+        title="Role Name"
         isEditable
       />
 
@@ -80,6 +80,6 @@ const TaskListFilterModal = ({
   );
 };
 
-export default TaskListFilterModal;
+export default AccessRoleFilterModal;
 
 const styles = StyleSheet.create({});

@@ -14,7 +14,7 @@ import Toast from '../../../Components/Toast';
 import HOCView from '../../../Components/HOCView';
 import TableView, {TableItemProps} from '../../../Components/TableView';
 import GlobaModal from '../../../Components/GlobalModal';
-import {addEdittaskProps, UpdatePolicyProps} from '../../../@types/general';
+import {AddEdittaskProps, UpdatePolicyProps} from '../../../@types/general';
 import AddEditTaskModal from '../../../Modals/ModifyModals/AddEditTaskModal';
 import {MastersStackNavigationProps} from '../../../@types/navigation';
 import {ApiResponse} from '../../../@types/Global';

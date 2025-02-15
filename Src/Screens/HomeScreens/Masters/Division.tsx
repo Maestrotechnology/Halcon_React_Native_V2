@@ -1,33 +1,39 @@
 import {StyleSheet, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
+import {UseToken} from '../../../Utilities/StoreData';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useIsFocused} from '@react-navigation/native';
+import {DivisionListDataProps} from '../../../@types/api';
+import {actionListProps} from '../../../Components/types';
+import {DivisionListFilterProps} from '../../../@types/modals';
+import {
+  deleteDivisionService,
+  deleteTasksService,
+  listDivisionService,
+} from '../../../Services/Services';
+import {getCatchMessage} from '../../../Utilities/GeneralUtilities';
 import Toast from '../../../Components/Toast';
 import HOCView from '../../../Components/HOCView';
-import {UseToken} from '../../../Utilities/StoreData';
-import {
-  deleteUserService,
-  listAccessRoleService,
-} from '../../../Services/Services';
-import {AccessRoleListDataProps} from '../../../@types/api';
-import TableView from '../../../Components/TableView';
-import {actionListProps} from '../../../Components/types';
 import {FONTSIZES} from '../../../Utilities/Constants';
+import {CommonStyles} from '../../../Utilities/CommonStyles';
 import CustomButton from '../../../Components/CustomButton';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {RoleListFilterdataProps} from '../../../@types/modals';
+import TableView from '../../../Components/TableView';
 import GlobaModal from '../../../Components/GlobalModal';
 import ConfirmationModal from '../../../Modals/ConfirmationModal';
-import {CommonStyles} from '../../../Utilities/CommonStyles';
-import {useIsFocused} from '@react-navigation/native';
-import {getCatchMessage} from '../../../Utilities/GeneralUtilities';
-import {UserScreensNavigationProps} from '../../../@types/navigation';
-import {ApiResponse, DeleteApiResposneProps} from '../../../@types/Global';
-import AccessRoleFilterModal from '../../../Modals/Filter/AccessRoleFilterModal';
+import {MastersStackNavigationProps} from '../../../@types/navigation';
+import {
+  AddEditModalScreenProsp,
+  ApiResponse,
+  DeleteApiResposneProps,
+} from '../../../@types/Global';
+import DivisionListFilterModal from '../../../Modals/Filter/DivisionListFilterModal';
+import AddEditDivisionModal from '../../../Modals/ModifyModals/AddEditDivisionModal';
 
 var isMount = true;
 var currentPage = 1;
 var totalPages = 1;
 
-const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
+const Division = ({route}: MastersStackNavigationProps) => {
   const token = UseToken();
   const {bottom} = useSafeAreaInsets();
   const focused = useIsFocused();
@@ -36,10 +42,10 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
   const [isEndRefreshing, setisEndRefreshing] = useState<boolean>(false);
   const [isLoading, setisLoading] = useState<boolean>(false);
   const [permissionLoader, setPermissionLoader] = useState(false);
-  const [RoleList, setRoleList] = useState<AccessRoleListDataProps[]>([]);
+  const [TasksList, setTasksList] = useState<DivisionListDataProps[]>([]);
   const [actionsList, setActionList] = useState<actionListProps[]>([
     {
-      id: 4,
+      id: 1,
       name: 'deleteIcon',
       // isShow: ServiceRequestPermissions.delete ? true : false,
       isShow: true,
@@ -52,10 +58,17 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
       disableKey: 'disableEditIcon',
     },
   ]);
-  const [filterData, setfilterData] = useState<RoleListFilterdataProps | null>({
-    role_name: '',
+  const [filterData, setfilterData] = useState<DivisionListFilterProps | null>({
+    description: '',
   });
   const [isShowFilter, setisShowFilter] = useState<boolean>(false);
+  const [addEditdivision, setAddEditDevision] = useState<
+    AddEditModalScreenProsp<DivisionListDataProps>
+  >({
+    type: '',
+    lineData: null,
+    show: false,
+  });
   const [isShowDelete, setIsShowDelete] = useState({
     id: -1,
     status: false,
@@ -67,7 +80,7 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
     totalPages = 1;
 
     if (token) {
-      handleGetRoleList(1);
+      handleGetDivisionList(1);
     }
     return () => {
       isMount = false;
@@ -76,28 +89,27 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
     };
   }, [token, route, focused]);
 
-  const handleGetRoleList = (
+  const handleGetDivisionList = (
     page: number = 1,
-    filter: RoleListFilterdataProps | null = filterData,
+    filter: DivisionListFilterProps | null = filterData,
   ) => {
     const formData = new FormData();
     formData.append('token', token);
-
-    if (filter?.role_name) {
-      formData.append('role_name', filter?.role_name);
+    if (filter?.description) {
+      formData.append('description', filter?.description);
     }
 
-    listAccessRoleService(formData, page)
+    listDivisionService(formData, page)
       .then(res => {
-        const response: ApiResponse<AccessRoleListDataProps> = res.data;
+        const response: ApiResponse<DivisionListDataProps> = res.data;
 
         if (response.status === 1) {
           if (page === 1) {
             totalPages = response.data?.total_page || 1;
 
-            setRoleList(response.data?.items || []);
+            setTasksList(response.data?.items || []);
           } else {
-            setRoleList(prev => [...prev, ...response.data?.items]);
+            setTasksList(prev => [...prev, ...response.data?.items]);
           }
         } else if (response.status === 0) {
           Toast.error(response.msg);
@@ -121,7 +133,7 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
       if (isMount) {
         setisEndRefreshing(true);
       }
-      handleGetRoleList(currentPage);
+      handleGetDivisionList(currentPage);
     }
   };
 
@@ -131,25 +143,25 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
     }
     totalPages = 1;
     currentPage = 1;
-    handleGetRoleList(1);
+    handleGetDivisionList(1);
   };
 
-  const handleDelete = (role_id: number) => {
+  const handleDeleteDivision = (division_id: number) => {
     handleCloseDelete();
     if (isMount) {
       setisLoading(true);
     }
     let formData = new FormData();
     formData.append('token', token);
-    formData.append('role_id', role_id);
-    deleteUserService(formData)
+    formData.append('division_id', division_id);
+    deleteDivisionService(formData)
       .then(res => {
         const response: DeleteApiResposneProps = res.data;
 
         if (response.status === 1) {
           if (isMount) {
-            setRoleList(prev =>
-              [...prev].filter(ele => ele.role_id !== role_id),
+            setTasksList(prev =>
+              [...prev].filter(ele => ele.division_id !== division_id),
             );
           }
           Toast.success(response.msg);
@@ -168,10 +180,10 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
   };
 
   const handleCheckAccessToAdd = () => {
-    navigation.navigate('AddEditRole', {type: 'Create'});
+    setAddEditDevision({show: true, type: 'Create', lineData: null});
   };
 
-  const onApplyFilter = (data: RoleListFilterdataProps | null) => {
+  const onApplyFilter = (data: DivisionListFilterProps | null) => {
     if (isMount) {
       setisListLoader(true);
       setfilterData(data);
@@ -179,12 +191,17 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
 
     currentPage = 1;
     totalPages = 1;
-    handleGetRoleList(1, data);
+    handleGetDivisionList(1, data);
   };
 
   const closeFilterModal = () => {
     if (isMount) {
       setisShowFilter(false);
+    }
+  };
+  const closeTaskModal = () => {
+    if (isMount) {
+      setAddEditDevision({lineData: null, show: false, type: ''});
     }
   };
 
@@ -195,16 +212,16 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
   return (
     <HOCView
       isListLoading={isListLoader}
-      secondaryHeaderTitle="Role"
+      secondaryHeaderTitle="Division"
       isShowSecondaryHeaderBtn
       secondaryBtnTextStyle={{fontSize: FONTSIZES.small}}
       onHeaderBtnPress={() => {
         handleCheckAccessToAdd();
       }}
       headerProps={{
-        headerTitle: 'Role',
+        headerTitle: 'Division',
       }}
-      secondaryBtnTitle="Add Role"
+      secondaryBtnTitle="Add Division"
       isLoading={isLoading}
       isBtnLoading={permissionLoader}>
       <View style={CommonStyles.flexRow}>
@@ -220,10 +237,10 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
       <View style={{marginBottom: bottom, flex: 1}}>
         <TableView
           rowData={[
-            {key: 'role_name', label: 'Role Name'},
-            {key: 'role_description', label: 'Description'},
+            {key: 'description', label: 'Division Name'},
+            {key: 'created_at', label: 'Created at', type: 'date'},
           ]}
-          dataList={[...RoleList]?.map(ele => ({
+          dataList={[...TasksList]?.map(ele => ({
             ...ele,
           }))}
           onEndReached={onEndReached}
@@ -232,33 +249,52 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
           isRefreshing={isRefreshing}
           isActionAvailable
           actionsList={actionsList}
-          lineTextNumberofLines={3}
-          onActionPress={(actionType: number, val: AccessRoleListDataProps) => {
-            if (actionType === 4) {
+          onActionPress={(actionType: number, val: DivisionListDataProps) => {
+            if (actionType === 1) {
               setIsShowDelete({
-                id: val.role_id,
+                id: val.division_id || -1,
                 status: true,
               });
             } else if (actionType === 2) {
-              navigation.navigate('AddEditRole', {
+              setAddEditDevision({
                 type: 'Update',
                 lineData: val,
+                show: true,
               });
-            } else if (actionType === 1) {
-              navigation.navigate('AddEditRole', {type: 'View', lineData: val});
+            } else if (actionType === 3) {
+              setAddEditDevision({
+                type: 'View',
+                lineData: val,
+                show: true,
+              });
             }
           }}
         />
       </View>
       {isShowFilter && (
         <GlobaModal
-          title="Role Filter"
+          title="Division Filter"
           visible={isShowFilter}
           onClose={closeFilterModal}>
-          <AccessRoleFilterModal
+          <DivisionListFilterModal
             filterData={filterData}
             onApplyFilter={onApplyFilter}
             onClose={closeFilterModal}
+          />
+        </GlobaModal>
+      )}
+      {addEditdivision?.show && (
+        <GlobaModal
+          title={`${addEditdivision?.type} Division`}
+          visible={addEditdivision?.show}
+          onClose={closeTaskModal}>
+          <AddEditDivisionModal
+            lineData={addEditdivision?.lineData || null}
+            type={addEditdivision?.type}
+            onApplyChanges={() => {
+              handleGetDivisionList(1);
+            }}
+            onClose={closeTaskModal}
           />
         </GlobaModal>
       )}
@@ -268,9 +304,9 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
           <ConfirmationModal
             onClose={handleCloseDelete}
             visible={isShowDelete?.status}
-            msg="Are you sure want to delete this User?"
+            msg="Are you sure want to delete this Division?"
             onConfirmPress={() => {
-              handleDelete(isShowDelete?.id);
+              handleDeleteDivision(isShowDelete?.id);
             }}
           />
         </GlobaModal>
@@ -279,6 +315,6 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
   );
 };
 
-export default AccessRoleList;
+export default Division;
 
 const styles = StyleSheet.create({});

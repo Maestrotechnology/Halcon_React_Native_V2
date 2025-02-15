@@ -23,12 +23,6 @@ export interface SearchDropdownBoxModalProps {
   onMultipleSelect?: (items: any[]) => void;
 }
 
-export type FilterModalProps<T> = {
-  filterData: T | null;
-  onApplyFilter: (val: T | null) => void;
-  onClose: () => void;
-  initialValue?: T;
-};
 export type TaskListFilterProps = {
   task_name?: string;
   control_key?: string;
@@ -69,11 +63,19 @@ export type ServiceRequestListFilterModalProps = {
 export type ServiceRequestFilterInitialProp = {
   type: number;
 };
+export type DivisionListFilterProps = {
+  description?: string;
+};
+export type WorkCenterListFilterProps = {
+  name?: string;
+};
+export type HolidayListFilterProps = {
+  reason?: string;
+};
+export type RoleListFilterdataProps = {
+  role_name: string;
+};
 
-export type addEditModalProps<T> = {
-  onApplyChanges: () => void;
-  onClose: () => void;
-  type: 'Create' | 'Update' | 'View' | '';
-  initialValue?: T;
-  lineData: T | null;
+export type MeterialListFilterdataProps = {
+  material_name: string;
 };
