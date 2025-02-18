@@ -12,6 +12,7 @@ import Material from '../Screens/HomeScreens/Masters/Matetial/Material';
 import WorkCenter from '../Screens/HomeScreens/Masters/WorkCenter';
 import Holiday from '../Screens/HomeScreens/Masters/Holiday';
 import AddEditMaterial from '../Screens/HomeScreens/Masters/Matetial/AddEditMaterial';
+import Machines from '../Screens/HomeScreens/Masters/Machines';
 
 const Stack = createNativeStackNavigator<MasterStackStackParamList>();
 
@@ -23,6 +24,7 @@ const MastersStack = ({route, navigation}: MastersStackNavigationProps) => {
         animation: 'fade',
       }}>
       <Stack.Screen name="TasksList" component={TasksList} />
+      <Stack.Screen name="Machines" component={Machines} />
       <Stack.Screen name="Policy" component={Policy} />
       <Stack.Screen name="Division" component={Division} />
       <Stack.Screen name="Material" component={Material} />

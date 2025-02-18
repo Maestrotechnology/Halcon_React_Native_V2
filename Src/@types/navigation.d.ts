@@ -74,6 +74,7 @@ export type MasterStackStackParamList = {
   Material: undefined;
   WorkCenter: undefined;
   Holiday: undefined;
+  Machines: undefined;
   AddEditMaterial: AddEditMaterialNavigationProps;
 };
 

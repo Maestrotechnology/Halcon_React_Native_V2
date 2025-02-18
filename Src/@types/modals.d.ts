@@ -79,3 +79,14 @@ export type RoleListFilterdataProps = {
 export type MeterialListFilterdataProps = {
   material_name: string;
 };
+export type MachinesListFilterProps = {
+  machine_name: string;
+  machine_id?: any;
+  division_id?: any;
+  equipment_id?: any;
+  serial_no?: number | string;
+  model?: string;
+  work_center_id?: any;
+  equipment_description?: string;
+  is_spindle?: string | number;
+};

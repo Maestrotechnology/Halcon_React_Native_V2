@@ -115,7 +115,7 @@ const CustomDrawerNavigation = ({
         {
           id: 31,
           displayName: 'Machines',
-          navigate: 'Dashboard',
+          navigate: 'Machines',
           leftIcon: 'RoleIcon',
           activeIcon: 'RoleIcon',
           isVisible: true,

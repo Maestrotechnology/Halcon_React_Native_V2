@@ -783,6 +783,16 @@ export interface HolidayListDataProps {
   holiday_date: string;
   reason: string;
 }
+
+//Machnes List
+export interface MachinesListDataProps {
+  machine_id: any;
+  machine_name: string;
+  equipment_id?: any;
+  division_description?: string;
+  division_id?: any;
+}
+
 // Access Permission List
 export interface AccessPermissionViewList {
   status: number;
