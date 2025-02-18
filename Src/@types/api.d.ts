@@ -783,13 +783,18 @@ export interface HolidayListDataProps {
   holiday_date: string;
   reason: string;
 }
-// Access Permission List
+export type RegularHolidayListDataProps = {
+  holiday_id: number;
+  id: number;
+};
+// Regular Holiday List
+
 export interface AccessPermissionViewList {
   status: number;
   msg: string;
   data: RolePermissionData;
 }
-
+// Access Permission List
 export interface RolePermissionData {
   role_id: number;
   role_name: string;

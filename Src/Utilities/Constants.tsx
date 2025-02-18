@@ -172,34 +172,47 @@ export const PolicyColorList = [
     color: '#007071',
   },
 ];
+export type ReqularDaysTypes = {
+  label: string;
+  holiday_id: number;
+  name: string;
+  status?: number;
+};
 
-export const ReqularDays = [
+export const ReqularDays: ReqularDaysTypes[] = [
   {
     label: 'Monday',
     holiday_id: 0,
+    name: 'Mon',
   },
   {
     label: 'Tuesday',
     holiday_id: 1,
+    name: 'Tues',
   },
   {
     label: 'Wednesday',
     holiday_id: 2,
+    name: 'Wed',
   },
   {
     label: 'Thursday',
     holiday_id: 3,
+    name: 'Turs',
   },
   {
     label: 'Friday',
     holiday_id: 4,
+    name: 'Fri',
   },
   {
     label: 'Saturday',
     holiday_id: 5,
+    name: 'Sat',
   },
   {
     label: 'Sunday',
     holiday_id: 6,
+    name: 'Sun',
   },
 ];

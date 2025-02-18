@@ -1,4 +1,4 @@
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {UseToken} from '../../../Utilities/StoreData';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -7,13 +7,21 @@ import {HolidayListDataProps} from '../../../@types/api';
 import {actionListProps} from '../../../Components/types';
 import {HolidayListFilterProps} from '../../../@types/modals';
 import {
+  CreateRegularHolidayService,
   deleteSpecialHolidayService,
+  listRegularHolidayService,
   listSpecialHolidayService,
 } from '../../../Services/Services';
 import {getCatchMessage} from '../../../Utilities/GeneralUtilities';
 import Toast from '../../../Components/Toast';
 import HOCView from '../../../Components/HOCView';
-import {FONTSIZES, ReqularDays} from '../../../Utilities/Constants';
+import {
+  BOX_SHADOW,
+  COLORS,
+  FONTSIZES,
+  ReqularDays,
+  ReqularDaysTypes,
+} from '../../../Utilities/Constants';
 import {CommonStyles} from '../../../Utilities/CommonStyles';
 import CustomButton from '../../../Components/CustomButton';
 import TableView from '../../../Components/TableView';
@@ -27,7 +35,9 @@ import {
 } from '../../../@types/Global';
 import HolidayListFilterModal from '../../../Modals/Filter/HolidayListFilterModal';
 import AddEditHolidayModal from '../../../Modals/ModifyModals/AddEditHolidayModal';
-import CheckBox from '../../../Components/CheckBox';
+import StyledText from '../../../Components/StyledText';
+import {FONTS} from '../../../Utilities/Fonts';
+import {WINDOW_WIDTH} from '@gorhom/bottom-sheet';
 
 var isMount = true;
 var currentPage = 1;
@@ -43,6 +53,10 @@ const Holiday = ({route}: MastersStackNavigationProps) => {
   const [isLoading, setisLoading] = useState<boolean>(false);
   const [permissionLoader, setPermissionLoader] = useState(false);
   const [HolidayList, setHolidayList] = useState<HolidayListDataProps[]>([]);
+  const [RegularHolidayList, setRegularHolidayList] = useState<
+    ReqularDaysTypes[]
+  >([]);
+
   const [actionsList, setActionList] = useState<actionListProps[]>([
     {
       id: 1,
@@ -81,6 +95,7 @@ const Holiday = ({route}: MastersStackNavigationProps) => {
 
     if (token) {
       handleGetHolidayList(1);
+      handleGetRegularHolidayList();
     }
     return () => {
       isMount = false;
@@ -88,6 +103,35 @@ const Holiday = ({route}: MastersStackNavigationProps) => {
       totalPages = 1;
     };
   }, [token, route, focused]);
+  const handleGetRegularHolidayList = () => {
+    setisLoading(true);
+    let formData = new FormData();
+    formData.append('token', token);
+    listRegularHolidayService(formData)
+      .then(response => {
+        if (response?.data?.status === 1) {
+          let Holidays = response?.data?.data?.map(
+            (ele: ReqularDaysTypes) => ele?.holiday_id,
+          );
+
+          setRegularHolidayList(
+            ReqularDays?.map(ele => {
+              return Holidays.includes(ele?.holiday_id)
+                ? {...ele, status: 1}
+                : ele;
+            }),
+          );
+        } else {
+          Toast.error(response?.data?.msg);
+        }
+      })
+      .catch(error => {
+        getCatchMessage(error);
+      })
+      .finally(() => {
+        setisLoading(false);
+      });
+  };
 
   const handleGetHolidayList = (
     page: number = 1,
@@ -207,6 +251,38 @@ const Holiday = ({route}: MastersStackNavigationProps) => {
     setIsShowDelete(pre => ({...pre, status: false}));
   };
 
+  const checkisRegularHoliday = (days: ReqularDaysTypes) => {
+    return days?.status === 1 ? true : false;
+  };
+
+  const handlePressRegularHoliday = (days: ReqularDaysTypes, index: number) => {
+    setisLoading(true);
+
+    let UpdatedDays = RegularHolidayList?.map((ele, ind) =>
+      ind !== index ? (ele?.status ? ind : null) : ele?.status ? null : ind,
+    ).filter((ele: number | null) => ele !== null);
+
+    let formData = new FormData();
+    formData.append('token', token);
+    formData.append('holiday_id', UpdatedDays?.length ? UpdatedDays : 7);
+
+    CreateRegularHolidayService(formData)
+      .then(response => {
+        if (response?.data?.status === 1) {
+          handleGetRegularHolidayList();
+        } else {
+          Toast.error(response?.data?.msg);
+        }
+      })
+      .catch(err => {
+        Toast.error(err.message);
+      })
+      .finally(() => {
+        if (isMount) {
+          setisLoading(false);
+        }
+      });
+  };
   return (
     <HOCView
       isListLoading={isListLoader}
@@ -233,14 +309,29 @@ const Holiday = ({route}: MastersStackNavigationProps) => {
         </CustomButton>
       </View>
       <View style={{marginBottom: bottom, flex: 1}}>
-        <View>
-          {ReqularDays?.map((days: any) => {
+        <View style={styles.HolidayLineFlex}>
+          {RegularHolidayList?.map((days: ReqularDaysTypes, index) => {
             return (
-              <CheckBox
-                checked={true}
-                key={days?.holiday_id}
-                label={days?.label}
-              />
+              <TouchableOpacity
+                style={[
+                  styles.HolidayButton,
+                  checkisRegularHoliday(days) ? styles.HighlightedBox : {},
+                ]}
+                onPress={() => {
+                  handlePressRegularHoliday(days, index);
+                }}>
+                <StyledText
+                  style={[
+                    styles.holidayText,
+                    {
+                      color: checkisRegularHoliday(days)
+                        ? COLORS.white
+                        : COLORS.darkBlue,
+                    },
+                  ]}>
+                  {days?.name}
+                </StyledText>
+              </TouchableOpacity>
             );
           })}
         </View>
@@ -326,4 +417,28 @@ const Holiday = ({route}: MastersStackNavigationProps) => {
 
 export default Holiday;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  HolidayLineFlex: {
+    flexDirection: 'row',
+    // gap: 10,
+    marginBottom: 10,
+    justifyContent: 'space-between',
+  },
+  HolidayButton: {
+    width: WINDOW_WIDTH / 7 - 10,
+    backgroundColor: COLORS.white,
+    borderRadius: 50,
+    paddingHorizontal: 5,
+    paddingVertical: 10,
+    ...BOX_SHADOW,
+  },
+  holidayText: {
+    fontFamily: FONTS.poppins.regular,
+    fontSize: FONTSIZES.tiny,
+    textAlign: 'center',
+  },
+  HighlightedBox: {
+    backgroundColor: '#363543',
+    ...BOX_SHADOW,
+  },
+});

@@ -310,34 +310,37 @@ const ServiceRequest = ({navigation, route}: any) =>
     };
 
     const handleCheckAccessToAdd = () => {
-      setPermissionLoader(true);
-      const data = {
-        token,
-      };
-      checkSubscriptionService(ConvertJSONtoFormData(data))
-        .then(res => {
-          if (res?.data?.status) {
-            const {
-              is_subscription,
-              available_machine_credits,
-            }: ServiceRequestSubscriptionProps = res?.data;
-            if (is_subscription === 1) {
-              navigation.navigate('ServiceRequestCreationStack', {
-                isCreate: true,
-              });
-            } else {
-              Toast.error(
-                'You do not have Subscription. Please subscribe to get access via web portal.',
-              );
-            }
-          } else {
-            Toast.error(res?.data?.msg);
-          }
-        })
-        .catch(err => getCatchMessage(err))
-        .finally(() => {
-          setPermissionLoader(false);
-        });
+      // setPermissionLoader(true);
+      // const data = {
+      //   token,
+      // };
+      // checkSubscriptionService(ConvertJSONtoFormData(data))
+      //   .then(res => {
+      //     if (res?.data?.status) {
+      //       const {
+      //         is_subscription,
+      //         available_machine_credits,
+      //       }: ServiceRequestSubscriptionProps = res?.data;
+      //       if (is_subscription === 1) {
+      //         navigation.navigate('ServiceRequestCreationStack', {
+      //           isCreate: true,
+      //         });
+      //       } else {
+      //         Toast.error(
+      //           'You do not have Subscription. Please subscribe to get access via web portal.',
+      //         );
+      //       }
+      //     } else {
+      //       Toast.error(res?.data?.msg);
+      //     }
+      //   })
+      //   .catch(err => getCatchMessage(err))
+      //   .finally(() => {
+      //     setPermissionLoader(false);
+      //   });
+      navigation.navigate('ServiceRequestCreationStack', {
+        isCreate: true,
+      });
     };
 
     const onApplyFilter = (data: ServiceRequestFilterDataProps | null) => {

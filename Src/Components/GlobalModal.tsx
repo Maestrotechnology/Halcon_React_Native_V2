@@ -5,12 +5,15 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import ToastContainer from 'react-native-toast-message';
+
 import React, {useState} from 'react';
 import {COLORS, WINDOW_WIDTH} from '../Utilities/Constants';
 import {ICONS} from '../Utilities/Icons';
 import StyledText from './StyledText';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {FONTS} from '../Utilities/Fonts';
+import ToastConfig from '../Utilities/ToastConfig';
 
 const GlobaModal = ({
   children,
@@ -41,6 +44,12 @@ const GlobaModal = ({
           ...styles.centeredView,
           backgroundColor: bgColor ? bgColor : COLORS.transparentDimColor,
         }}>
+        <ToastContainer
+          visibilityTime={3000}
+          config={ToastConfig}
+          topOffset={40}
+          bottomOffset={60}
+        />
         <KeyboardAwareScrollView>
           <TouchableOpacity activeOpacity={1} style={{...styles.modalView}}>
             <View
