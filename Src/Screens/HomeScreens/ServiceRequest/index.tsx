@@ -1,9 +1,8 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import HOCView from '../../../Components/HOCView';
-import {GetUserPermissions, UseToken} from '../../../Utilities/StoreData';
+import {UseToken} from '../../../Utilities/StoreData';
 import {
-  checkSubscriptionService,
   deleteServiceRequestService,
   exportServiceRequestService,
   getServiceRequestListService,
@@ -13,20 +12,16 @@ import {
   DeleteServiceRequestApiResposneProps,
   ServiceRequestItemsProps,
   ServiceRequestListApiResponseProps,
-  ServiceRequestSubscriptionProps,
 } from '../../../@types/api';
 import TableView from '../../../Components/TableView';
 import {ItemKeyListProps, actionListProps} from '../../../Components/types';
 import {
-  AlertBox,
   downloadPdf,
   getCatchMessage,
 } from '../../../Utilities/GeneralUtilities';
-import {ServiceRequestScreensNavigationProps} from '../../../@types/navigation';
 import {FONTSIZES} from '../../../Utilities/Constants';
 import CustomButton from '../../../Components/CustomButton';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {ServiceRequestPermissionProps} from '../../../Utilities/Reducertype';
 import {
   ServiceRequestFilterDataProps,
   ServiceRequestFilterInitialProp,
@@ -379,26 +374,26 @@ const ServiceRequest = ({navigation, route}: any) =>
         secondaryBtnTitle="Add Downtime SR"
         isLoading={isLoading}
         isBtnLoading={permissionLoader}>
-        {serviceRequestList?.length > 0 ? (
-          <View style={CommonStyles.flexRow}>
-            <CustomButton
-              onPress={() => {
-                setisShowFilter(true);
-              }}
-              type="secondary"
-              style={{width: '30%', marginVertical: 8}}>
-              Filter
-            </CustomButton>
-            <CustomButton
-              onPress={() => {
-                handleExportService();
-              }}
-              type="export"
-              style={{width: '30%', marginVertical: 8, marginLeft: 8}}>
-              Export
-            </CustomButton>
-          </View>
-        ) : null}
+        {/* {serviceRequestList?.length > 0 ? ( */}
+        <View style={CommonStyles.flexRow}>
+          <CustomButton
+            onPress={() => {
+              setisShowFilter(true);
+            }}
+            type="secondary"
+            style={{width: '30%', marginVertical: 8}}>
+            Filter
+          </CustomButton>
+          <CustomButton
+            onPress={() => {
+              handleExportService();
+            }}
+            type="export"
+            style={{width: '30%', marginVertical: 8, marginLeft: 8}}>
+            Export
+          </CustomButton>
+        </View>
+        {/* ) : null} */}
         <View style={{marginBottom: bottom, flex: 1}}>
           <TableView
             rowData={[

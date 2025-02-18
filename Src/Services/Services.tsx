@@ -206,10 +206,10 @@ export const getUserDropdownListService = (data: FormData) => {
   return axios.post('dropdown/user_dropdown', data);
 };
 export const getWorkCenterDropdownListService = (data: FormData) => {
-  return axios.post('dropdown/workCenterDropdown', data);
+  return axios.post('dropdown/work_center_dropdown', data);
 };
 export const getDivisionDropdownListService = (data: FormData) => {
-  return axios.post('dropdown/division_dropdown', data);
+  return axios.post('dropdown/dropdown_division', data);
 };
 export const getRoleDropdownListService = (data: FormData) => {
   return axios.post('dropdown/dropdown_role', data);
@@ -392,6 +392,16 @@ export const listRegularHolidayService = (data: FormData) => {
 export const CreateRegularHolidayService = (data: FormData) => {
   return axios.post('/masters/add_regular_holiday', data);
 };
+
+//machine list
+export const listMachinesService = (data: FormData, page: number) => {
+  return axios.post(`/masters/list_machines?page=${page}&size=20`, data);
+};
+
+export const CreateMachineService = (data: FormData) => {
+  return axios.post('masters/create_machine', data);
+};
+
 // Dropdown Lists
 export const RoleDropdownListService = (data: FormData) => {
   return axios.post('dropdown/dropdown_role', data);

@@ -1,27 +1,19 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import React, {useEffect} from 'react';
 import {
   ServiceRequestFilterDataProps,
   ServiceRequestListFilterModalProps,
 } from '../../@types/modals';
 import {useFormik} from 'formik';
-import * as Yup from 'yup';
 import {
   DeviceStatusProps,
-  SORT_OPTIONS,
-  priorityLevelOptions,
   requestStatusOptions,
 } from '../../Utilities/StaticDropdownOptions';
 import DropdownBox from '../../Components/DropdownBox';
 import CustomButton from '../../Components/CustomButton';
 import DateTimePicker from '../../Components/DateTimePicker';
-import TextInputBox from '../../Components/TextInputBox';
-import {COLORS} from '../../Utilities/Constants';
 
-const reqStatusOptions: DeviceStatusProps[] = [
-  // {id: 1, name: 'Created'},
-  ...requestStatusOptions,
-];
+const reqStatusOptions: DeviceStatusProps[] = [...requestStatusOptions];
 
 const ServiceRequestListFilterModal = ({
   filterData,
