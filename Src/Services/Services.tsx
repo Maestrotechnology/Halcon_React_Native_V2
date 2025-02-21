@@ -402,6 +402,14 @@ export const CreateMachineService = (data: FormData) => {
   return axios.post('masters/create_machine', data);
 };
 
+export const UpdateMachineService = (data: FormData) => {
+  return axios.post('masters/update_machine', data);
+};
+
+export const DeleteMachineService = (data: FormData) => {
+  return axios.post('masters/delete_machine', data);
+};
+
 // Dropdown Lists
 export const RoleDropdownListService = (data: FormData) => {
   return axios.post('dropdown/dropdown_role', data);

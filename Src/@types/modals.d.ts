@@ -89,4 +89,6 @@ export type MachinesListFilterProps = {
   work_center_id?: any;
   equipment_description?: string;
   is_spindle?: string | number;
+  division_description?: string;
+  work_center_name?: string;
 };

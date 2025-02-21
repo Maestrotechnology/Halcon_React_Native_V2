@@ -5,10 +5,15 @@ import {useFormik} from 'formik';
 import CustomButton from '../../Components/CustomButton';
 import TextInputBox from '../../Components/TextInputBox';
 import {COLORS, INPUT_SIZE} from '../../Utilities/Constants';
-import {ConvertJSONtoFormData, isLoading} from '../../Utilities/Methods';
+import {
+  ConvertJSONtoFormData,
+  isLoading,
+  RemoveSpace,
+} from '../../Utilities/Methods';
 import {
   CreateMachineService,
   CreateWorkCenterService,
+  UpdateMachineService,
   UpdateWorkCenterService,
 } from '../../Services/Services';
 import {getCatchMessage} from '../../Utilities/GeneralUtilities';
@@ -17,10 +22,15 @@ import {UseToken} from '../../Utilities/StoreData';
 import {AddEditModalProps} from '../../@types/Global';
 import {MachinesListFilterProps} from '../../@types/modals';
 import DropdownBox from '../../Components/DropdownBox';
+import CheckBox from '../../Components/CheckBox';
+import StyledText from '../../Components/StyledText';
+import Loader from '../../Components/Loader';
 
 const validationSchema = Yup.object().shape({
-  name: Yup.string().trim().required('* Machine Name is required.'),
+  machine_name: Yup.string().trim().required('* Machine Name is required.'),
+  equipment_id: Yup.string().trim().required('* Machine ID is required.'),
 });
+
 const AddEditMachinesModal = ({
   onApplyChanges,
   onClose,
@@ -46,7 +56,7 @@ const AddEditMachinesModal = ({
       model: '',
       work_center_id: '',
       equipment_description: '',
-      is_spindle: '',
+      is_spindle: 0,
     },
     validationSchema,
     onSubmit(values) {
@@ -62,6 +72,8 @@ const AddEditMachinesModal = ({
     isLoading(true);
     let finalObj = {
       ...values,
+      division_id: values.division_id.division_id,
+      work_center_id: values.work_center_id.work_center_id,
       token: token,
     };
 
@@ -87,9 +99,11 @@ const AddEditMachinesModal = ({
     let finalObj = {
       ...values,
       token: token,
+      division_id: values.division_id.division_id,
+      work_center_id: values.work_center_id.work_center_id,
     };
 
-    UpdateWorkCenterService(ConvertJSONtoFormData(finalObj))
+    UpdateMachineService(ConvertJSONtoFormData(finalObj))
       .then(async res => {
         if (res.data.status === 1) {
           Toast.success(res?.data?.msg);
@@ -109,9 +123,18 @@ const AddEditMachinesModal = ({
     if (lineData) {
       setValues({
         ...lineData,
+        division_id: {
+          division_id: lineData.division_id,
+          division_description: lineData.division_description,
+        },
+        work_center_id: {
+          work_center_id: lineData.work_center_id,
+          work_center_name: lineData.work_center_name,
+        },
       });
     }
   }, []);
+
   return (
     <View>
       <TextInputBox
@@ -138,13 +161,13 @@ const AddEditMachinesModal = ({
       <TextInputBox
         value={values?.equipment_id}
         onChangeText={(val: string) => {
-          setFieldValue('equipment_id', val);
+          setFieldValue('equipment_id', RemoveSpace(val));
         }}
         customInputBoxContainerStyle={{
           borderColor: COLORS.primary,
         }}
         textInputProps={{
-          maxLength: INPUT_SIZE.Name,
+          maxLength: INPUT_SIZE.Machine_ID,
         }}
         isRequired
         placeHolder="Enter Machine ID"
@@ -175,15 +198,15 @@ const AddEditMachinesModal = ({
       />
 
       <TextInputBox
-        value={values?.equipment_id}
+        value={values?.serial_no}
         onChangeText={(val: string) => {
-          setFieldValue('serial_no', val);
+          setFieldValue('serial_no', RemoveSpace(val));
         }}
         customInputBoxContainerStyle={{
           borderColor: COLORS.primary,
         }}
         textInputProps={{
-          maxLength: INPUT_SIZE.Name,
+          maxLength: INPUT_SIZE.Serial_Number,
         }}
         placeHolder="Enter Serial No"
         title="Serial No"
@@ -191,7 +214,7 @@ const AddEditMachinesModal = ({
       />
 
       <TextInputBox
-        value={values?.equipment_id}
+        value={values?.model}
         onChangeText={(val: string) => {
           setFieldValue('model', val);
         }}
@@ -224,7 +247,7 @@ const AddEditMachinesModal = ({
       />
 
       <TextInputBox
-        value={values?.equipment_id}
+        value={values?.equipment_description}
         onChangeText={(val: string) => {
           setFieldValue('equipment_description', val);
         }}
@@ -238,6 +261,34 @@ const AddEditMachinesModal = ({
         title="Equipment Description"
         isEditable={type !== 'View'}
       />
+      <View style={{marginBottom: 8}}>
+        <StyledText style={{marginBottom: 7, marginTop: 5}}>
+          Is Spindle
+        </StyledText>
+        <View style={{flexDirection: 'row'}}>
+          <View style={{width: 100}}>
+            <CheckBox
+              label="Yes"
+              checked={values.is_spindle === 1}
+              onChange={() => {
+                setFieldValue('is_spindle', values.is_spindle === 1 ? 0 : 1);
+              }}
+            />
+          </View>
+
+          <View style={{width: 100}}>
+            <CheckBox
+              label="No"
+              checked={values.is_spindle === 2}
+              onChange={() => {
+                if (values.is_spindle === 2) {
+                }
+                setFieldValue('is_spindle', values.is_spindle === 2 ? 0 : 2);
+              }}
+            />
+          </View>
+        </View>
+      </View>
 
       <View
         style={{
