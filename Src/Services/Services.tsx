@@ -154,11 +154,11 @@ export const updateServiceRequestService = (data: any) => {
 };
 
 export const fileUploadService = (data: FormData) => {
-  return axios.post('file_upload', data);
+  return axios.post('service_request/file_upload', data);
 };
 
 export const viewServiceRequestService = (data: FormData) => {
-  return axios.post('view_request', data);
+  return axios.post('service_request/view_request', data);
 };
 
 export const getAttachmentsListService = (data: FormData, page: number) => {

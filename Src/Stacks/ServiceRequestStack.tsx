@@ -1,12 +1,12 @@
-import { StyleSheet } from "react-native";
-import React from "react";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import {StyleSheet} from 'react-native';
+import React from 'react';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
   ServiceRequestScreensNavigationProps,
   ServiceRequestStackParamList,
-} from "../@types/navigation";
-import ServiceRequest from "../Screens/HomeScreens/ServiceRequest";
-import ServiceRequestCreationStack from "./ServiceRequestCreationStack";
+} from '../@types/navigation';
+import ServiceRequest from '../Screens/HomeScreens/ServiceRequest';
+import ServiceRequestCreationStack from './ServiceRequestCreationStack';
 
 const Stack = createNativeStackNavigator<ServiceRequestStackParamList>();
 
@@ -18,14 +18,13 @@ const ServiceRequestStack = ({
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        animation: "fade",
-      }}
-    >
+        animation: 'fade',
+      }}>
       <Stack.Screen
         // @ts-ignore
         initialParams={{
           // @ts-ignore
-          machineId: route?.params?.machineId || "",
+          machineId: route?.params?.machineId || '',
           // @ts-ignore
           serviceType: route?.params?.serviceType,
           // @ts-ignore

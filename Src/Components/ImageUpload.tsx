@@ -108,43 +108,44 @@ const ImageUpload = ({
 
   const handleImage = async () => {
     const galleryPermission = await getIsGrantedGalleryPermission();
-    if (galleryPermission) {
-      ImagePicker.openPicker({
-        width: 512,
-        height: 512,
-        cropping: true,
-        mediaType: 'photo',
-        smartAlbums: [
-          'PhotoStream',
-          'Generic',
-          'Panoramas',
-          'Favorites',
-          'Timelapses',
-          'AllHidden',
-          'RecentlyAdded',
-          'Bursts',
-          'SlomoVideos',
-          'UserLibrary',
-          'SelfPortraits',
-          'Screenshots',
-          'DepthEffect',
-          'LivePhotos',
-          'Animated',
-          'LongExposure',
-        ],
+
+    // if (galleryPermission) {
+    ImagePicker.openPicker({
+      width: 512,
+      height: 512,
+      cropping: true,
+      mediaType: 'photo',
+      smartAlbums: [
+        'PhotoStream',
+        'Generic',
+        'Panoramas',
+        'Favorites',
+        'Timelapses',
+        'AllHidden',
+        'RecentlyAdded',
+        'Bursts',
+        'SlomoVideos',
+        'UserLibrary',
+        'SelfPortraits',
+        'Screenshots',
+        'DepthEffect',
+        'LivePhotos',
+        'Animated',
+        'LongExposure',
+      ],
+    })
+      .then(image => {
+        const tempData = {
+          type: image.mime,
+          file_title: getFileNameFromUrl(image.path),
+          file: image.path,
+          attachment_id: generateUniqueId(),
+        };
+        cameraRef.current?.close();
+        onSelect(tempData);
       })
-        .then(image => {
-          const tempData = {
-            type: image.mime,
-            file_title: getFileNameFromUrl(image.path),
-            file: image.path,
-            attachment_id: generateUniqueId(),
-          };
-          cameraRef.current?.close();
-          onSelect(tempData);
-        })
-        .catch(error => {});
-    }
+      .catch(error => {});
+    // }
   };
 
   const RenderCameraOptions = ({icon, text = '', id}: CameraOptionsType) => {
@@ -316,8 +317,7 @@ const ImageUpload = ({
         bottomSheetModalRef={cameraRef}
         onClose={() => {
           cameraRef.current?.close();
-        }}
-        snapPoints={['22%']}>
+        }}>
         <StyledText
           style={{fontFamily: FONTS.poppins.bold, fontSize: FONTSIZES.medium}}>
           {title}

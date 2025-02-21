@@ -1,6 +1,6 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
-import {BottomSheetModal} from '@gorhom/bottom-sheet';
+import {BottomSheetModal, BottomSheetView} from '@gorhom/bottom-sheet';
 import {COLORS} from '../Utilities/Constants';
 import {BottomSheetProps} from '../@types/general';
 
@@ -46,7 +46,9 @@ const BottomSheet = ({
           />
         );
       }}>
-      {children}
+      <BottomSheetView style={{flex: 1, padding: 20}}>
+        {children}
+      </BottomSheetView>
     </BottomSheetModal>
   );
 };

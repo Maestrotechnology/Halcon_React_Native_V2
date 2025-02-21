@@ -39,6 +39,7 @@ export type CustomDrawerNavigationOptionsProps = {
   isVisible: boolean;
   activeIcon: IconType;
   isMenu?: boolean;
+  screenName?: string;
   children?: CustomDrawerNavigationOptionsProps[];
 };
 

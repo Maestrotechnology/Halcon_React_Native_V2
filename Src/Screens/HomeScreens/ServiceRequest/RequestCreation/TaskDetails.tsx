@@ -1,52 +1,49 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
-import { useIsFocused } from "@react-navigation/native";
-import { useServiceRequestDetails } from "../../../../Utilities/Contexts";
-import { UseToken } from "../../../../Utilities/StoreData";
+import {StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {useIsFocused} from '@react-navigation/native';
+import {useServiceRequestDetails} from '../../../../Utilities/Contexts';
+import {UseToken} from '../../../../Utilities/StoreData';
 import {
   deleteTaskDetailService,
   getTaskDetailsListService,
-} from "../../../../Services/Services";
-import Toast from "../../../../Components/Toast";
+} from '../../../../Services/Services';
+import Toast from '../../../../Components/Toast';
 import {
   DeleteTaskDetailApiResposneProps,
   TaskDetailsDataItemsProps,
   TaskDetailsListApiResponseProps,
-} from "../../../../@types/api";
-import HOCView from "../../../../Components/HOCView";
-import { FONTSIZES } from "../../../../Utilities/Constants";
-import StyledText from "../../../../Components/StyledText";
-import TableView from "../../../../Components/TableView";
-import {
-  ItemKeyListProps,
-  actionListProps,
-} from "../../../../Components/types";
-import { ServiceRequestCreationScreensNavigationProps } from "../../../../@types/navigation";
-import { AlertBox } from "../../../../Utilities/GeneralUtilities";
-import moment from "moment";
-import CustomButton from "../../../../Components/CustomButton";
-import GlobaModal from "../../../../Components/GlobalModal";
-import ConfirmationModal from "../../../../Modals/ConfirmationModal";
+} from '../../../../@types/api';
+import HOCView from '../../../../Components/HOCView';
+import {FONTSIZES} from '../../../../Utilities/Constants';
+import StyledText from '../../../../Components/StyledText';
+import TableView from '../../../../Components/TableView';
+import {ItemKeyListProps, actionListProps} from '../../../../Components/types';
+import {ServiceRequestCreationScreensNavigationProps} from '../../../../@types/navigation';
+import {AlertBox} from '../../../../Utilities/GeneralUtilities';
+import moment from 'moment';
+import CustomButton from '../../../../Components/CustomButton';
+import GlobaModal from '../../../../Components/GlobalModal';
+import ConfirmationModal from '../../../../Modals/ConfirmationModal';
 
 var isMount = true;
 var currentPage = 1;
 var totalPages = 1;
 
 const itemHeaderList = [
-  "Start Date",
-  "End Date",
-  "Machine Status Before",
-  "Machine Status After",
-  "Total Hours",
-  "Technician",
+  'Start Date',
+  'End Date',
+  'Machine Status Before',
+  'Machine Status After',
+  'Total Hours',
+  'Technician',
 ];
 const itemKeyList: ItemKeyListProps[] = [
-  { key: "startDatetime" },
-  { key: "endDatetime" },
-  { key: "deviceStatusBefore" },
-  { key: "deviceStatusAfter" },
-  { key: "totalDuration" },
-  { key: "technicianName" },
+  {key: 'startDatetime'},
+  {key: 'endDatetime'},
+  {key: 'deviceStatusBefore'},
+  {key: 'deviceStatusAfter'},
+  {key: 'totalDuration'},
+  {key: 'technicianName'},
 ];
 
 const TaskDetails = ({
@@ -54,7 +51,7 @@ const TaskDetails = ({
 }: ServiceRequestCreationScreensNavigationProps) => {
   const token = UseToken();
   const focused = useIsFocused();
-  const { setactiveTab, serviceReqId, isView, values } =
+  const {setactiveTab, serviceReqId, isView, values} =
     useServiceRequestDetails();
   const [isListLoading, setisListLoading] = useState<boolean>(true);
   const [isRefreshing, setisRefreshing] = useState<boolean>(false);
@@ -75,12 +72,12 @@ const TaskDetails = ({
     // },
     {
       id: 3,
-      name: "deleteIcon",
+      name: 'deleteIcon',
       // isDisabled: isView || values.serviceCompletedDate !== '',
     },
     {
       id: 2,
-      name: "editIcon",
+      name: 'editIcon',
       // isDisabled: isView || values.serviceCompletedDate !== '',
     },
   ];
@@ -104,19 +101,19 @@ const TaskDetails = ({
 
   const handleGetTaskDetailsList = (page = 1) => {
     const formData = new FormData();
-    formData.append("token", token);
-    formData.append("request_id", serviceReqId);
+    formData.append('token', token);
+    formData.append('request_id', serviceReqId);
     getTaskDetailsListService(formData, page)
-      .then((res) => {
+      .then(res => {
         const response: TaskDetailsListApiResponseProps = res.data;
         if (response.status === 1) {
-          let tempList = [...response.data.items].map((ele) => {
+          let tempList = [...response.data.items].map(ele => {
             return {
               ...ele,
               startDatetime: moment(ele.startDatetime).format(
-                "YYYY-MM-DD HH:mm A"
+                'YYYY-MM-DD HH:mm A',
               ),
-              endDatetime: moment(ele.endDatetime).format("YYYY-MM-DD HH:mm A"),
+              endDatetime: moment(ele.endDatetime).format('YYYY-MM-DD HH:mm A'),
             };
           });
           if (page === 1) {
@@ -126,14 +123,14 @@ const TaskDetails = ({
             }
           } else {
             if (isMount) {
-              settaskDetailsList((prev) => [...prev, ...tempList]);
+              settaskDetailsList(prev => [...prev, ...tempList]);
             }
           }
         } else if (response.status === 0) {
           Toast.error(response.msg);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         Toast.error(err.message);
       })
       .finally(() => {
@@ -169,15 +166,15 @@ const TaskDetails = ({
       setisLoading(true);
     }
     const formData = new FormData();
-    formData.append("token", token);
-    formData.append("report_id", taskId);
+    formData.append('token', token);
+    formData.append('report_id', taskId);
     deleteTaskDetailService(formData)
-      .then((res) => {
+      .then(res => {
         const response: DeleteTaskDetailApiResposneProps = res.data;
         if (response.status === 1) {
           if (isMount) {
-            settaskDetailsList((prev) =>
-              [...prev].filter((ele) => ele.report_id !== taskId)
+            settaskDetailsList(prev =>
+              [...prev].filter(ele => ele.report_id !== taskId),
             );
           }
           Toast.success(response.msg);
@@ -185,7 +182,7 @@ const TaskDetails = ({
           Toast.error(response.msg);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         Toast.error(err.message);
       })
       .finally(() => {
@@ -196,7 +193,7 @@ const TaskDetails = ({
   };
 
   const handleClose = () =>
-    setConfirmationModal((pre) => ({ ...pre, status: false }));
+    setConfirmationModal(pre => ({...pre, status: false}));
 
   return (
     <HOCView
@@ -204,9 +201,9 @@ const TaskDetails = ({
       isLoading={isLoading}
       secondaryHeaderTitle="Task Details"
       isShowSecondaryHeaderBtn={!isView && !values.serviceCompletedDate}
-      secondaryBtnTextStyle={{ fontSize: FONTSIZES.small }}
+      secondaryBtnTextStyle={{fontSize: FONTSIZES.small}}
       onHeaderBtnPress={() => {
-        navigation.navigate("CreateTask", {
+        navigation.navigate('CreateTask', {
           isCreate: true,
         });
       }}
@@ -216,18 +213,17 @@ const TaskDetails = ({
         },
         isEnableMenu: false,
         isRightIconEnable: false,
-        headerTitle: "Task Details",
+        headerTitle: 'Task Details',
       }}
-      secondaryBtnTitle="Add Service Task"
-    >
+      secondaryBtnTitle="Add Service Task">
       <TableView
         dataList={[...taskDetailsList]}
         rowData={[
-          { key: "intervention_start_date", label: "Intervention Start Date" },
-          { key: "intervention_end_date", label: "Intervention End Date" },
-          { key: "start_status", label: "Machine Status at Task Start" },
-          { key: "end_status", label: "Machine Status at Task End" },
-          { key: "task_done_by", label: "Task Done By" },
+          {key: 'intervention_start_date', label: 'Intervention Start Date'},
+          {key: 'intervention_end_date', label: 'Intervention End Date'},
+          {key: 'start_status', label: 'Machine Status at Task Start'},
+          {key: 'end_status', label: 'Machine Status at Task End'},
+          {key: 'task_done_by', label: 'Task Done By'},
         ]}
         onEndReached={onEndReached}
         viewPortColumnDivisionCount={3.8}
@@ -238,12 +234,12 @@ const TaskDetails = ({
         actionsList={isView ? [] : actionsList}
         onActionPress={(actionType: number, val: TaskDetailsDataItemsProps) => {
           if (actionType === 10) {
-            navigation.navigate("CreateTask", {
+            navigation.navigate('CreateTask', {
               isView: true,
               taskItemData: val,
             });
           } else if (actionType === 2) {
-            navigation.navigate("CreateTask", {
+            navigation.navigate('CreateTask', {
               isUpdate: true,
               taskItemData: val,
             });
@@ -263,14 +259,13 @@ const TaskDetails = ({
       />
       {/* {taskDetailsList.length > 0 && ( */}
       <CustomButton
-        style={{ marginBottom: 20 }}
+        style={{marginBottom: 20}}
         onPress={() => {
           setactiveTab(4);
-          navigation.navigate("TaskDetailsFileUploading", {
-            isFrom: "TaskDetails",
+          navigation.navigate('TaskDetailsFileUploading', {
+            isFrom: 'TaskDetails',
           });
-        }}
-      >
+        }}>
         Next
       </CustomButton>
       {/* )} */}
