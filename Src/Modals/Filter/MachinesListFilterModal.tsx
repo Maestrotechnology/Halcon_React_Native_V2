@@ -58,7 +58,7 @@ const MachinesListFilterModal = ({
         isLocalSearch
         searchFieldName="equipment_id"
         onIconPress={() => {
-          setFieldValue('machine', null);
+          setFieldValue('machine_id', null);
         }}
       />
       <TextInputBox

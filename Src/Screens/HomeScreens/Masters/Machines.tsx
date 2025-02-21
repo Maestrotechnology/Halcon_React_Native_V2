@@ -7,6 +7,7 @@ import {MachinesListDataProps} from '../../../@types/api';
 import {actionListProps} from '../../../Components/types';
 import {MachinesListFilterProps} from '../../../@types/modals';
 import {
+  DeleteMachineService,
   deleteWorkCenterService,
   listMachinesService,
 } from '../../../Services/Services';
@@ -98,14 +99,16 @@ const Machines = ({route}: MastersStackNavigationProps) => {
   ) => {
     const formData = new FormData();
     formData.append('token', token);
+    console.log(filter, 'filter');
+
     if (filter?.machine_name) {
-      formData.append('name', filter?.machine_name);
+      formData.append('machine_name', filter?.machine_name);
     }
     if (filter?.machine_id) {
-      formData.append('name', filter?.machine_id);
+      formData.append('machine_id', filter?.machine_id?.machine_id);
     }
     if (filter?.division_id) {
-      formData.append('name', filter?.division_id);
+      formData.append('division_id', filter?.division_id);
     }
 
     listMachinesService(formData, page)
@@ -162,8 +165,9 @@ const Machines = ({route}: MastersStackNavigationProps) => {
     }
     let formData = new FormData();
     formData.append('token', token);
-    formData.append('work_center_id', machine_id);
-    deleteWorkCenterService(formData)
+    formData.append('machine_id', machine_id);
+
+    DeleteMachineService(formData)
       .then(res => {
         const response: DeleteApiResposneProps = res.data;
 
@@ -208,6 +212,7 @@ const Machines = ({route}: MastersStackNavigationProps) => {
       setisShowFilter(false);
     }
   };
+
   const closeTaskModal = () => {
     if (isMount) {
       setAddEditWorkCenter({lineData: null, show: false, type: ''});

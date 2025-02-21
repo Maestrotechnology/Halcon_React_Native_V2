@@ -153,6 +153,8 @@ export const INPUT_SIZE = {
   Material_Code: 100,
   Notes: 100,
   Unit: 100,
+  Machine_ID: 12,
+  Serial_Number: 12,
 };
 
 export const PolicyColorList = [
@@ -179,40 +181,33 @@ export type ReqularDaysTypes = {
   status?: number;
 };
 
-export const ReqularDays: ReqularDaysTypes[] = [
+export const ReqularDays = [
   {
     label: 'Monday',
     holiday_id: 0,
-    name: 'Mon',
   },
   {
     label: 'Tuesday',
     holiday_id: 1,
-    name: 'Tues',
   },
   {
     label: 'Wednesday',
     holiday_id: 2,
-    name: 'Wed',
   },
   {
     label: 'Thursday',
     holiday_id: 3,
-    name: 'Turs',
   },
   {
     label: 'Friday',
     holiday_id: 4,
-    name: 'Fri',
   },
   {
     label: 'Saturday',
     holiday_id: 5,
-    name: 'Sat',
   },
   {
     label: 'Sunday',
     holiday_id: 6,
-    name: 'Sun',
   },
 ];

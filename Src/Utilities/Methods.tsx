@@ -56,3 +56,7 @@ export const FormateDate = (date: Date, type: 'date' | 'datetime' | 'time') => {
 
   return moment(date).format(formatMap[type]);
 };
+
+export const RemoveSpace = (value: any) => {
+  return value.split(' ').join('');
+};

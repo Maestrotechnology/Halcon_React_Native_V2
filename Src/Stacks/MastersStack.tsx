@@ -18,20 +18,22 @@ const Stack = createNativeStackNavigator<MasterStackStackParamList>();
 
 const MastersStack = ({route, navigation}: MastersStackNavigationProps) => {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-        animation: 'fade',
-      }}>
-      <Stack.Screen name="TasksList" component={TasksList} />
-      <Stack.Screen name="Machines" component={Machines} />
-      <Stack.Screen name="Policy" component={Policy} />
-      <Stack.Screen name="Division" component={Division} />
-      <Stack.Screen name="Material" component={Material} />
-      <Stack.Screen name="AddEditMaterial" component={AddEditMaterial} />
-      <Stack.Screen name="WorkCenter" component={WorkCenter} />
-      <Stack.Screen name="Holiday" component={Holiday} />
-    </Stack.Navigator>
+    <>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+          animation: 'fade',
+        }}>
+        <Stack.Screen name="TasksList" component={TasksList} />
+        <Stack.Screen name="Machines" component={Machines} />
+        <Stack.Screen name="Policy" component={Policy} />
+        <Stack.Screen name="Division" component={Division} />
+        <Stack.Screen name="Material" component={Material} />
+        <Stack.Screen name="AddEditMaterial" component={AddEditMaterial} />
+        <Stack.Screen name="WorkCenter" component={WorkCenter} />
+        <Stack.Screen name="Holiday" component={Holiday} />
+      </Stack.Navigator>
+    </>
   );
 };
 
