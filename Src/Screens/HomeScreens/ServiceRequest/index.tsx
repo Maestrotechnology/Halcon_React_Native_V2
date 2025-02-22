@@ -404,7 +404,7 @@ const ServiceRequest = ({navigation, route}: any) =>
               {key: 'machine_status_name', label: 'Machine Status'},
               // {key: 'report_no', label: 'Report Number'},
               {key: 'date_of_error_occur', label: 'Error Occurred At'},
-              {key: 'requested_date', label: 'Request Date'},
+              {key: 'requested_date', label: 'Request Date', type: 'date'},
               {key: 'completed_date', label: 'Completed Date'},
               // {key: 'total_down_time', label: 'Total Down Time'},
               {key: 'request_status_name', label: 'Request Status'},

@@ -11,11 +11,16 @@ import StyledText from './StyledText';
 import {COLORS, WINDOW_WIDTH} from '../Utilities/Constants';
 import {FONTS} from '../Utilities/Fonts';
 import {ICONS} from '../Utilities/Icons';
-import {TableViewProps} from './types';
+import {TableRowDataProps, TableViewProps} from './types';
 import ListEmptyComponent from './ListEmptyComponent';
 import CommonSwitch from './CommonSwitch';
 import lodash from 'lodash';
 import {FormateDate} from '../Utilities/Methods';
+import {
+  deviceStatusOptions,
+  LIST_TYPE_MAP,
+  TASK_DONE_BY_OPTIONS,
+} from '../Utilities/StaticDropdownOptions';
 export type TableItemProps = {
   item: any;
   index: number;
@@ -69,14 +74,30 @@ const TableView = ({
     );
   };
 
-  const getDisplayData = (value: any) => {
-    if ((value && value !== '') || value === 0) {
-      return value;
-    } else {
-      return '-';
+  const getCardValue = (item: any, cardItem: TableRowDataProps) => {
+    if (cardItem?.type === 'date') {
+      return item?.[cardItem?.key]
+        ? FormateDate(item[cardItem.key], 'datetime')
+        : '';
     }
+    if (cardItem?.ListType) {
+      return getLabelName(item, cardItem);
+    }
+    if (cardItem?.subChildName) {
+      return item?.[cardItem?.key]?.[cardItem?.subChildName];
+    }
+    return item?.[cardItem?.key];
   };
 
+  const getLabelName = (item: any, cardItem: TableRowDataProps) => {
+    if (!item?.[cardItem?.key]) return '';
+
+    return cardItem?.ListType
+      ? LIST_TYPE_MAP[cardItem?.ListType]?.find(
+          ele => ele?.id == item?.[cardItem?.key],
+        )?.name || ''
+      : '';
+  };
   const renderTableHeader = () => {
     return (
       <>
@@ -222,11 +243,7 @@ const TableView = ({
                             ...styles.valueLabel,
                             color: item?.color ? item?.color : '#000',
                           }}>
-                          {cardItem?.type === 'date'
-                            ? item?.[cardItem?.key]
-                              ? FormateDate(item?.[cardItem?.key], 'datetime')
-                              : ''
-                            : item?.[cardItem?.key]}
+                          {getCardValue(item, cardItem)}
                         </StyledText>
                       )}
                     </View>

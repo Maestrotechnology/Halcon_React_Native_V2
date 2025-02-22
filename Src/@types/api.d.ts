@@ -362,7 +362,7 @@ export type ViewServiceRequestDataProps = {
   promise_date: string;
   received_by: string;
   receiving_date: string;
-  recurring_problem: string;
+  recurring_problem: any;
   relevant_details: string;
   report_no: string;
   request_id: number;
@@ -831,4 +831,9 @@ export interface InnerChildRolePermission {
   id: number;
   name: string;
   status: number;
+}
+
+export interface AssignedUserLtemProps {
+  user_id: number;
+  name: string;
 }

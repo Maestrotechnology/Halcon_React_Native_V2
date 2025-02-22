@@ -159,7 +159,14 @@ export interface DropdownBoxProps
   isRefreshing?: boolean;
   onEndReached?: () => void;
   onRefresh?: () => void;
-  apiType?: 'machineList' | 'user' | 'work_center' | 'division' | 'roleList';
+  apiType?:
+    | 'machineList'
+    | 'user'
+    | 'work_center'
+    | 'division'
+    | 'roleList'
+    | 'assignedUsersList'
+    | 'MaterialList';
   isRequired?: boolean;
   placeHolder?: string;
   iconHeight?: number;
@@ -168,6 +175,7 @@ export interface DropdownBoxProps
   isEnableRightIcon?: boolean;
   bigListProps?: SearchDropdownBoxModalProps;
   ContainerStyle?: StyleProp<ViewStyle>;
+  mainContainerStyle?: StyleProp<ViewStyle>;
   multiSelect?: boolean;
   uniqueKey?: 'role_id';
   onMultipleSelect?: (item: any[]) => void;
@@ -203,6 +211,18 @@ export type TextInputBoxProps = {
   onVerifyPress?: () => void;
   multiline?: boolean;
   numberOfLines?: number;
+  validationType?:
+    | 'NUMBER'
+    | 'CHARACTER'
+    | 'ALPHA_NUMERIC'
+    | 'AMOUNT'
+    | 'CHAR_AND_SPACE'
+    | 'SEO_URL'
+    | 'PREVENT_EMOJI'
+    | 'PREVENT_SPECIAL_CHAR'
+    | 'PREVENT_SPACE'
+    | 'FLOAT'
+    | 'RESTRICKT_SPACE';
 };
 
 export type DateTimePickerProps = {
@@ -326,4 +346,15 @@ export type AddEdittaskProps = {
 export type UpdatePolicyProps = {
   lineData: PolicyListDataProps | null;
   show: boolean;
+};
+export type ImageBoxProps = {
+  src: any;
+  alt: string;
+  width?: any;
+  height?: any;
+  ImageStyle?: StyleProp<TextStyle>;
+  onPress?: ((event?: any) => void) | false;
+  resizeMode?: any;
+  keyData?: number;
+  isProfile?: boolean;
 };

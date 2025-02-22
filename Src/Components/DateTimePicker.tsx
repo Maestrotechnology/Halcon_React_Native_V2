@@ -87,7 +87,7 @@ const DateTimePicker = ({
               borderColor: errorText
                 ? COLORS.red
                 : isDisabled
-                ? COLORS.orange
+                ? '#fff'
                 : COLORS.primary,
             },
           ]}>

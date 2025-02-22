@@ -1,4 +1,4 @@
-import { IconType } from "./Icons";
+import {IconType} from './Icons';
 
 export type DeviceStatusProps = {
   id: number;
@@ -14,117 +14,136 @@ export type CameraOptionsprops = {
 export const deviceStatusOptions: DeviceStatusProps[] = [
   {
     id: 1,
-    name: "Operational",
+    name: 'Operational',
   },
   {
     id: 2,
-    name: "Partially Operational",
+    name: 'Partially Operational',
   },
   {
     id: 3,
-    name: "Not Operational",
+    name: 'Not Operational',
   },
 ];
 
 export const priorityLevelOptions: DeviceStatusProps[] = [
   {
     id: 1,
-    name: "Low",
+    name: 'Low',
   },
   {
     id: 2,
-    name: "Medium",
+    name: 'Medium',
   },
   {
     id: 3,
-    name: "High",
+    name: 'High',
   },
 ];
 export const priorityLevelOptions1: DeviceStatusProps[] = [
   {
     id: 1,
-    name: "Critical",
+    name: 'Critical',
   },
   {
     id: 2,
-    name: "Non Critical",
+    name: 'Non Critical',
+  },
+];
+export const RequiringProblemsList: DeviceStatusProps[] = [
+  {
+    name: 'Yes',
+    id: 1,
+  },
+  {
+    name: 'No',
+    id: 2,
+  },
+  {
+    name: 'N/A',
+    id: 3,
   },
 ];
 
 export const requestStatusOptions: DeviceStatusProps[] = [
   {
     id: 1,
-    name: "Created",
+    name: 'Created',
   },
   {
     id: 2,
-    name: "On Going",
+    name: 'On Going',
   },
   {
     id: 3,
-    name: "Completed",
+    name: 'Completed',
   },
 ];
 
 export const SHIFT_OPTIONS: DeviceStatusProps[] = [
   {
     id: 1,
-    name: "Day",
+    name: 'Day',
   },
   {
     id: 2,
-    name: "Night",
+    name: 'Night',
   },
 ];
 
 export const MACHINE_WORK_STATUS: DeviceStatusProps[] = [
   {
     id: 1,
-    name: "Machining",
+    name: 'Machining',
   },
   {
     id: 2,
-    name: "Pallet Change",
+    name: 'Pallet Change',
   },
   {
     id: 3,
-    name: "Tool Change",
+    name: 'Tool Change',
   },
   {
     id: 4,
-    name: "Warm up",
+    name: 'Warm up',
   },
   {
     id: 5,
-    name: "Collision",
+    name: 'Collision',
   },
   {
     id: 6,
-    name: "Others",
+    name: 'Others',
   },
 ];
 
 export const TASK_DONE_BY_OPTIONS = [
   {
     id: 1,
-    name: "External",
+    name: 'External',
   },
   {
     id: 2,
-    name: "Internal",
+    name: 'Internal',
   },
 ];
 export const SORT_OPTIONS = [
   {
     id: 1,
-    name: "Requested Date",
+    name: 'Requested Date',
   },
   {
     id: 2,
-    name: "Error Occurred",
+    name: 'Error Occurred',
   },
 ];
 export const cameraOptions: CameraOptionsprops[] = [
-  { id: 1, icon: "profile_option_camera", name: "Camera" },
-  { id: 2, icon: "profile_option_gallery", name: "Gallery" },
+  {id: 1, icon: 'profile_option_camera', name: 'Camera'},
+  {id: 2, icon: 'profile_option_gallery', name: 'Gallery'},
 ];
+
+export const LIST_TYPE_MAP = {
+  deviceStatusOptions: deviceStatusOptions,
+  TASK_DONE_BY_OPTIONS: TASK_DONE_BY_OPTIONS,
+};

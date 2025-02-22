@@ -120,7 +120,7 @@ export const year = [
 // REGEX
 export const REGEX = {
   NAME_REGEX: /^[A-Za-z_ ]+$/,
-  NUMBER_REGEX: /^[0-9]*$/,
+  NUMBER_REGEX: /[^0-9]/g,
   SPECIAL_CHARACTER_REGEX: /^[A-Za-z0-9 ]+$/,
   MOBILE_REGEX: /^[6-9]{1}[0-9]{9}$/,
   PASSWORD_REGEX: /(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])/,

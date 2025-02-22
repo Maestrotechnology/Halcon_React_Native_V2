@@ -99,7 +99,6 @@ const Machines = ({route}: MastersStackNavigationProps) => {
   ) => {
     const formData = new FormData();
     formData.append('token', token);
-    console.log(filter, 'filter');
 
     if (filter?.machine_name) {
       formData.append('machine_name', filter?.machine_name);

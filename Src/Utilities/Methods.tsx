@@ -2,6 +2,8 @@ import moment from 'moment';
 import {ObjectType} from '../Components/types';
 import store from '../Store/Store/Index';
 import {openLoader} from '../Store/Slices/LoaderSlice';
+import StyledText from '../Components/StyledText';
+import {COLORS, FONTSIZES} from './Constants';
 
 export const ConvertJSONtoFormData = (obj: ObjectType, isFilter = true) => {
   const formData = new FormData();
@@ -59,4 +61,26 @@ export const FormateDate = (date: Date, type: 'date' | 'datetime' | 'time') => {
 
 export const RemoveSpace = (value: any) => {
   return value.split(' ').join('');
+};
+
+export const ConvertNumbertoString = (value: any) => {
+  return value ? (typeof value === 'number' ? value?.toString() : value) : '';
+};
+
+export const AlertMessageBox = () => {
+  return (
+    <StyledText
+      style={{
+        backgroundColor: '#fffbe6',
+        paddingVertical: 8,
+        paddingHorizontal: 10,
+        borderRadius: 8,
+        fontSize: FONTSIZES.tiny,
+        borderWidth: 1,
+        borderColor: '#ffe58f',
+        marginBottom: 5,
+      }}>
+      Change Request status to Ongoing for Update this request
+    </StyledText>
+  );
 };

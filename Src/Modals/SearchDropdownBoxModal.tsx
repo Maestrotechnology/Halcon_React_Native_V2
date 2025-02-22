@@ -19,14 +19,17 @@ import Loader from '../Components/Loader';
 import TextInputBox from '../Components/TextInputBox';
 import {UseToken} from '../Utilities/StoreData';
 import {
+  AssignedUserDropdownListService,
   getDivisionDropdownListService,
   getMachineDropdownListService,
   getRoleDropdownListService,
   getUserDropdownListService,
   getWorkCenterDropdownListService,
+  MaterialDropdownListService,
 } from '../Services/Services';
 import Toast from '../Components/Toast';
 import {
+  AssignedUserLtemProps,
   MachineDropdownListApiResponseProps,
   RoleItemProps,
 } from '../@types/api';
@@ -101,9 +104,75 @@ const SearchDropdownBoxModal = ({
         break;
       case 'roleList':
         handleRoleList();
+      case 'assignedUsersList':
+        handleAssignedUserList();
+      case 'MaterialList':
+        handlegetMaterialList();
       default:
         break;
     }
+  };
+  const handlegetMaterialList = () => {
+    const formData = new FormData();
+    formData.append('token', token);
+    MaterialDropdownListService(formData)
+      .then(res => {
+        const response = res.data;
+
+        if (response.status === 1) {
+          if (isMount) {
+            let finalList = response?.data?.map(
+              (item: AssignedUserLtemProps) => ({
+                ...item,
+                unique_id: item?.user_id,
+              }),
+            );
+            setoptionsList(finalList || []);
+            globalDataList.current = finalList || [];
+          }
+        } else if (response.status === 0) {
+          Toast.error(response.msg);
+        }
+      })
+      .catch(err => {
+        Toast.error(err.message);
+      })
+      .finally(() => {
+        if (isMount) {
+          setisListLoading(false);
+        }
+      });
+  };
+  const handleAssignedUserList = () => {
+    const formData = new FormData();
+    formData.append('token', token);
+    AssignedUserDropdownListService(formData)
+      .then(res => {
+        const response = res.data;
+
+        if (response.status === 1) {
+          if (isMount) {
+            let finalList = response?.data?.map(
+              (item: AssignedUserLtemProps) => ({
+                ...item,
+                unique_id: item?.user_id,
+              }),
+            );
+            setoptionsList(finalList || []);
+            globalDataList.current = finalList || [];
+          }
+        } else if (response.status === 0) {
+          Toast.error(response.msg);
+        }
+      })
+      .catch(err => {
+        Toast.error(err.message);
+      })
+      .finally(() => {
+        if (isMount) {
+          setisListLoading(false);
+        }
+      });
   };
   const handleRoleList = () => {
     const formData = new FormData();

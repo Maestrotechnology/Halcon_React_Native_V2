@@ -8,6 +8,7 @@ import {
 } from './api';
 import {DeviceStatusProps} from '../Utilities/StaticDropdownOptions';
 import {ImageProps} from './general';
+import {number} from 'yup';
 
 export type ServiceRequestFormikDataProps = {
   machine: MachineDropdownListDataProps | null;
@@ -16,11 +17,11 @@ export type ServiceRequestFormikDataProps = {
   scheduleDate: string;
   serviceStartedDate: string;
   deviceStatus: DeviceStatusProps | null;
-  priorityLevel: DeviceStatusProps | null;
+  priorityLevel: number | null;
   reqStatus: DeviceStatusProps | null;
   machineStatusWhileAlarm: DeviceStatusProps | null;
   expectedCompletedDate: string;
-  shift: DeviceStatusProps | null;
+  shift?: DeviceStatusProps | null;
   msgOnDisplay: string;
   comments: string;
   deviceFailureFileName: string;
@@ -32,13 +33,33 @@ export type ServiceRequestFormikDataProps = {
   employee: UserDropdownListDataProps | null;
   problem_description: string;
   pending_reason: string;
+  relevant_details?: string;
+  recurring_problem?: number | null;
+  problem_status: number | null;
+  problem_description: string;
+  material_list: addMeterialProps[] | [];
+  efmea_status: any;
+  efmea_date: any;
+  machine_limitations: string;
 };
-
+export type addMeterialProps = {
+  material_id: MaterialListProps | null;
+  quantity: number | string;
+};
+export type MaterialListProps = {
+  request_id?: number;
+  material_id: number | null;
+  quantity: number | string;
+  material_map_id?: number;
+  material_name?: '';
+};
 export type ServiceRequestCreationContextProps = {
   values: ServiceRequestFormikDataProps;
   errors: FormikErrors;
   touched: FormikTouched;
   isSubmitting: boolean;
+  routeData: any;
+
   handleChange: {
     (e: React.ChangeEvent<any>): void;
     <T_1 = string | React.ChangeEvent<any>>(

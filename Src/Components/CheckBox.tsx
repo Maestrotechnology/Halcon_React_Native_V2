@@ -9,16 +9,18 @@ const CheckBox = ({
   disabled = false,
   onChange,
   checked,
+  containerStyle,
 }: {
   label?: string;
   disabled?: boolean;
   onChange?: (val: boolean) => void;
   checked: boolean;
+  containerStyle?: any;
 }) => {
   //   const [checked, setChecked] = useState(false);
 
   return (
-    <View style={styles.checkBoxViewContainer}>
+    <View style={[styles.checkBoxViewContainer, containerStyle]}>
       <TouchableOpacity
         activeOpacity={disabled ? 1 : 0.5}
         disabled={disabled}

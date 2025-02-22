@@ -1,9 +1,7 @@
-import {useDispatch} from 'react-redux';
 import Toast from '../Components/Toast';
-import {clearStorage} from './SecureStorage';
 import {Alert, Linking, PermissionsAndroid, Platform} from 'react-native';
 import {AlertBoxProps} from '../@types/general';
-import {IS_IOS} from './Constants';
+import {IS_IOS, REGEX} from './Constants';
 import RNFetchBlob, {RNFetchBlobConfig} from 'rn-fetch-blob';
 import {getCatchMsgType} from './Types';
 
@@ -233,26 +231,23 @@ export function getCatchMsg(error: getCatchMsgType) {
     Toast.error('Something went wrong!');
   }
 }
-// export const FilterValidObj = (obj: ObjectType) => {
-//   const finalObj: ObjectType = {};
-//   for (const key in obj) {
-//     const value = obj[key];
 
-//     if (value !== undefined && value !== null && value !== '') {
-//       finalObj[key] = typeof value === 'string' ? value.trim() : value;
-//     }
-//   }
-//   return finalObj;
-// };
-
-// export const ConvertConvertJSONtoFormData = (obj: ObjectType, isFilter = true) => {
-//   const formData = new FormData();
-//   for (const key in obj) {
-//     const value = obj[key];
-//     if (!isFilter || (value !== undefined && value !== null && value !== '')) {
-//       formData.append(key, typeof value === 'string' ? value.trim() : value);
-//     }
-//   }
-
-//   return formData;
-// };
+export const CHAR_AND_SPACE = (data: string): string => {
+  return data.replace(REGEX.NAME_REGEX, '');
+};
+export const PREVENT_EMOJI = (data: string) => {
+  return data.replace(
+    /([#0-9]\u20E3)|[\xA9\xAE\u203C\u2047-\u2049\u2122\u2139\u3030\u303D\u3297\u3299][\uFE00-\uFEFF]?|[\u2190-\u21FF][\uFE00-\uFEFF]?|[\u2300-\u23FF][\uFE00-\uFEFF]?|[\u2460-\u24FF][\uFE00-\uFEFF]?|[\u25A0-\u25FF][\uFE00-\uFEFF]?|[\u2600-\u27BF][\uFE00-\uFEFF]?|[\u2900-\u297F][\uFE00-\uFEFF]?|[\u2B00-\u2BF0][\uFE00-\uFEFF]?|(?:\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDEFF])[\uFE00-\uFEFF]?/g,
+    '',
+  );
+};
+export const removeNonAlphanumeric = (str: string) => {
+  const regex = /[^a-zA-Z0-9]/g;
+  return str.replace(regex, ''); // Replaces all non-alphanumeric characters
+};
+export const NUMBER_VALIDATION = (value: string) => {
+  return value.replace(REGEX.NUMBER_REGEX, '');
+};
+export const RESTRICKT_SPACE = (data: string): string => {
+  return data.trim();
+};

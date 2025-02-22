@@ -184,6 +184,7 @@ const ImageUpload = ({
   };
 
   const RenderImage = ({item, index = 1}: RenderImageProps) => {
+    let ImageUrl: any = item?.file;
     const isLastImage = index + 1 / 3 === 0;
     return (
       <View
@@ -199,9 +200,12 @@ const ImageUpload = ({
           }}>
           {item?.file && (
             <Image
-              source={{uri: item.file}}
+              source={{uri: ImageUrl}}
               style={{width: '100%', height: 100, position: 'relative'}}
               resizeMode="cover"
+              // onError={() => {
+              //   ImageUrl = 'https://dummyimage.com/100x100/ccc/fff';
+              // }}
             />
           )}
           <TouchableOpacity

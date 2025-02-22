@@ -138,19 +138,11 @@ export const deleteServiceRequestService = (data: FormData) => {
 };
 
 export const createServiceRequestService = (data: any) => {
-  return axios.post('service_request/create_request', data, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  return axios.post('service_request/create_request', data, JSONHeaderType);
 };
 
 export const updateServiceRequestService = (data: any) => {
-  return axios.post('service_request/update_request', data, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  return axios.post('service_request/update_request', data, JSONHeaderType);
 };
 
 export const fileUploadService = (data: FormData) => {
@@ -162,11 +154,14 @@ export const viewServiceRequestService = (data: FormData) => {
 };
 
 export const getAttachmentsListService = (data: FormData, page: number) => {
-  return axios.post(`list_file_upload?page=${page}&size=20`, data);
+  return axios.post(
+    `service_request/list_file_upload?page=${page}&size=20`,
+    data,
+  );
 };
 
 export const deleteAttachmentsService = (data: FormData) => {
-  return axios.post('delete_file_upload', data);
+  return axios.post('service_request/delete_file_upload', data);
 };
 
 export const workStartService = (data: FormData) => {
@@ -174,23 +169,22 @@ export const workStartService = (data: FormData) => {
 };
 
 export const getTaskDetailsListService = (data: FormData, page: number) => {
-  return axios.post(`list_intervention?page=${page}&size=10`, data);
+  return axios.post(
+    `service_request/list_intervention?page=${page}&size=10`,
+    data,
+  );
 };
 
 export const deleteTaskDetailService = (data: FormData) => {
-  return axios.post('delete_intervention', data);
+  return axios.post('service_request/delete_intervention', data);
 };
 
 export const createTaskDetailService = (data: any) => {
-  return axios.post('add_intervention', data, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  return axios.post('service_request/add_intervention', data, JSONHeaderType);
 };
 
 export const updateTaskDetailService = (data: ObjectType) => {
-  return axios.post('edit_intervention', data, JSONHeaderType);
+  return axios.post('service_request/edit_intervention', data, JSONHeaderType);
 };
 
 export const closeWorkService = (data: FormData) => {
@@ -413,4 +407,10 @@ export const DeleteMachineService = (data: FormData) => {
 // Dropdown Lists
 export const RoleDropdownListService = (data: FormData) => {
   return axios.post('dropdown/dropdown_role', data);
+};
+export const AssignedUserDropdownListService = (data: FormData) => {
+  return axios.post('dropdown/get_assigned_users', data);
+};
+export const MaterialDropdownListService = (data: FormData) => {
+  return axios.post('dropdown/material_dropdown', data);
 };

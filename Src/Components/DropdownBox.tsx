@@ -36,6 +36,7 @@ const DropdownBox = ({
   isLocalSearch = false,
   bigListProps,
   ContainerStyle,
+  mainContainerStyle,
   multiSelect = false,
   uniqueKey,
   onMultipleSelect,
@@ -59,7 +60,7 @@ const DropdownBox = ({
   };
   return (
     <>
-      <View style={styles.container}>
+      <View style={[styles.container, mainContainerStyle]}>
         {title && (
           <StyledText style={{fontFamily: FONTS.poppins.medium}}>
             {title}{' '}
@@ -78,7 +79,11 @@ const DropdownBox = ({
             ContainerStyle,
             {
               backgroundColor: COLORS.white,
-              borderColor: errorText ? COLORS.red : COLORS.primary,
+              borderColor: isDisabled
+                ? '#fff'
+                : errorText
+                ? COLORS.red
+                : COLORS.primary,
             },
           ]}>
           <View style={styles.inputField}>

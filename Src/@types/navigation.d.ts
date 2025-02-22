@@ -109,6 +109,8 @@ export type CreateTaskScreenParamsDataProps = {
 
 export type ServiceRequestCreationStackParamList = {
   DeviceFailreInfo: undefined;
+  ProblemDetails: FileUploadingScreenParamDataProps &
+    CreateTaskScreenParamsDataProps;
   FileUploading: FileUploadingScreenParamDataProps &
     CreateTaskScreenParamsDataProps;
   TaskDetails: undefined;

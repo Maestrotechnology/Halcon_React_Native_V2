@@ -12,6 +12,11 @@ import SVGIcon from './SVGIcon';
 import {TextInputBoxProps} from '../@types/general';
 import {FONTS} from '../Utilities/Fonts';
 import StyledText from './StyledText';
+import {
+  CHAR_AND_SPACE,
+  NUMBER_VALIDATION,
+  PREVENT_EMOJI,
+} from '../Utilities/GeneralUtilities';
 
 const TextInputBox = ({
   title = '',
@@ -37,9 +42,24 @@ const TextInputBox = ({
   keyboardType,
   multiline = false,
   numberOfLines = multiline ? 4 : 1,
+  validationType,
 }: TextInputBoxProps) => {
   const [isVisiblePassword, setisVisiblePassword] = useState<boolean>(false);
 
+  const InputValidation = (data: string) => {
+    switch (validationType) {
+      case 'CHAR_AND_SPACE':
+        return CHAR_AND_SPACE(data);
+      case 'PREVENT_EMOJI':
+        return PREVENT_EMOJI(data);
+      case 'NUMBER':
+        return NUMBER_VALIDATION(data);
+      case 'RESTRICKT_SPACE':
+        return data?.trim();
+      default:
+        return data;
+    }
+  };
   const InputBox = useCallback(
     ({value}: {value: string | number | undefined}) => {
       return (
@@ -48,7 +68,8 @@ const TextInputBox = ({
           value={value}
           onChangeText={text => {
             if (onChangeText) {
-              onChangeText(text);
+              const validatedText = InputValidation(text);
+              onChangeText(validatedText);
             }
           }}
           editable={isEditable}
@@ -82,7 +103,7 @@ const TextInputBox = ({
         />
       );
     },
-    [isVisiblePassword],
+    [isVisiblePassword, isEditable],
   );
   return (
     <View style={[styles.textInputBoxContainer, customContainerStyle]}>

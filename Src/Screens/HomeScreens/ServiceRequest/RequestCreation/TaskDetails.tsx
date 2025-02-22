@@ -106,6 +106,7 @@ const TaskDetails = ({
     getTaskDetailsListService(formData, page)
       .then(res => {
         const response: TaskDetailsListApiResponseProps = res.data;
+
         if (response.status === 1) {
           let tempList = [...response.data.items].map(ele => {
             return {
@@ -221,9 +222,21 @@ const TaskDetails = ({
         rowData={[
           {key: 'intervention_start_date', label: 'Intervention Start Date'},
           {key: 'intervention_end_date', label: 'Intervention End Date'},
-          {key: 'start_status', label: 'Machine Status at Task Start'},
-          {key: 'end_status', label: 'Machine Status at Task End'},
-          {key: 'task_done_by', label: 'Task Done By'},
+          {
+            key: 'start_status',
+            label: 'Machine Status at Task Start',
+            ListType: 'deviceStatusOptions',
+          },
+          {
+            key: 'end_status',
+            label: 'Machine Status at Task End',
+            ListType: 'deviceStatusOptions',
+          },
+          {
+            key: 'task_done_by',
+            label: 'Task Done By',
+            ListType: 'TASK_DONE_BY_OPTIONS',
+          },
         ]}
         onEndReached={onEndReached}
         viewPortColumnDivisionCount={3.8}
@@ -261,8 +274,8 @@ const TaskDetails = ({
       <CustomButton
         style={{marginBottom: 20}}
         onPress={() => {
-          setactiveTab(4);
-          navigation.navigate('TaskDetailsFileUploading', {
+          setactiveTab(5);
+          navigation.navigate('ProblemDetails', {
             isFrom: 'TaskDetails',
           });
         }}>

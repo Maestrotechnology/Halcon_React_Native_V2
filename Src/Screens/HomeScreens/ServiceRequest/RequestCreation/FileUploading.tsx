@@ -5,55 +5,60 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-} from "react-native";
-import React, { useEffect, useState } from "react";
-import HOCView from "../../../../Components/HOCView";
-import StyledText from "../../../../Components/StyledText";
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import HOCView from '../../../../Components/HOCView';
+import StyledText from '../../../../Components/StyledText';
 import {
   ServiceRequestCreationScreensNavigationProps,
   ServiceRequestCreationStackParamList,
-} from "../../../../@types/navigation";
-import ImageUpload from "../../../../Components/ImageUpload";
-import TextInputBox from "../../../../Components/TextInputBox";
-import { useServiceRequestDetails } from "../../../../Utilities/Contexts";
-import CustomButton from "../../../../Components/CustomButton";
+} from '../../../../@types/navigation';
+import ImageUpload from '../../../../Components/ImageUpload';
+import TextInputBox from '../../../../Components/TextInputBox';
+import {useServiceRequestDetails} from '../../../../Utilities/Contexts';
+import CustomButton from '../../../../Components/CustomButton';
 import {
   ImageInputBoxOptionsProps,
   ImageProps,
-} from "../../../../@types/general";
-import SVGIcon from "../../../../Components/SVGIcon";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { FONTS } from "../../../../Utilities/Fonts";
+} from '../../../../@types/general';
+import SVGIcon from '../../../../Components/SVGIcon';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {FONTS} from '../../../../Utilities/Fonts';
 import {
   COLORS,
   WINDOW_WIDTH,
   bigInputBoxStyle,
-} from "../../../../Utilities/Constants";
+} from '../../../../Utilities/Constants';
 import {
   AlertBox,
   downloadPdf,
   getFileNameFromUrl,
-} from "../../../../Utilities/GeneralUtilities";
+} from '../../../../Utilities/GeneralUtilities';
 import {
   RouteProp,
   useFocusEffect,
   useIsFocused,
   useRoute,
-} from "@react-navigation/native";
-import { UseToken } from "../../../../Utilities/StoreData";
+} from '@react-navigation/native';
+import {UseToken} from '../../../../Utilities/StoreData';
 import {
   deleteAttachmentsService,
   fileUploadService,
   getAttachmentsListService,
-} from "../../../../Services/Services";
-import Toast from "../../../../Components/Toast";
-import Loader from "../../../../Components/Loader";
+} from '../../../../Services/Services';
+import Toast from '../../../../Components/Toast';
+import Loader from '../../../../Components/Loader';
 import {
   AttachmentsListApiResponseProps,
   DeleteAttachmentApiResposneProps,
   FileUploadApiResponseProps,
-} from "../../../../@types/api";
-import TextField from "../../../../Components/TextField";
+} from '../../../../@types/api';
+import TextField from '../../../../Components/TextField';
+import CustomImageBox from '../../../../Components/CustomImageBox';
+import DropdownBox from '../../../../Components/DropdownBox';
+import {RequiringProblemsList} from '../../../../Utilities/StaticDropdownOptions';
+import DateTimePicker from '../../../../Components/DateTimePicker';
+import {renderTitleText} from '../../../../Utilities/UiComponents';
 
 type ViewImageStateProps = {
   status: boolean;
@@ -94,10 +99,11 @@ const FileUploading = ({
     activeTab,
     settaskDetailsFiles,
     taskDetailsFiles,
+    routeData,
   } = useServiceRequestDetails();
   const [isViewImage, setisViewImage] = useState<ViewImageStateProps>({
     status: false,
-    uri: "",
+    uri: '',
   });
   const [isLoading, setisLoading] = useState<boolean>(false);
   const [isRefreshing, setisRefreshing] = useState<boolean>(false);
@@ -105,20 +111,20 @@ const FileUploading = ({
   const imgOptions: ImageInputBoxOptionsProps[] = [
     {
       id: 1,
-      buttonName: "View",
+      buttonName: 'View',
     },
     {
       id: 2,
       buttonName:
         isUpdate || (activeTab === 4 && !isView) || isCreate
-          ? "Delete"
-          : "Download",
+          ? 'Delete'
+          : 'Download',
     },
   ];
 
   useEffect(() => {
     if (focused) {
-      setactiveTab(route.params?.isFrom === "deviceFailure" ? 2 : 4);
+      setactiveTab(route.params?.isFrom === 'deviceFailure' ? 2 : 4);
       if (!isCreate && serviceReqId) {
         setisLoading(true);
         handlegetUploadedImages(serviceReqId, 1);
@@ -140,20 +146,21 @@ const FileUploading = ({
 
   const handlegetUploadedImages = (serviceReqId: number, page = 1) => {
     const formData = new FormData();
-    formData.append("token", token);
-    formData.append("request_id", serviceReqId);
-    formData.append("upload_for", activeTab === 4 ? 2 : 1);
+    formData.append('token', token);
+    formData.append('request_id', serviceReqId);
+    formData.append('upload_for', activeTab === 4 ? 2 : 1);
     getAttachmentsListService(formData, page)
-      .then((res) => {
+      .then(res => {
         const response: AttachmentsListApiResponseProps = res.data;
 
         if (response.status === 1) {
-          let tempData: ImageProps[] = [...response.data.items].map((ele) => {
+          let tempData: ImageProps[] = [...response.data.items].map(ele => {
             return {
               file_title: ele.file_title,
-              type: "image/jpeg",
+              type: 'image/jpeg',
               file: ele.file,
               attachment_id: ele.id,
+              id: ele?.id,
               attachmentType: ele.upload_for,
             };
           });
@@ -181,7 +188,7 @@ const FileUploading = ({
           Toast.error(response.msg);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         Toast.error(err.message);
       })
       .finally(() => {
@@ -217,7 +224,7 @@ const FileUploading = ({
   const closeViewImageModal = () => {
     setisViewImage({
       status: false,
-      uri: "",
+      uri: '',
     });
   };
 
@@ -226,17 +233,17 @@ const FileUploading = ({
       handleDeleteAttachment(val.attachment_id);
     } else {
       let tempData = [...deviceFailureFiles].filter(
-        (ele) => ele.attachment_id !== val.attachment_id
+        ele => ele.attachment_id !== val.attachment_id,
       );
       let tempTaskFiles = [...taskDetailsFiles].filter(
-        (ele) => ele.attachment_id !== val.attachment_id
+        ele => ele.attachment_id !== val.attachment_id,
       );
       if (activeTab === 4) {
         settaskDetailsFiles([...tempTaskFiles]);
       } else {
         setdeviceFailureFiles([...tempData]);
       }
-      Toast.success("Attachment deleted successfully");
+      Toast.success('Attachment deleted successfully');
     }
   };
 
@@ -245,17 +252,17 @@ const FileUploading = ({
       setisLoading(true);
     }
     let tempFileNames = [...taskDetailsFiles]
-      .filter((element) => !element?.attachmentType)
-      .map((ele) => ele.file_title);
+      .filter(element => !element?.attachmentType)
+      .map(ele => ele.file_title);
 
     const formData = new FormData();
-    formData.append("token", token);
-    formData.append("request_id", serviceReqId);
-    formData.append("upload_for", 2);
-    formData.append("file_title", tempFileNames?.toString());
+    formData.append('token', token);
+    formData.append('request_id', serviceReqId);
+    formData.append('upload_for', 2);
+    formData.append('file_title', tempFileNames?.toString());
     [...taskDetailsFiles]
-      .filter((element) => !element?.attachmentType)
-      .map((ele) => {
+      .filter(element => !element?.attachmentType)
+      .map(ele => {
         let file = {
           type: ele.type,
           // @ts-ignore
@@ -263,23 +270,23 @@ const FileUploading = ({
           uri: ele.file,
         };
 
-        formData.append("upload_file", file);
+        formData.append('upload_file', file);
       });
 
     fileUploadService(formData)
-      .then((res) => {
+      .then(res => {
         const response: FileUploadApiResponseProps = res.data;
         if (response.status === 1) {
           Toast.success(response.msg);
           if (serviceReqId) {
             handlegetUploadedImages(serviceReqId, 1);
           }
-          setFieldValue("deviceFailureFileName", "");
+          setFieldValue('deviceFailureFileName', '');
         } else if (response.status === 0) {
           Toast.error(response.msg);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         Toast.error(err.message);
       })
       .finally(() => {
@@ -294,17 +301,17 @@ const FileUploading = ({
       setisLoading(true);
     }
     const formData = new FormData();
-    formData.append("token", token);
-    formData.append("file_id", attchmentId);
+    formData.append('token', token);
+    formData.append('file_id', attchmentId);
     deleteAttachmentsService(formData)
-      .then((res) => {
+      .then(res => {
         const response: DeleteAttachmentApiResposneProps = res.data;
         if (response.status === 1) {
           let tempData = [...deviceFailureFiles].filter(
-            (ele) => ele.attachment_id !== attchmentId
+            ele => ele.attachment_id !== attchmentId,
           );
           let tempTaskFiles = [...taskDetailsFiles].filter(
-            (ele) => ele.attachment_id !== attchmentId
+            ele => ele.attachment_id !== attchmentId,
           );
           if (activeTab === 4) {
             settaskDetailsFiles([...tempTaskFiles]);
@@ -316,7 +323,7 @@ const FileUploading = ({
           Toast.error(response.msg);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         Toast.error(err.message);
       })
       .finally(() => {
@@ -328,20 +335,20 @@ const FileUploading = ({
 
   const RenderImageView = () => {
     return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <View style={{ padding: 10 }}>
+      <SafeAreaView style={{flex: 1}}>
+        <View style={{padding: 10}}>
           <TouchableOpacity
             onPress={closeViewImageModal}
-            style={{ flexDirection: "row", alignItems: "center" }}
-          >
+            style={{flexDirection: 'row', alignItems: 'center'}}>
             <SVGIcon icon="back_arrow" />
-            <StyledText style={{ fontFamily: FONTS.poppins.medium }}>
+            <StyledText style={{fontFamily: FONTS.poppins.medium}}>
               Back
             </StyledText>
           </TouchableOpacity>
-          <Image
-            source={{ uri: isViewImage.uri }}
-            style={{ width: WINDOW_WIDTH - 20, height: "100%" }}
+          <CustomImageBox
+            alt="file"
+            src={{uri: isViewImage.uri}}
+            ImageStyle={{width: WINDOW_WIDTH - 20, height: '100%'}}
             resizeMode="contain"
           />
         </View>
@@ -360,25 +367,25 @@ const FileUploading = ({
   const getBtnTitle = () => {
     return isView
       ? activeTab === 2
-        ? "Next"
-        : ""
+        ? 'Next'
+        : ''
       : isCreate
-      ? "Save"
+      ? 'Save'
       : isUpdate
-      ? "Update"
+      ? 'Update'
       : isServiceUpdate
       ? activeTab === 2
-        ? "Next"
-        : "Update"
+        ? 'Next'
+        : 'Update'
       : activeTab === 4
-      ? "Close Service"
+      ? 'Close Service'
       : activeTab === 2 && isView && !values.serviceStartedDate
-      ? "Back"
-      : "Next";
+      ? 'Back'
+      : 'Next';
   };
 
   const isShowUploadFilesBtn = () => {
-    return [...taskDetailsFiles].some((ele) => !ele.attachmentType);
+    return [...taskDetailsFiles].some(ele => !ele.attachmentType);
   };
 
   const isShowUploadFileOption = () => {
@@ -399,22 +406,21 @@ const FileUploading = ({
           onBackPress() {
             navigation.goBack();
           },
-          headerTitle: "File Upload",
+          headerTitle: 'File Upload',
         }}
-        secondaryHeaderTitle="File Upload"
-      >
+        secondaryHeaderTitle="File Upload">
         {isShowUploadFileOption() && (
           <TextInputBox
             title="File name"
             placeHolder="Enter file name"
             value={values.deviceFailureFileName}
-            onChangeText={handleChange("deviceFailureFileName")}
+            onChangeText={handleChange('deviceFailureFileName')}
             errorText={
               errors.deviceFailureFileName && touched.deviceFailureFileName
                 ? errors.deviceFailureFileName
-                : ""
+                : ''
             }
-            textInputProps={{ maxLength: 100 }}
+            textInputProps={{maxLength: 100}}
           />
         )}
         <ImageUpload
@@ -424,7 +430,7 @@ const FileUploading = ({
           isRefreshing={isRefreshing}
           isShowSelectImage={isShowUploadFileOption()}
           value={getFiles()}
-          onSelect={(val) => {
+          onSelect={val => {
             if (activeTab === 4) {
               settaskDetailsFiles((prev: ImageProps[]) => [
                 ...prev,
@@ -449,7 +455,7 @@ const FileUploading = ({
               ]);
             }
 
-            setFieldValue("deviceFailureFileName", "");
+            setFieldValue('deviceFailureFileName', '');
           }}
           imgOptions={[...imgOptions]}
           onPressImgOption={(id, val) => {
@@ -461,7 +467,7 @@ const FileUploading = ({
             } else if (id === 2) {
               if (isUpdate || (activeTab === 4 && !isView) || isCreate) {
                 AlertBox({
-                  alertMsg: "Are you sure that want to delete this image?",
+                  alertMsg: 'Are you sure that want to delete this image?',
                   onPressPositiveButton() {
                     if (val.attachment_id) {
                       handleDeleteImage(val);
@@ -470,7 +476,7 @@ const FileUploading = ({
                 });
               } else {
                 let fileName = getFileNameFromUrl(val.file);
-                downloadPdf(val.file, fileName, "pdf_download", setisLoading);
+                downloadPdf(val.file, fileName, 'pdf_download', setisLoading);
               }
             }
           }}
@@ -481,25 +487,83 @@ const FileUploading = ({
             <CustomButton
               onPress={handleUploadFiles}
               type="secondary"
-              style={{ width: "50%", marginTop: 15 }}
-            >
+              style={{width: '50%', marginTop: 15}}>
               Upload Files
             </CustomButton>
+          )}
+        {isServiceUpdate && activeTab === 4 && renderTitleText('FMEA')}
+        {isServiceUpdate && activeTab === 4 && (
+          <DropdownBox
+            title="Was this failure mode identified in the FMEA?"
+            // isRequired
+            options={[...RequiringProblemsList]}
+            value={values.efmea_status}
+            placeHolder="Status"
+            onSelect={val => {
+              setFieldValue('efmea_status', val);
+            }}
+            type="miniList"
+            fieldName="name"
+            onIconPress={() => {
+              setFieldValue('efmea_status', null);
+            }}
+            errorText={
+              errors.efmea_status && touched.efmea_status
+                ? errors.efmea_status
+                : ''
+            }
+            isDisabled={!isServiceUpdate}
+            isEnableRightIcon={!isServiceUpdate}
+          />
+        )}
+        {isServiceUpdate &&
+          activeTab === 4 &&
+          values?.efmea_status?.id === 2 && (
+            <DateTimePicker
+              isDisabled={isView}
+              mode="datetime"
+              format="YYYY-MM-DD hh:mm A"
+              title="Expected Completed Date"
+              value={values.efmea_date}
+              onSelect={date => {
+                setFieldValue('efmea_date', date);
+              }}
+              minimumDate={new Date()}
+            />
           )}
 
         {isServiceUpdate && activeTab === 4 && (
           <TextInputBox
-            title="Problem Description"
-            value={values?.problem_description}
-            placeHolder="Problem Description"
-            onChangeText={(e) => {
-              setFieldValue("problem_description", e);
+            title="If machine is not fully operational, list limitations"
+            value={values?.machine_limitations}
+            placeHolder="If machine is not fully operational, list limitations"
+            onChangeText={e => {
+              setFieldValue('machine_limitations', e);
             }}
             textInputProps={{
               ...bigInputBoxStyle,
             }}
             customInputBoxContainerStyle={{
-              height: 130,
+              height: 100,
+              backgroundColor: COLORS.white,
+              borderColor: isView ? COLORS.white : COLORS.primary,
+            }}
+            isEditable={isServiceUpdate}
+          />
+        )}
+        {isServiceUpdate && activeTab === 4 && (
+          <TextInputBox
+            title="Problem Description"
+            value={values?.problem_description}
+            placeHolder="Problem Description"
+            onChangeText={e => {
+              setFieldValue('problem_description', e);
+            }}
+            textInputProps={{
+              ...bigInputBoxStyle,
+            }}
+            customInputBoxContainerStyle={{
+              height: 100,
               backgroundColor: COLORS.white,
               borderColor: isView ? COLORS.white : COLORS.primary,
             }}
@@ -511,12 +575,12 @@ const FileUploading = ({
             title="Service Team Comments"
             value={values?.service_team_commments}
             placeHolder="Service Team Comments"
-            onChangeText={handleChange("service_team_commments")}
+            onChangeText={handleChange('service_team_commments')}
             textInputProps={{
               ...bigInputBoxStyle,
             }}
             customInputBoxContainerStyle={{
-              height: 130,
+              height: 100,
               backgroundColor: COLORS.white,
               borderColor: isView ? COLORS.white : COLORS.primary,
             }}
@@ -524,14 +588,33 @@ const FileUploading = ({
           />
         )}
         {((activeTab === 4 && !isView) || activeTab === 2) && (
-          <CustomButton onPress={handleSubmit} style={{ marginVertical: 20 }}>
+          <CustomButton
+            onPress={() => {
+              if (isCreate || isUpdate) {
+                handleSubmit();
+              } else if (
+                activeTab === 2 &&
+                routeData?.isServiceUpdate &&
+                !values.serviceStartedDate
+              ) {
+                navigation.navigate('TaskDetails');
+              } else if (
+                activeTab === 2 &&
+                (routeData?.isServiceUpdate || routeData?.isView) &&
+                values.serviceStartedDate
+              ) {
+                navigation.navigate('TaskDetails');
+              } else if (activeTab === 2 && routeData?.isView) {
+                navigation.navigate('TaskDetails');
+              }
+            }}
+            style={{marginVertical: 20}}>
             {getBtnTitle()}
           </CustomButton>
         )}
         <Modal
           visible={isViewImage.status}
-          onRequestClose={closeViewImageModal}
-        >
+          onRequestClose={closeViewImageModal}>
           <RenderImageView />
         </Modal>
       </HOCView>
