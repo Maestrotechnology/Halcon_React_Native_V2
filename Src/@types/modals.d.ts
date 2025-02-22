@@ -1,3 +1,4 @@
+import {number, string} from 'yup';
 import {IconType} from '../Utilities/Icons';
 import {DeviceStatusProps} from '../Utilities/StaticDropdownOptions';
 import {MachineDropdownListDataProps} from './api';
@@ -38,6 +39,10 @@ export type SearchDropdownBoxModalRenderOptionsProps = {
   item: any;
   index: number;
 };
+export type StatusOptionProps = {
+  name: string;
+  id: number;
+};
 export type UserListFilterdataProps = {
   role_id: {role_id: null} | null;
   username: string;
@@ -58,6 +63,10 @@ export type ServiceRequestFilterDataProps = {
   work_center: WorkCenterDropdownProp | null;
   division: DivisionDropdownProp | null;
   report_no?: string;
+};
+export type ApprovalStatusFilterProps = {
+  role_name: '';
+  status: StatusOptionProps | null;
 };
 
 export type ServiceRequestListFilterModalProps = {

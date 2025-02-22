@@ -343,10 +343,11 @@ const UpdatePreventiveRequest = ({route, navigation}: any) => {
                 ...bigInputBoxStyle,
               }}
               customInputBoxContainerStyle={{
-                height: 130,
+                height: 110,
                 backgroundColor: COLORS.white,
                 borderColor: !isView ? COLORS.primary : COLORS.secondary,
               }}
+              multiline
               isEditable={!isView}
             />
           )}

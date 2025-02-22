@@ -514,11 +514,12 @@ const CreateTask = ({
         onChangeText={handleChange('description')}
         textInputProps={bigInputBoxStyle}
         customInputBoxContainerStyle={{
-          height: 130,
+          height: 110,
           backgroundColor: !route.params?.isView
             ? COLORS.white
             : COLORS.disabledColor,
         }}
+        multiline
         isEditable={!route.params?.isView}
       />
       {/* <TextInputBox
@@ -528,7 +529,7 @@ const CreateTask = ({
         onChangeText={handleChange('comments')}
         textInputProps={bigInputBoxStyle}
         customInputBoxContainerStyle={{
-          height: 130,
+          height: 110,
           backgroundColor: !route.params?.isView
             ? COLORS.white
             : COLORS.disabledColor,

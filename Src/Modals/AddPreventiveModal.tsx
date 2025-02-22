@@ -278,8 +278,9 @@ const AddPreventiveModal = ({
             textInputProps={{
               ...bigInputBoxStyle,
             }}
+            multiline
             customInputBoxContainerStyle={{
-              height: 130,
+              height: 110,
               backgroundColor: COLORS.white,
             }}
           />

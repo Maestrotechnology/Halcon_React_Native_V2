@@ -14,7 +14,7 @@ const validationSchema = Yup.object().shape({
   material_id: Yup.mixed().required('* required'),
   quantity: Yup.string().required('* required'),
 });
-export default function MaterialList({handleAddMeterialList}: any) {
+export default function MaterialList({handleAddMeterialList, isEditable}: any) {
   const {values, setFieldValue, errors, touched, handleSubmit, resetForm} =
     useFormik<addMeterialProps>({
       initialValues: {
@@ -50,33 +50,41 @@ export default function MaterialList({handleAddMeterialList}: any) {
           errors.material_id && touched.material_id ? errors.material_id : ''
         }
         mainContainerStyle={{width: '40%'}}
-        // isDisabled={!CheckisEditable()}
-        // isEnableRightIcon={CheckisEditable()}
+        isDisabled={!isEditable}
+        isEnableRightIcon={isEditable}
       />
       <TextInputBox
         title="Quantity"
         value={values.quantity}
         placeHolder="Quantity"
         onChangeText={val => {
-          setFieldValue('quantity', val);
+          if (val > '0' || '') {
+            setFieldValue('quantity', val);
+          }
         }}
         textInputProps={{
           maxLength: INPUT_SIZE.AMOUNT_LENGTH,
+          keyboardType: 'number-pad',
         }}
         validationType="NUMBER"
         //   isEditable={isCreate || isUpdate}
         customContainerStyle={{width: '40%'}}
         customInputBoxContainerStyle={{
           backgroundColor: COLORS.white,
-          borderColor:
-            errors.quantity && touched.quantity
+          borderColor: isEditable
+            ? errors.quantity && touched.quantity
               ? COLORS.dangerColor
-              : COLORS.primary,
+              : COLORS.primary
+            : COLORS.grey,
         }}
+        isEditable={isEditable}
         errorText={errors.quantity && touched.quantity ? errors.quantity : ''}
       />
       <View>
-        <CustomButton style={{width: 40, marginTop: 30}} onPress={handleSubmit}>
+        <CustomButton
+          isDisabled={!isEditable}
+          style={{width: 40, marginTop: 30}}
+          onPress={handleSubmit}>
           +
         </CustomButton>
       </View>

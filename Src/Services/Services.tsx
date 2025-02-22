@@ -129,6 +129,18 @@ export const exportServiceRequestService = (data: FormData) => {
   return axios.post('export_request', data);
 };
 
+export const getServiceRequestApprovalStatusListService = (
+  data: FormData,
+  page: number,
+) => {
+  return axios.post(
+    `service_request/list_approval_status?page=${page}&size=10`,
+    data,
+  );
+};
+export const editApprovalStatus = (data: FormData) => {
+  return axios.post(`service_request/edit_approval`, data);
+};
 export const getServiceRequestListService = (data: FormData, page: number) => {
   return axios.post(`service_request/list_request?page=${page}&size=10`, data);
 };

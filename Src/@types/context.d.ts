@@ -34,13 +34,14 @@ export type ServiceRequestFormikDataProps = {
   problem_description: string;
   pending_reason: string;
   relevant_details?: string;
-  recurring_problem?: number | null;
+  recurring_problem?: DeviceStatusProps | null;
   problem_status: number | null;
   problem_description: string;
   material_list: addMeterialProps[] | [];
   efmea_status: any;
   efmea_date: any;
   machine_limitations: string;
+  why: string;
 };
 export type addMeterialProps = {
   material_id: MaterialListProps | null;

@@ -329,7 +329,7 @@ export type ViewServiceRequestDataProps = {
   division_id: number;
   division_name: string;
   efmea_date: string;
-  efmea_status: string;
+  efmea_status: number;
   employee_id: number;
   engineer_completion_date: string;
   engineer_id: number;
@@ -397,6 +397,7 @@ export type ViewServiceRequestDataProps = {
   why2: string;
   why3: string;
   work_description: string;
+  why: string;
 };
 
 export type AttachmentsListApiResponseProps = {
@@ -788,6 +789,21 @@ export type RegularHolidayListDataProps = {
   holiday_id: number;
   id: number;
 };
+
+// Approval Status List
+export interface ApprovalStatusListDataProps {
+  id: number;
+  role_id?: number;
+  role_name?: string;
+  updated_by?: any;
+  updated_name?: any;
+  action?: any;
+  comment?: any;
+  status?: number;
+  edit_status?: number;
+  updated_at?: any;
+}
+
 // Regular Holiday List
 
 //Machnes List

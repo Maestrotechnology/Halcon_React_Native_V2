@@ -231,7 +231,8 @@ const AddWorkOrder = () => {
         value={values.description}
         placeHolder="Reason"
         onChangeText={handleChange('description')}
-        customInputBoxContainerStyle={{height: 130}}
+        customInputBoxContainerStyle={{height: 110}}
+        multiline
         textInputProps={{
           textAlignVertical: 'top',
           multiline: true,

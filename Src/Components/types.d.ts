@@ -48,7 +48,10 @@ export type TableRowDataProps = {
   label: string;
   key: string;
   type?: 'date';
-  ListType?: 'deviceStatusOptions' | 'TASK_DONE_BY_OPTIONS';
+  ListType?:
+    | 'deviceStatusOptions'
+    | 'TASK_DONE_BY_OPTIONS'
+    | 'APPROVAL_STATUS_OPTIONS';
   subChildName?: 'name';
 };
 
