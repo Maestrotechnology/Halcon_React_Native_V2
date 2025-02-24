@@ -39,8 +39,8 @@ import GlobaModal from '../Components/GlobalModal';
 import ConfirmationModal from '../Modals/ConfirmationModal';
 import {
   MACHINE_WORK_STATUS,
+  RequiringProblemsList,
   SHIFT_OPTIONS,
-  priorityLevelOptions1,
   requestStatusOptions,
 } from '../Utilities/StaticDropdownOptions';
 import {ConvertNumbertoString, FilterValidObj} from '../Utilities/Methods';
@@ -134,6 +134,7 @@ const ServiceRequestCreationStack = ({
       efmea_status: null,
       efmea_date: null,
       machine_limitations: '',
+      why: '',
     },
     validationSchema: deviceFailureSchema,
     onSubmit(values) {
@@ -206,6 +207,9 @@ const ServiceRequestCreationStack = ({
             efmea_status,
             efmea_date,
             machine_limitations,
+            problem_status,
+            material_list,
+            why,
             ...restData
           } = response.data;
           setValues({
@@ -261,44 +265,24 @@ const ServiceRequestCreationStack = ({
             problem_description: problem_description || '',
             pending_reason: availablity_reason || '',
             relevant_details: relevant_details,
-            recurring_problem: recurring_problem || null,
-            efmea_status: efmea_status,
+            recurring_problem: recurring_problem
+              ? RequiringProblemsList?.find(
+                  ele => ele?.id === recurring_problem,
+                )
+              : null,
+            efmea_status: efmea_status
+              ? RequiringProblemsList?.find(ele => ele?.id == efmea_status)
+              : null,
             efmea_date: efmea_date,
             machine_limitations: machine_limitations || '',
+            problem_status: problem_status ? parseInt(problem_status) : 0,
+            why: why || '',
+            material_list: material_list?.map((ele: any) => ({
+              ...ele,
+              material_id: {...ele, material_name: ele?.name},
+              quantity: ele?.quantity,
+            })),
           });
-        } else if (response.status === 0) {
-          Toast.error(response.msg);
-        }
-      })
-      .catch(err => {
-        Toast.error(err.message);
-      })
-      .finally(() => {
-        if (isMount) {
-          setisLoading(false);
-        }
-      });
-  };
-
-  const handleStartService = () => {
-    if (isMount) {
-      setisLoading(true);
-    }
-    const formData = new FormData();
-    formData.append('token', token);
-    if (route.params?.serviceReqData?.request_id) {
-      formData.append('request_id', route.params?.serviceReqData?.request_id);
-    }
-    workStartService(formData)
-      .then(res => {
-        const response: WorkStartApiResposneProps = res.data;
-        if (response.status === 1) {
-          Toast.success(response.msg);
-          setValues({
-            ...values,
-            serviceStartedDate: moment().format('YYYY-MM-DD HH:mm A'),
-          });
-          navigation.navigate('TaskDetails');
         } else if (response.status === 0) {
           Toast.error(response.msg);
         }
@@ -320,45 +304,129 @@ const ServiceRequestCreationStack = ({
     if (isMount) {
       setisLoading(true);
     }
-    const payload = {
+    let finalObj = {
       token,
       machine_id: values?.machine?.machine_id || 0,
-      request_id: route.params?.serviceReqData?.request_id,
       report_no: values?.report_no || '',
       request_status: values?.reqStatus?.id || 0,
+      priority: values?.priorityLevel || 0,
       // location: '',
       date_of_error_occur: values?.dateOfErrorOccured
         ? moment(values?.dateOfErrorOccured, 'YYYY-MM-DD hh:mm A').format(
             'YYYY-MM-DD HH:mm:ss',
           )
         : null,
+      // shift: "",
+      // failure_time: new Date(),
       machine_status: values?.deviceStatus?.id || 0,
+      // operator_id: '',
+      // operator_name: '',
       employee_id: ConvertNumbertoString(values?.employee?.user_id),
+      // machine_status_at_alarm: 0,
       error_message_alarm: values?.msgOnDisplay || '',
       requested_date: values?.dateOfReq
         ? moment(values?.dateOfReq, 'DD-MM-YYYY').format('YYYY-MM-DD HH:mm:ss')
         : null,
+      // division_id: 0,
       requested_comments: values?.comments || '',
-
+      // schedule_date: new Date(),
       expected_completion_date: values?.expectedCompletedDate
         ? moment(values?.expectedCompletedDate, 'YYYY-MM-DD hh:mm A').format(
             'YYYY-MM-DD HH:mm:ss',
           )
         : null,
+      request_id: route.params?.serviceReqData?.request_id,
       for_edit: serviceUpdate ? 2 : 1,
-      service_team_comments: values?.service_team_commments || '',
-      material_list: [],
+      // clear_alarm: 0,
+      // restart_program: 0,
+      // restart_machine: 0,
+      // supervisor_name: '',
+      // error_verify_date: new Date(),
+      // serviceable_or_not: 0,
+      // service_deviation: '',
+      // required_spare_parts: 0,
+      // material_list_reason: '',
+      // identified_error: 0,
+      // perceived_inadequacy: '',
+      // problem_rectified_status: 0,
+      // problem_deviation: '',
+      // service_order: '',
+      // service_date: new Date(),
+      // technician_id: 0,
+      // technician_completion_date: new Date(),
+      // engineer_id: 0,
+      // engineer_completion_date: new Date(),
+      relevant_details: values?.relevant_details || '',
+      recurring_problem: values?.recurring_problem?.id || 0,
+      // test_try_details: '',
+      problem_status: values?.problem_status || 0,
       problem_description: values?.problem_description || '',
+      why: values?.why || '',
+      // receiving_date: new Date(),
+      // received_by: '',
+      // requested_by: '',
+      material_list: values?.material_list?.map(item => ({
+        request_id: item?.material_id?.request_id || 0,
+        material_id: item?.material_id?.material_id,
+        quantity: item?.quantity,
+        material_map_id: item?.material_id?.material_map_id || 0,
+      })),
+      // work_description: '',
+      // geometry_status: 0,
+      // spare_availablity: 0,
       availablity_reason: values?.pending_reason || '',
-      priority: values?.priorityLevel,
-      recurring_problem: values?.recurring_problem,
-      relevant_details: values?.relevant_details,
-      efmea_status: values?.efmea_status || '',
-      efmea_date: values?.efmea_date || '',
+      // pr_number: '',
+      // promise_date: new Date(),
+      efmea_status: values?.efmea_status?.id || '',
+      efmea_date: values?.efmea_date
+        ? moment(values?.efmea_date, 'YYYY-MM-DD hh:mm A').format(
+            'YYYY-MM-DD HH:mm:ss',
+          )
+        : null,
       machine_limitations: values?.machine_limitations || '',
+      service_team_comments: values?.machine_limitations || '',
+      // start_date: new Date(),
+      // completed_date: new Date(),
     };
+    // const payload = {
+    //   token,
+    //   machine_id: values?.machine?.machine_id || 0,
+    //   request_id: route.params?.serviceReqData?.request_id,
+    //   report_no: values?.report_no || '',
+    //   request_status: values?.reqStatus?.id || 0,
+    //   // location: '',
+    //   date_of_error_occur: values?.dateOfErrorOccured
+    //     ? moment(values?.dateOfErrorOccured, 'YYYY-MM-DD hh:mm A').format(
+    //         'YYYY-MM-DD HH:mm:ss',
+    //       )
+    //     : null,
+    //   machine_status: values?.deviceStatus?.id || 0,
+    //   employee_id: ConvertNumbertoString(values?.employee?.user_id),
+    //   error_message_alarm: values?.msgOnDisplay || '',
+    //   requested_date: values?.dateOfReq
+    //     ? moment(values?.dateOfReq, 'DD-MM-YYYY').format('YYYY-MM-DD HH:mm:ss')
+    //     : null,
+    //   requested_comments: values?.comments || '',
 
-    updateServiceRequestService(FilterValidObj(payload))
+    //   expected_completion_date: values?.expectedCompletedDate
+    //     ? moment(values?.expectedCompletedDate, 'YYYY-MM-DD hh:mm A').format(
+    //         'YYYY-MM-DD HH:mm:ss',
+    //       )
+    //     : null,
+    //   for_edit: serviceUpdate ? 2 : 1,
+    //   service_team_comments: values?.service_team_commments || '',
+    //   material_list: [],
+    //   problem_description: values?.problem_description || '',
+    //   availablity_reason: values?.pending_reason || '',
+    //   priority: values?.priorityLevel,
+    //   recurring_problem: values?.recurring_problem?.id || 0,
+    //   relevant_details: values?.relevant_details,
+    //   efmea_status: values?.efmea_status?.id || 0,
+    //   efmea_date: values?.efmea_date || '',
+    //   machine_limitations: values?.machine_limitations || '',
+    // };
+
+    updateServiceRequestService(FilterValidObj(finalObj))
       .then(res => {
         const response: CreateServiceReqApiResponseProps = res.data;
 

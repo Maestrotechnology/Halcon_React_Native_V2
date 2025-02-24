@@ -140,6 +140,7 @@ const PreventiveSR = ({route}: any) => {
     if (route?.params?.preventive_id) {
       formData.append('preventive_id', route?.params?.requestId);
     }
+
     if (!data && !requestStatus) {
       setStateFilterData(null);
     }
@@ -199,6 +200,7 @@ const PreventiveSR = ({route}: any) => {
       ...ele,
       req_date: moment(ele?.req_date).format('YYYY-MM-DD hh:mm A'),
       disableUpdateKey: ele?.request_status === 3 ? true : false,
+      disableApprovalIcon: ele?.request_status === 3 ? true : false,
     }));
   };
 
@@ -317,6 +319,13 @@ const PreventiveSR = ({route}: any) => {
               disableKey: 'disableUpdateKey',
               // isShow: PreventivePermissions?.update ? true : false,
             },
+            {
+              id: 4,
+              name: 'ApprovalIcon',
+              // isShow: ServiceRequestPermissions.update ? true : false,
+              isShow: true,
+              disableKey: 'disableApprovalIcon',
+            },
           ]}
           onActionPress={(type: number, val: PreventiveSRListDataProps) => {
             if (type === 1) {
@@ -332,6 +341,11 @@ const PreventiveSR = ({route}: any) => {
               setDeletePreventiveModal({
                 status: true,
                 id: val?.request_id,
+              });
+              return;
+            } else if (type === 4) {
+              navigation.navigate('ApprovalStatusList', {
+                request_id: val?.request_id,
               });
               return;
             }

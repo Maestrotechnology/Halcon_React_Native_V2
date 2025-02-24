@@ -7,6 +7,7 @@ import {
 } from '../@types/navigation';
 import ServiceRequest from '../Screens/HomeScreens/ServiceRequest';
 import ServiceRequestCreationStack from './ServiceRequestCreationStack';
+import ApprovalStatusList from '../Screens/HomeScreens/ServiceRequest/ApprovalStatusList';
 
 const Stack = createNativeStackNavigator<ServiceRequestStackParamList>();
 
@@ -37,6 +38,7 @@ const ServiceRequestStack = ({
         name="ServiceRequestCreationStack"
         component={ServiceRequestCreationStack}
       />
+      <Stack.Screen name="ApprovalStatusList" component={ApprovalStatusList} />
     </Stack.Navigator>
   );
 };

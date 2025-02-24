@@ -97,6 +97,13 @@ const ServiceRequest = ({navigation, route}: any) =>
         isShow: true,
         disableKey: 'disableUpdateIcon',
       },
+      {
+        id: 5,
+        name: 'ApprovalIcon',
+        // isShow: ServiceRequestPermissions.update ? true : false,
+        isShow: true,
+        disableKey: 'disableApprovalIcon',
+      },
     ]);
     const [filterData, setfilterData] =
       useState<ServiceRequestFilterDataProps | null>({
@@ -413,6 +420,7 @@ const ServiceRequest = ({navigation, route}: any) =>
               ...ele,
               disableEditIcon: ele?.request_status === 3 ? true : false,
               disableUpdateIcon: ele?.request_status === 3 ? true : false,
+              disableApprovalIcon: ele?.request_status === 3 ? true : false,
             }))}
             onEndReached={onEndReached}
             onRefresh={onRefresh}
@@ -439,7 +447,7 @@ const ServiceRequest = ({navigation, route}: any) =>
                   serviceReqData: val,
                   isUpdate: true,
                 });
-              } else {
+              } else if (actionType === 4) {
                 setIsShowDelete({
                   id: val.request_id,
                   status: true,
@@ -450,6 +458,10 @@ const ServiceRequest = ({navigation, route}: any) =>
                 //     handleDeleteServiceRequest(val.serviceId);
                 //   },
                 // });
+              } else {
+                navigation.navigate('ApprovalStatusList', {
+                  request_id: val?.request_id,
+                });
               }
             }}
           />

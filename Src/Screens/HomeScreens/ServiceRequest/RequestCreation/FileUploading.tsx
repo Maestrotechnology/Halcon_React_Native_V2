@@ -1,11 +1,4 @@
-import {
-  BackHandler,
-  Image,
-  Modal,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Modal, StyleSheet, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import HOCView from '../../../../Components/HOCView';
 import StyledText from '../../../../Components/StyledText';
@@ -34,12 +27,7 @@ import {
   downloadPdf,
   getFileNameFromUrl,
 } from '../../../../Utilities/GeneralUtilities';
-import {
-  RouteProp,
-  useFocusEffect,
-  useIsFocused,
-  useRoute,
-} from '@react-navigation/native';
+import {RouteProp, useIsFocused, useRoute} from '@react-navigation/native';
 import {UseToken} from '../../../../Utilities/StoreData';
 import {
   deleteAttachmentsService,
@@ -53,7 +41,6 @@ import {
   DeleteAttachmentApiResposneProps,
   FileUploadApiResponseProps,
 } from '../../../../@types/api';
-import TextField from '../../../../Components/TextField';
 import CustomImageBox from '../../../../Components/CustomImageBox';
 import DropdownBox from '../../../../Components/DropdownBox';
 import {RequiringProblemsList} from '../../../../Utilities/StaticDropdownOptions';
@@ -491,6 +478,7 @@ const FileUploading = ({
               Upload Files
             </CustomButton>
           )}
+        <View style={{marginVertical: 10}} />
         {isServiceUpdate && activeTab === 4 && renderTitleText('FMEA')}
         {isServiceUpdate && activeTab === 4 && (
           <DropdownBox
@@ -523,7 +511,7 @@ const FileUploading = ({
               isDisabled={isView}
               mode="datetime"
               format="YYYY-MM-DD hh:mm A"
-              title="Expected Completed Date"
+              title="If No, date FMEA was updated to include this failure mode"
               value={values.efmea_date}
               onSelect={date => {
                 setFieldValue('efmea_date', date);
@@ -537,31 +525,11 @@ const FileUploading = ({
             title="If machine is not fully operational, list limitations"
             value={values?.machine_limitations}
             placeHolder="If machine is not fully operational, list limitations"
-            onChangeText={e => {
-              setFieldValue('machine_limitations', e);
-            }}
+            onChangeText={handleChange('machine_limitations')}
             textInputProps={{
               ...bigInputBoxStyle,
             }}
-            customInputBoxContainerStyle={{
-              height: 100,
-              backgroundColor: COLORS.white,
-              borderColor: isView ? COLORS.white : COLORS.primary,
-            }}
-            isEditable={isServiceUpdate}
-          />
-        )}
-        {isServiceUpdate && activeTab === 4 && (
-          <TextInputBox
-            title="Problem Description"
-            value={values?.problem_description}
-            placeHolder="Problem Description"
-            onChangeText={e => {
-              setFieldValue('problem_description', e);
-            }}
-            textInputProps={{
-              ...bigInputBoxStyle,
-            }}
+            multiline
             customInputBoxContainerStyle={{
               height: 100,
               backgroundColor: COLORS.white,
@@ -579,6 +547,7 @@ const FileUploading = ({
             textInputProps={{
               ...bigInputBoxStyle,
             }}
+            multiline
             customInputBoxContainerStyle={{
               height: 100,
               backgroundColor: COLORS.white,
@@ -606,6 +575,8 @@ const FileUploading = ({
                 navigation.navigate('TaskDetails');
               } else if (activeTab === 2 && routeData?.isView) {
                 navigation.navigate('TaskDetails');
+              } else if (isServiceUpdate) {
+                handleSubmit();
               }
             }}
             style={{marginVertical: 20}}>

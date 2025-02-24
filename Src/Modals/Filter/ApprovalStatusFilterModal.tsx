@@ -1,17 +1,26 @@
 import {StyleSheet, View} from 'react-native';
 import React, {useEffect} from 'react';
+import {ApprovalStatusFilterProps} from '../../@types/modals';
 import {useFormik} from 'formik';
-import {TaskListFilterProps} from '../../@types/modals';
+import {
+  APPROVAL_STATUS_OPTIONS,
+  DeviceStatusProps,
+  requestStatusOptions,
+} from '../../Utilities/StaticDropdownOptions';
+import DropdownBox from '../../Components/DropdownBox';
 import CustomButton from '../../Components/CustomButton';
+import {FilterModalProps} from '../../@types/Global';
 import TextInputBox from '../../Components/TextInputBox';
 import {COLORS} from '../../Utilities/Constants';
-import {FilterModalProps} from '../../@types/Global';
 
-const TaskListFilterModal = ({
+const reqStatusOptions: DeviceStatusProps[] = [...requestStatusOptions];
+
+const ApprovalStatusFilterModal = ({
   filterData,
   onApplyFilter,
   onClose,
-}: FilterModalProps<TaskListFilterProps>) => {
+  initialValue,
+}: FilterModalProps<ApprovalStatusFilterProps>) => {
   const {
     setFieldValue,
     handleSubmit,
@@ -19,9 +28,10 @@ const TaskListFilterModal = ({
     resetForm,
     values,
     initialValues,
-  } = useFormik<TaskListFilterProps>({
+  } = useFormik<ApprovalStatusFilterProps>({
     initialValues: {
-      task_name: '',
+      role_name: '',
+      status: null,
     },
     onSubmit(values) {
       onApplyFilter(values);
@@ -35,21 +45,43 @@ const TaskListFilterModal = ({
         ...filterData,
       });
     }
+  }, []);
+
+  useEffect(() => {
+    if (filterData) {
+      setValues({
+        ...filterData,
+      });
+    }
   }, [filterData]);
 
   return (
     <View>
       <TextInputBox
-        value={values?.task_name}
+        value={values?.role_name}
         onChangeText={(val: string) => {
-          setFieldValue('task_name', val);
+          setFieldValue('role_name', val);
         }}
         customInputBoxContainerStyle={{
           borderColor: COLORS.primary,
         }}
-        placeHolder="Enter User Name"
-        title="Task Name"
+        placeHolder="Enter Role Name"
+        title="Role Name"
         isEditable
+      />
+      <DropdownBox
+        title="Status"
+        options={[...APPROVAL_STATUS_OPTIONS]}
+        value={values.status}
+        placeHolder="Select Status"
+        onSelect={val => {
+          setFieldValue('status', val);
+        }}
+        type="miniList"
+        fieldName="name"
+        onIconPress={() => {
+          setFieldValue('status', null);
+        }}
       />
 
       <View
@@ -80,6 +112,6 @@ const TaskListFilterModal = ({
   );
 };
 
-export default TaskListFilterModal;
+export default ApprovalStatusFilterModal;
 
 const styles = StyleSheet.create({});

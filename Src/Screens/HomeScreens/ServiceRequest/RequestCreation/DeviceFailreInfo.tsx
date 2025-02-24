@@ -26,6 +26,7 @@ import CheckBox from '../../../../Components/CheckBox';
 import {WINDOW_WIDTH} from '@gorhom/bottom-sheet';
 import {AlertBox} from '../../../../Utilities/GeneralUtilities';
 import {AlertMessageBox} from '../../../../Utilities/Methods';
+import MarqueeCustom from '../../../../Components/MarqueeTag';
 const deviceFailureSchema = Yup.object().shape({
   machine: Yup.object().nullable().required('Machine is required'),
   // dateOfErrorOccured: Yup.string().required(
@@ -154,13 +155,15 @@ const DeviceFailreInfo = ({
             } Service Request`,
       }}
       isEnableKeyboardAware
-      secondaryHeaderTitle={
-        isView
-          ? ''
-          : `${
-              isCreate ? 'Create' : isUpdate ? 'Edit' : 'Update'
-            } Service Request`
-      }>
+      // secondaryHeaderTitle={
+      //   isView
+      //     ? ''
+      //     : `${
+      //         isCreate ? 'Create' : isUpdate ? 'Edit' : 'Update'
+      //       } Service Request`
+      // }
+    >
+      {/* <MarqueeCustom /> */}
       {!CheckisEditable() && !isUpdate && isServiceUpdate ? (
         AlertMessageBox()
       ) : (
@@ -252,8 +255,9 @@ const DeviceFailreInfo = ({
           textInputProps={{
             ...bigInputBoxStyle,
           }}
+          multiline
           customInputBoxContainerStyle={{
-            height: 130,
+            height: 110,
             backgroundColor: COLORS.white,
             borderColor: !CheckisEditable() ? COLORS.white : COLORS.primary,
           }}
@@ -457,9 +461,8 @@ const DeviceFailreInfo = ({
           ...bigInputBoxStyle,
         }}
         multiline={true}
-        numberOfLines={7}
         customInputBoxContainerStyle={{
-          height: 130,
+          height: 110,
           backgroundColor: COLORS.white,
           borderColor:
             isView || isServiceUpdate ? COLORS.white : COLORS.primary,
@@ -502,7 +505,7 @@ const DeviceFailreInfo = ({
             isEditable={CheckisEditable()}
             numberOfLines={7}
             customInputBoxContainerStyle={{
-              height: 130,
+              height: 110,
               backgroundColor: COLORS.white,
               borderColor: !CheckisEditable() ? COLORS.white : COLORS.primary,
             }}

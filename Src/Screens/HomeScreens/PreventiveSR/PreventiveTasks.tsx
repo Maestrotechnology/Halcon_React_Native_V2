@@ -1,21 +1,19 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
-import TableView, { TableItemProps } from "../../../Components/TableView";
-import StyledText from "../../../Components/StyledText";
-import DateTimePicker from "../../../Components/DateTimePicker";
-import { CommonStyles } from "../../../Utilities/CommonStyles";
-import CheckBox from "../../../Components/CheckBox";
-import * as yup from "yup";
-import { useFormik } from "formik";
-import { PreventiveViewSelectedTaskProps } from "../../../@types/api";
-import { usePreventiveRequestContext } from "../../../Utilities/Contexts";
-import { COLORS, WINDOW_WIDTH } from "../../../Utilities/Constants";
-import { FONTS } from "../../../Utilities/Fonts";
-import HOCView from "../../../Components/HOCView";
-import { LoaderStatus } from "../../../Utilities/StoreData";
-import { useNavigation } from "@react-navigation/native";
-import CustomButton from "../../../Components/CustomButton";
-import moment from "moment";
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import React from 'react';
+import TableView, {TableItemProps} from '../../../Components/TableView';
+import StyledText from '../../../Components/StyledText';
+import DateTimePicker from '../../../Components/DateTimePicker';
+import {CommonStyles} from '../../../Utilities/CommonStyles';
+import CheckBox from '../../../Components/CheckBox';
+import {usePreventiveRequestContext} from '../../../Utilities/Contexts';
+import {COLORS} from '../../../Utilities/Constants';
+import {FONTS} from '../../../Utilities/Fonts';
+import HOCView from '../../../Components/HOCView';
+import {LoaderStatus} from '../../../Utilities/StoreData';
+import {useNavigation} from '@react-navigation/native';
+import CustomButton from '../../../Components/CustomButton';
+import moment from 'moment';
+import {isEmpty} from 'lodash';
 
 const PreventiveTasks = () => {
   const {
@@ -29,18 +27,21 @@ const PreventiveTasks = () => {
     selectedId,
     handleSubmit,
     isView,
+    navigateStatus,
+    route,
+    setnavigateStatus,
   } = usePreventiveRequestContext();
   const loading = LoaderStatus();
   const navigation: any = useNavigation();
   const TaskRowData = [
-    { key: "task_name", label: "Task Name" },
+    {key: 'task_name', label: 'Task Name'},
     // {key: 'created_at', label: 'Start Date'},
     // {key: 'updated_at', label: 'End Date'},
   ];
 
-  const renderCardItem = ({ item, index }: TableItemProps) => {
+  const renderCardItem = ({item, index}: TableItemProps) => {
     const selected_task =
-      values?.selected_tasks?.find((ele) => ele?.task_id === item?.task_id) ||
+      values?.selected_tasks?.find(ele => ele?.task_id === item?.task_id) ||
       null;
     if ((isView && selected_task) || !isView) {
       return (
@@ -50,14 +51,12 @@ const PreventiveTasks = () => {
             style={{
               ...styles.tableContainer,
               // backgroundColor: 'grey',
-            }}
-          >
+            }}>
             <TouchableOpacity
               style={{
                 flex: 1,
               }}
-              activeOpacity={1}
-            >
+              activeOpacity={1}>
               {!isView && (
                 <View style={[CommonStyles.flexRow]}>
                   {/* <StyledText style={styles.headerLabel}>
@@ -79,19 +78,17 @@ const PreventiveTasks = () => {
                   <View
                     style={[
                       CommonStyles.flexRow,
-                      { flex: 1, alignItems: "flex-start", paddingVertical: 5 },
-                    ]}
-                  >
+                      {flex: 1, alignItems: 'flex-start', paddingVertical: 5},
+                    ]}>
                     <StyledText style={styles.headerLabel}>
                       {cardItem?.label}&ensp;:&ensp;
                     </StyledText>
-                    <View style={{ flex: 1 }}>
+                    <View style={{flex: 1}}>
                       <StyledText
                         numberOfLines={1}
                         style={{
-                          color: item?.color ? item?.color : "#000",
-                        }}
-                      >
+                          color: item?.color ? item?.color : '#000',
+                        }}>
                         {item?.[cardItem?.key]}
                       </StyledText>
                     </View>
@@ -103,17 +100,15 @@ const PreventiveTasks = () => {
                   style={[
                     CommonStyles.flexRow,
                     {
-                      justifyContent: "space-between",
+                      justifyContent: 'space-between',
                       flex: 1,
-                      alignItems: "flex-start",
+                      alignItems: 'flex-start',
                     },
-                  ]}
-                >
+                  ]}>
                   <View
                     style={{
-                      width: "48%",
-                    }}
-                  >
+                      width: '48%',
+                    }}>
                     <StyledText style={styles.headerLabel}>
                       Start Date
                     </StyledText>
@@ -123,37 +118,37 @@ const PreventiveTasks = () => {
                         format="YYYY-MM-DD hh:mm A"
                         title=""
                         value={selected_task?.start_date || null}
-                        onSelect={(date) => {
+                        onSelect={date => {
                           handleTaskDateUpdates(
-                            "start_date",
+                            'start_date',
                             date,
-                            item?.task_id
+                            item?.task_id,
                           );
                         }}
                         errorText={
                           touched.selected_tasks && errors?.selected_tasks
                             ? !selected_task?.start_date
-                              ? "* Start date is required"
+                              ? '* Start date is required'
                               : moment(
                                   selected_task?.start_date,
-                                  "YYYY-MM-DD hh:mm A"
+                                  'YYYY-MM-DD hh:mm A',
                                 ).isAfter(
                                   moment(
                                     selected_task?.end_date,
-                                    "YYYY-MM-DD hh:mm A"
-                                  )
+                                    'YYYY-MM-DD hh:mm A',
+                                  ),
                                 )
-                              ? "Start date should be before end date!"
-                              : ""
-                            : ""
+                              ? 'Start date should be before end date!'
+                              : ''
+                            : ''
                         }
                         maximumDate={
                           selected_task?.end_date
                             ? new Date(
                                 moment(
                                   selected_task?.end_date,
-                                  "YYYY-MM-DD hh:mm A"
-                                ).format("YYYY-MM-DD")
+                                  'YYYY-MM-DD hh:mm A',
+                                ).format('YYYY-MM-DD'),
                               )
                             : undefined
                         }
@@ -162,22 +157,20 @@ const PreventiveTasks = () => {
                       <StyledText
                         numberOfLines={1}
                         style={{
-                          color: item?.color ? item?.color : "#000",
-                        }}
-                      >
-                        {item?.created_at
-                          ? moment(item?.created_at).format(
-                              "YYYY-MM-DD hh:mm A"
+                          color: item?.color ? item?.color : '#000',
+                        }}>
+                        {item?.start_date
+                          ? moment(item?.start_date).format(
+                              'YYYY-MM-DD hh:mm A',
                             )
-                          : "-"}
+                          : '-'}
                       </StyledText>
                     )}
                   </View>
                   <View
                     style={{
-                      width: "48%",
-                    }}
-                  >
+                      width: '48%',
+                    }}>
                     <StyledText style={styles.headerLabel}>End Date</StyledText>
                     {selected_task && !isView ? (
                       <DateTimePicker
@@ -185,27 +178,27 @@ const PreventiveTasks = () => {
                         format="YYYY-MM-DD hh:mm A"
                         title=""
                         value={selected_task?.end_date || null}
-                        onSelect={(date) => {
+                        onSelect={date => {
                           handleTaskDateUpdates(
-                            "end_date",
+                            'end_date',
                             date,
-                            item?.task_id
+                            item?.task_id,
                           );
                         }}
                         errorText={
                           touched.selected_tasks && errors?.selected_tasks
                             ? !selected_task?.end_date
-                              ? "* End date is required"
-                              : ""
-                            : ""
+                              ? '* End date is required'
+                              : ''
+                            : ''
                         }
                         minimumDate={
                           selected_task?.start_date
                             ? new Date(
                                 moment(
                                   selected_task?.start_date,
-                                  "YYYY-MM-DD hh:mm A"
-                                ).format("YYYY-MM-DD")
+                                  'YYYY-MM-DD hh:mm A',
+                                ).format('YYYY-MM-DD'),
                               )
                             : undefined
                         }
@@ -214,14 +207,13 @@ const PreventiveTasks = () => {
                       <StyledText
                         numberOfLines={1}
                         style={{
-                          color: item?.color ? item?.color : "#000",
-                        }}
-                      >
+                          color: item?.color ? item?.color : '#000',
+                        }}>
                         {item?.updated_at
                           ? moment(item?.updated_at).format(
-                              "YYYY-MM-DD hh:mm A"
+                              'YYYY-MM-DD hh:mm A',
                             )
-                          : "-"}
+                          : '-'}
                       </StyledText>
                     )}
                   </View>
@@ -231,17 +223,15 @@ const PreventiveTasks = () => {
                   style={[
                     CommonStyles.flexRow,
                     {
-                      justifyContent: "space-between",
+                      justifyContent: 'space-between',
                       flex: 1,
-                      alignItems: "flex-start",
+                      alignItems: 'flex-start',
                     },
-                  ]}
-                >
+                  ]}>
                   <View
                     style={{
-                      width: "48%",
-                    }}
-                  >
+                      width: '48%',
+                    }}>
                     <StyledText style={styles.headerLabel}>
                       Start Date
                     </StyledText>
@@ -249,28 +239,25 @@ const PreventiveTasks = () => {
                     <StyledText
                       numberOfLines={1}
                       style={{
-                        color: item?.color ? item?.color : "#000",
-                      }}
-                    >
+                        color: item?.color ? item?.color : '#000',
+                      }}>
                       {selected_task?.start_date
                         ? selected_task?.start_date
-                        : "-"}
+                        : '-'}
                     </StyledText>
                   </View>
                   <View
                     style={{
-                      width: "48%",
-                    }}
-                  >
+                      width: '48%',
+                    }}>
                     <StyledText style={styles.headerLabel}>End Date</StyledText>
 
                     <StyledText
                       numberOfLines={1}
                       style={{
-                        color: item?.color ? item?.color : "#000",
-                      }}
-                    >
-                      {selected_task?.end_date ? selected_task?.end_date : "-"}
+                        color: item?.color ? item?.color : '#000',
+                      }}>
+                      {selected_task?.end_date ? selected_task?.end_date : '-'}
                     </StyledText>
                   </View>
                 </View>
@@ -284,59 +271,59 @@ const PreventiveTasks = () => {
   };
 
   const handleTaskDateUpdates = (
-    key: "start_date" | "end_date",
+    key: 'start_date' | 'end_date',
     date: string,
-    id: number
+    id: number,
   ) => {
-    const tempdata = [...values?.selected_tasks]?.map((ele) => {
+    const tempdata = [...values?.selected_tasks]?.map(ele => {
       if (ele?.task_id === id) {
         return {
           ...ele,
           [key]: date,
         };
       }
-      return { ...ele };
+      return {...ele};
     });
 
     // setSelectedTasks([...tempdata] || []);
-    setFieldValue("selected_tasks", [...tempdata] || []);
+    // @ts-ignore
+    setFieldValue('selected_tasks', [...tempdata] || []);
   };
 
   const onSelectTask = (val: any) => {
     if (
-      values?.selected_tasks?.map((ele) => ele?.task_id)?.includes(val?.task_id)
+      values?.selected_tasks?.map(ele => ele?.task_id)?.includes(val?.task_id)
     ) {
       // setSelectedTasks(pre =>
       //   [...pre]?.filter(ele => ele?.task_id !== val?.task_id),
       // );
       setFieldValue(
-        "selected_tasks",
+        'selected_tasks',
         [...values?.selected_tasks]?.filter(
-          (ele) => ele?.task_id !== val?.task_id
-        )
+          ele => ele?.task_id !== val?.task_id,
+        ),
       );
       return;
     }
     // setSelectedTasks(pre => [...pre, val]);
-    setFieldValue("selected_tasks", [...values?.selected_tasks, val]);
+    setFieldValue('selected_tasks', [...values?.selected_tasks, val]);
   };
+
   return (
     <HOCView
       headerProps={{
         isEnableMenu: false,
         isRightIconEnable: false,
-        headerTitle: `${isView ? "View" : "Update"} Preventive Tasks`,
+        headerTitle: `${isView ? 'View' : 'Update'} Preventive Tasks`,
         onBackPress() {
           navigation.goBack();
         },
       }}
-      isLoading={loading}
-    >
+      isLoading={loading}>
       <View
         style={{
           flex: 1,
-        }}
-      >
+        }}>
         {/* <CustomButton
           style={{
             maxWidth: 130,
@@ -355,12 +342,12 @@ const PreventiveTasks = () => {
             viewPortColumnDivisionCount={2.3}
             showFullText
             selectable={type !== 1 && preventiveViewData?.request_status !== 3}
-            selectedIds={values?.selected_tasks?.map((ele) => ele?.task_id)}
+            selectedIds={values?.selected_tasks?.map(ele => ele?.task_id)}
             checkedKey="task_id"
-            onCheckPress={(val) => {
+            onCheckPress={val => {
               onSelectTask(val);
             }}
-            onPressItem={(val) => {
+            onPressItem={val => {
               if (type !== 1 && preventiveViewData?.request_status !== 3)
                 onSelectTask(val);
             }}
@@ -369,9 +356,17 @@ const PreventiveTasks = () => {
         )}
         <CustomButton
           onPress={() => {
+            // // setnavigateStatus(false);
             handleSubmit();
-          }}
-        >
+            if (isEmpty(errors)) {
+              navigation.navigate('PreventiveFileUpload', {
+                preventiveId: selectedId,
+                isView:
+                  route?.params?.preventiveType === 1 ||
+                  preventiveViewData?.request_status === 3,
+              });
+            }
+          }}>
           Next
         </CustomButton>
       </View>
@@ -387,9 +382,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 15,
     padding: 15,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     flex: 1,
   },
   headerLabel: {

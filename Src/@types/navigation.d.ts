@@ -51,6 +51,7 @@ export type ServiceRequestParamsDataProps = {
 
 export type ServiceRequestStackParamList = {
   ServiceRequest: undefined;
+  ApprovalStatusList: ServiceRequestCreationStackParamsDataProps;
   ServiceRequestCreationStack: ServiceRequestCreationStackParamsDataProps;
 };
 export type UserStackStackParamList = {
@@ -94,6 +95,8 @@ export type PreventiveSRStackParamList = {
   PreventiveFileUpload: undefined;
   PreventiveTasks: undefined;
   AssignTasks: undefined;
+  ApprovalStatusList: undefined;
+  MaterialissueList: undefined;
 };
 
 export type MaintananceWorkOrderParamList = {

@@ -76,7 +76,10 @@ export const viewPreventiveSRService = (
   page: number,
   size: number,
 ) => {
-  return axios.post(`view_preventive?page=${page}&size=${size}`, data);
+  return axios.post(
+    `service_request/view_preventive?page=${page}&size=${size}`,
+    data,
+  );
 };
 
 export const preventiveTaskListService = (
@@ -88,15 +91,11 @@ export const preventiveTaskListService = (
 };
 
 export const deletePreventiveRequestService = (data: FormData) => {
-  return axios.post('delete_preventive', data);
+  return axios.post('service_request/delete_preventive', data);
 };
 
 export const updatePreventiveTaskService = (data: any) => {
-  return axios.post('edit_preventive', data, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  return axios.post('service_request/edit_preventive', data, JSONHeaderType);
 };
 
 export const createTaskMappingService = (data: any) => {
@@ -129,6 +128,18 @@ export const exportServiceRequestService = (data: FormData) => {
   return axios.post('export_request', data);
 };
 
+export const getServiceRequestApprovalStatusListService = (
+  data: FormData,
+  page: number,
+) => {
+  return axios.post(
+    `service_request/list_approval_status?page=${page}&size=10`,
+    data,
+  );
+};
+export const editApprovalStatus = (data: FormData) => {
+  return axios.post(`service_request/edit_approval`, data);
+};
 export const getServiceRequestListService = (data: FormData, page: number) => {
   return axios.post(`service_request/list_request?page=${page}&size=10`, data);
 };

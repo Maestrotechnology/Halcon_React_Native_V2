@@ -138,6 +138,16 @@ export const SORT_OPTIONS = [
     name: 'Error Occurred',
   },
 ];
+export const APPROVAL_STATUS_OPTIONS = [
+  {
+    id: 1,
+    name: 'Approved',
+  },
+  {
+    id: 2,
+    name: 'Rejected',
+  },
+];
 export const cameraOptions: CameraOptionsprops[] = [
   {id: 1, icon: 'profile_option_camera', name: 'Camera'},
   {id: 2, icon: 'profile_option_gallery', name: 'Gallery'},
@@ -146,4 +156,5 @@ export const cameraOptions: CameraOptionsprops[] = [
 export const LIST_TYPE_MAP = {
   deviceStatusOptions: deviceStatusOptions,
   TASK_DONE_BY_OPTIONS: TASK_DONE_BY_OPTIONS,
+  APPROVAL_STATUS_OPTIONS: APPROVAL_STATUS_OPTIONS,
 };
