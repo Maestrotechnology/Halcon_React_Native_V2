@@ -104,10 +104,13 @@ const SearchDropdownBoxModal = ({
         break;
       case 'roleList':
         handleRoleList();
+        break;
       case 'assignedUsersList':
         handleAssignedUserList();
+        break;
       case 'MaterialList':
         handlegetMaterialList();
+        break;
       default:
         break;
     }

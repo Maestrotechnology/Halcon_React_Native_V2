@@ -102,6 +102,7 @@ export type PreventiveRequestFormikDataProps = {
   completedDate: string;
   comments: string;
   selected_tasks: PreventiveViewSelectedTaskProps[];
+  material_list: addMeterialProps[] | [];
 };
 
 // export type PreventiveRequestUpdateContextProps = {
@@ -141,8 +142,10 @@ export type PreventiveRequestUpdateContextProps = {
   type: number;
   selectedId: number | null;
   setselectedId: Dispatch<SetStateAction<number | null>>;
+  setnavigateStatus: Dispatch<SetStateAction<number | null>>;
   isView: boolean;
-
+  navigateStatus: boolean;
+  route: any;
   setIsView: Dispatch<SetStateAction<boolean>>;
   values: PreventiveRequestFormikDataProps;
   errors: FormikErrors<PreventiveRequestFormikDataProps>;

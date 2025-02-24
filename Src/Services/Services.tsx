@@ -76,7 +76,10 @@ export const viewPreventiveSRService = (
   page: number,
   size: number,
 ) => {
-  return axios.post(`view_preventive?page=${page}&size=${size}`, data);
+  return axios.post(
+    `service_request/view_preventive?page=${page}&size=${size}`,
+    data,
+  );
 };
 
 export const preventiveTaskListService = (
@@ -88,15 +91,11 @@ export const preventiveTaskListService = (
 };
 
 export const deletePreventiveRequestService = (data: FormData) => {
-  return axios.post('delete_preventive', data);
+  return axios.post('service_request/delete_preventive', data);
 };
 
 export const updatePreventiveTaskService = (data: any) => {
-  return axios.post('edit_preventive', data, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  return axios.post('service_request/edit_preventive', data, JSONHeaderType);
 };
 
 export const createTaskMappingService = (data: any) => {

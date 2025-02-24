@@ -29,6 +29,7 @@ const ProblemDetails = ({
     values,
     isServiceUpdate,
   } = useServiceRequestDetails();
+  const ServiceRequestContextValue = useServiceRequestDetails();
 
   useEffect(() => {
     if (focused) {
@@ -158,9 +159,11 @@ const ProblemDetails = ({
               materialItem,
             ]);
           }}
+          CheckisEditable={CheckisEditable()}
+          contextValue={ServiceRequestContextValue}
         />
       )}
-      {values?.material_list?.length > 0 && (
+      {/* {values?.material_list?.length > 0 && (
         <View style={styles.MaterialListTable}>
           {values?.material_list?.map((item, index) => {
             return (
@@ -240,7 +243,7 @@ const ProblemDetails = ({
             );
           })}
         </View>
-      )}
+      )} */}
       <CustomButton
         onPress={() => {
           setactiveTab(4);

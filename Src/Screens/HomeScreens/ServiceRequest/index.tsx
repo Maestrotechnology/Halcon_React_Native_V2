@@ -102,7 +102,7 @@ const ServiceRequest = ({navigation, route}: any) =>
         name: 'ApprovalIcon',
         // isShow: ServiceRequestPermissions.update ? true : false,
         isShow: true,
-        disableKey: 'disableUpdateIcon',
+        disableKey: 'disableApprovalIcon',
       },
     ]);
     const [filterData, setfilterData] =
@@ -420,6 +420,7 @@ const ServiceRequest = ({navigation, route}: any) =>
               ...ele,
               disableEditIcon: ele?.request_status === 3 ? true : false,
               disableUpdateIcon: ele?.request_status === 3 ? true : false,
+              disableApprovalIcon: ele?.request_status === 3 ? true : false,
             }))}
             onEndReached={onEndReached}
             onRefresh={onRefresh}

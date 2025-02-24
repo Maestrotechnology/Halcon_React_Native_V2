@@ -89,6 +89,8 @@ export type PreventiveSRStackParamList = {
   PreventiveFileUpload: undefined;
   PreventiveTasks: undefined;
   AssignTasks: undefined;
+  ApprovalStatusList: undefined;
+  MaterialissueList: undefined;
 };
 
 export type MaintananceWorkOrderParamList = {
