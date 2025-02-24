@@ -48,6 +48,7 @@ import ApprovalIcon from '../Assets/Svg/ApprovalStatus.svg';
 import FilterIcon from '../Assets/Svg/FilterIcon.svg';
 
 import DummyImage from '../Assets/Images/dummyImage.png';
+import TaskAssignIcon from '../Assets/Svg/task_assign_icon.svg';
 
 export type IconType =
   | 'FilterIcon'
@@ -98,7 +99,8 @@ export type IconType =
   | 'service_icon'
   | 'preventive_req__icon'
   | 'work_order_icon'
-  | 'work_order_active_icon';
+  | 'work_order_active_icon'
+  | 'TaskAssignIcon';
 
 export const ICONS = {
   successIcon,
@@ -148,6 +150,7 @@ export const ICONS = {
   RoleIcon,
   UserMenuIcon,
   DummyImage,
+  TaskAssignIcon,
   ApprovalIcon,
   FilterIcon,
 };

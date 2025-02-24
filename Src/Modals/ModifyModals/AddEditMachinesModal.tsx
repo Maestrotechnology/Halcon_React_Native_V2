@@ -17,7 +17,6 @@ import {
   UpdateWorkCenterService,
 } from '../../Services/Services';
 import {getCatchMessage} from '../../Utilities/GeneralUtilities';
-import Toast from '../../Components/Toast';
 import {UseToken} from '../../Utilities/StoreData';
 import {AddEditModalProps} from '../../@types/Global';
 import {MachinesListFilterProps} from '../../@types/modals';
@@ -25,6 +24,7 @@ import DropdownBox from '../../Components/DropdownBox';
 import CheckBox from '../../Components/CheckBox';
 import StyledText from '../../Components/StyledText';
 import Loader from '../../Components/Loader';
+import Toast from '../../Components/Toast';
 
 const validationSchema = Yup.object().shape({
   machine_name: Yup.string().trim().required('* Machine Name is required.'),

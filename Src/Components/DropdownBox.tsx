@@ -40,6 +40,7 @@ const DropdownBox = ({
   multiSelect = false,
   uniqueKey,
   onMultipleSelect,
+  isDisabledInPopup = false,
 }: DropdownBoxProps) => {
   const [isOpenModal, setisOpenModal] = useState<boolean>(false);
 
@@ -78,8 +79,12 @@ const DropdownBox = ({
             styles.inputContainer,
             ContainerStyle,
             {
-              backgroundColor: COLORS.white,
-              borderColor: isDisabled
+              backgroundColor: isDisabledInPopup
+                ? COLORS.disabledColor
+                : COLORS.white,
+              borderColor: isDisabledInPopup
+                ? COLORS.disabledColor
+                : isDisabled
                 ? '#fff'
                 : errorText
                 ? COLORS.red

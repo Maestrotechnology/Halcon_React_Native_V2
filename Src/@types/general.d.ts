@@ -179,6 +179,7 @@ export interface DropdownBoxProps
   multiSelect?: boolean;
   uniqueKey?: 'role_id';
   onMultipleSelect?: (item: any[]) => void;
+  isDisabledInPopup?: boolean;
 }
 
 export type TextInputBoxProps = {

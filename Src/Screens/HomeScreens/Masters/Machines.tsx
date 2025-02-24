@@ -33,7 +33,7 @@ var isMount = true;
 var currentPage = 1;
 var totalPages = 1;
 
-const Machines = ({route}: MastersStackNavigationProps) => {
+const Machines = ({navigation, route}: MastersStackNavigationProps) => {
   const token = UseToken();
   const {bottom} = useSafeAreaInsets();
   const focused = useIsFocused();
@@ -47,17 +47,24 @@ const Machines = ({route}: MastersStackNavigationProps) => {
   );
   const [actionsList, setActionList] = useState<actionListProps[]>([
     {
-      id: 1,
-      name: 'deleteIcon',
-      // isShow: ServiceRequestPermissions.delete ? true : false,
-      isShow: true,
-    },
-    {
       id: 2,
       name: 'editIcon',
       // isShow: ServiceRequestPermissions.edit ? true : false,
       isShow: true,
       disableKey: 'disableEditIcon',
+    },
+    {
+      id: 4,
+      name: 'TaskAssignIcon',
+      // isShow: ServiceRequestPermissions.edit ? true : false,
+      isShow: true,
+      disableKey: 'disableEditIcon',
+    },
+    {
+      id: 1,
+      name: 'deleteIcon',
+      // isShow: ServiceRequestPermissions.delete ? true : false,
+      isShow: true,
     },
   ]);
   const [filterData, setfilterData] = useState<MachinesListFilterProps | null>({
@@ -84,7 +91,7 @@ const Machines = ({route}: MastersStackNavigationProps) => {
     totalPages = 1;
 
     if (token) {
-      handleGetWorkCenterList(1);
+      handleGetMachineList(1);
     }
     return () => {
       isMount = false;
@@ -93,7 +100,7 @@ const Machines = ({route}: MastersStackNavigationProps) => {
     };
   }, [token, route, focused]);
 
-  const handleGetWorkCenterList = (
+  const handleGetMachineList = (
     page: number = 1,
     filter: MachinesListFilterProps | null = filterData,
   ) => {
@@ -107,7 +114,7 @@ const Machines = ({route}: MastersStackNavigationProps) => {
       formData.append('machine_id', filter?.machine_id?.machine_id);
     }
     if (filter?.division_id) {
-      formData.append('division_id', filter?.division_id);
+      formData.append('division_id', filter?.division_id?.division_id);
     }
 
     listMachinesService(formData, page)
@@ -144,7 +151,7 @@ const Machines = ({route}: MastersStackNavigationProps) => {
       if (isMount) {
         setisEndRefreshing(true);
       }
-      handleGetWorkCenterList(currentPage);
+      handleGetMachineList(currentPage);
     }
   };
 
@@ -154,7 +161,7 @@ const Machines = ({route}: MastersStackNavigationProps) => {
     }
     totalPages = 1;
     currentPage = 1;
-    handleGetWorkCenterList(1);
+    handleGetMachineList(1);
   };
 
   const handleDeleteDivision = (machine_id: number) => {
@@ -203,7 +210,7 @@ const Machines = ({route}: MastersStackNavigationProps) => {
 
     currentPage = 1;
     totalPages = 1;
-    handleGetWorkCenterList(1, data);
+    handleGetMachineList(1, data);
   };
 
   const closeFilterModal = () => {
@@ -281,6 +288,10 @@ const Machines = ({route}: MastersStackNavigationProps) => {
                 lineData: val,
                 show: true,
               });
+            } else if (actionType === 4) {
+              navigation.navigate('MachineTasks', {
+                item: val,
+              });
             }
           }}
         />
@@ -306,7 +317,7 @@ const Machines = ({route}: MastersStackNavigationProps) => {
             lineData={addEditWorkCenter?.lineData || null}
             type={addEditWorkCenter?.type}
             onApplyChanges={() => {
-              handleGetWorkCenterList(1);
+              handleGetMachineList(1);
             }}
             onClose={closeTaskModal}
           />

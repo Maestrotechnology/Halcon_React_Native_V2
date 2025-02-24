@@ -77,6 +77,12 @@ export type MasterStackStackParamList = {
   Holiday: undefined;
   Machines: undefined;
   AddEditMaterial: AddEditMaterialNavigationProps;
+  MachineTasks: {item: MachinesListDataProps};
+};
+
+export type MahineStackParamList = {
+  Machines: undefined;
+  MachineTasks: undefined;
 };
 
 export type AddEditMaterialNavigationProps = {
