@@ -45,9 +45,12 @@ import WorkOrderActiveIcon from '../Assets/Svg/work_order_active_icon.svg';
 import RoleIcon from '../Assets/Svg/userRole.svg';
 import UserMenuIcon from '../Assets/Svg/userMenuIcon.svg';
 import ApprovalIcon from '../Assets/Svg/ApprovalStatus.svg';
+import FilterIcon from '../Assets/Svg/FilterIcon.svg';
+
 import DummyImage from '../Assets/Images/dummyImage.png';
 
 export type IconType =
+  | 'FilterIcon'
   | 'ApprovalIcon'
   | 'DummyImage'
   | 'RoleIcon'
@@ -146,4 +149,5 @@ export const ICONS = {
   UserMenuIcon,
   DummyImage,
   ApprovalIcon,
+  FilterIcon,
 };

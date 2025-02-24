@@ -36,65 +36,71 @@ export default function MaterialList({
 
   return (
     <View>
-      <View style={styles.MeterialListFlex}>
-        <DropdownBox
-          title="Material"
-          // isRequired
-          apiType="MaterialList"
-          value={values.material_id}
-          placeHolder="Select Material"
-          onSelect={val => {
-            setFieldValue('material_id', val);
-          }}
-          type="search"
-          fieldName="material_name"
-          onIconPress={() => {
-            setFieldValue('material_id', null);
-          }}
-          isLocalSearch={true}
-          errorText={
-            errors.material_id && touched.material_id ? errors.material_id : ''
-          }
-          mainContainerStyle={{width: '40%'}}
-          isDisabled={!isEditable}
-          isEnableRightIcon={isEditable}
-        />
-        <TextInputBox
-          title="Quantity"
-          value={values.quantity}
-          placeHolder="Quantity"
-          onChangeText={val => {
-            if (val > '0' || '') {
-              setFieldValue('quantity', val);
+      {CheckisEditable && (
+        <View style={styles.MeterialListFlex}>
+          <DropdownBox
+            title="Material"
+            // isRequired
+            apiType="MaterialList"
+            value={values.material_id}
+            placeHolder="Select Material"
+            onSelect={val => {
+              setFieldValue('material_id', val);
+            }}
+            type="search"
+            fieldName="material_name"
+            onIconPress={() => {
+              setFieldValue('material_id', null);
+            }}
+            isLocalSearch={true}
+            errorText={
+              errors.material_id && touched.material_id
+                ? errors.material_id
+                : ''
             }
-          }}
-          textInputProps={{
-            maxLength: INPUT_SIZE.AMOUNT_LENGTH,
-            keyboardType: 'number-pad',
-          }}
-          validationType="NUMBER"
-          //   isEditable={isCreate || isUpdate}
-          customContainerStyle={{width: '40%'}}
-          customInputBoxContainerStyle={{
-            backgroundColor: COLORS.white,
-            borderColor: isEditable
-              ? errors.quantity && touched.quantity
-                ? COLORS.dangerColor
-                : COLORS.primary
-              : COLORS.grey,
-          }}
-          isEditable={isEditable}
-          errorText={errors.quantity && touched.quantity ? errors.quantity : ''}
-        />
-        <View>
-          <CustomButton
+            mainContainerStyle={{width: '40%'}}
             isDisabled={!isEditable}
-            style={{width: 40, marginTop: 30}}
-            onPress={handleSubmit}>
-            +
-          </CustomButton>
+            isEnableRightIcon={isEditable}
+          />
+          <TextInputBox
+            title="Quantity"
+            value={values.quantity}
+            placeHolder="Quantity"
+            onChangeText={val => {
+              if (val > '0' || '') {
+                setFieldValue('quantity', val);
+              }
+            }}
+            textInputProps={{
+              maxLength: INPUT_SIZE.AMOUNT_LENGTH,
+              keyboardType: 'number-pad',
+            }}
+            validationType="NUMBER"
+            //   isEditable={isCreate || isUpdate}
+            customContainerStyle={{width: '40%'}}
+            customInputBoxContainerStyle={{
+              backgroundColor: COLORS.white,
+              borderColor: isEditable
+                ? errors.quantity && touched.quantity
+                  ? COLORS.dangerColor
+                  : COLORS.primary
+                : COLORS.grey,
+            }}
+            isEditable={isEditable}
+            errorText={
+              errors.quantity && touched.quantity ? errors.quantity : ''
+            }
+          />
+          <View>
+            <CustomButton
+              isDisabled={!isEditable}
+              style={{width: 40, marginTop: 30}}
+              onPress={handleSubmit}>
+              +
+            </CustomButton>
+          </View>
         </View>
-      </View>
+      )}
       {contextValue?.values?.material_list?.length > 0 && (
         <View style={styles.MaterialListTable}>
           {contextValue?.values?.material_list?.map(
@@ -211,5 +217,6 @@ const styles = StyleSheet.create({
   MaterialListTable: {
     flexDirection: 'column',
     gap: 5,
+    marginTop: 20,
   },
 });

@@ -187,7 +187,41 @@ const CustomDrawerNavigation = ({
       activeIcon: 'preventiveActiveIcon',
       isVisible: true,
     },
-
+    {
+      id: 7,
+      isMenu: true,
+      displayName: 'Reports',
+      navigate: 'ReportStack',
+      leftIcon: 'preventive_icon',
+      activeIcon: 'preventiveActiveIcon',
+      isVisible: true,
+      children: [
+        {
+          id: 71,
+          displayName: 'Spindle',
+          navigate: 'Machines',
+          leftIcon: 'preventive_icon',
+          activeIcon: 'preventiveActiveIcon',
+          isVisible: true,
+        },
+        {
+          id: 72,
+          displayName: 'MTTR',
+          navigate: 'TasksList',
+          leftIcon: 'preventive_icon',
+          activeIcon: 'preventiveActiveIcon',
+          isVisible: true,
+        },
+        {
+          id: 73,
+          displayName: 'MTBF',
+          navigate: 'Policy',
+          leftIcon: 'preventive_icon',
+          activeIcon: 'preventiveActiveIcon',
+          isVisible: true,
+        },
+      ],
+    },
     {
       id: 6,
       displayName: 'Logout',

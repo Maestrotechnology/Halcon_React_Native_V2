@@ -1,7 +1,11 @@
 import {number, string} from 'yup';
 import {IconType} from '../Utilities/Icons';
 import {DeviceStatusProps} from '../Utilities/StaticDropdownOptions';
-import {MachineDropdownListDataProps} from './api';
+import {
+  DevisionDropdownListReponseProps,
+  MachineDropdownListDataProps,
+  WorkCenterropdownListReponseProps,
+} from './api';
 import {DivisionDropdownProp, WorkCenterDropdownProp} from './dropdown';
 
 export interface SearchDropdownBoxModalProps {
@@ -34,6 +38,10 @@ export interface SearchDropdownBoxModalProps {
 export type TaskListFilterProps = {
   task_name?: string;
   control_key?: string;
+};
+export type SpindleReportFilterProps = {
+  division_id: DevisionDropdownListReponseProps | null;
+  work_center_id: WorkCenterropdownListReponseProps | nul;
 };
 export type SearchDropdownBoxModalRenderOptionsProps = {
   item: any;

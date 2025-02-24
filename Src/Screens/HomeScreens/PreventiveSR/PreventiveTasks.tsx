@@ -1,5 +1,7 @@
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import moment from 'moment';
+import {isEmpty} from 'lodash';
 import React from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import TableView, {TableItemProps} from '../../../Components/TableView';
 import StyledText from '../../../Components/StyledText';
 import DateTimePicker from '../../../Components/DateTimePicker';
@@ -12,13 +14,10 @@ import HOCView from '../../../Components/HOCView';
 import {LoaderStatus} from '../../../Utilities/StoreData';
 import {useNavigation} from '@react-navigation/native';
 import CustomButton from '../../../Components/CustomButton';
-import moment from 'moment';
-import {isEmpty} from 'lodash';
 
 const PreventiveTasks = () => {
   const {
     preventiveViewData,
-    setPreventiveViewData,
     type,
     errors,
     setFieldValue,
@@ -27,247 +26,223 @@ const PreventiveTasks = () => {
     selectedId,
     handleSubmit,
     isView,
-    navigateStatus,
     route,
-    setnavigateStatus,
   } = usePreventiveRequestContext();
   const loading = LoaderStatus();
   const navigation: any = useNavigation();
-  const TaskRowData = [
-    {key: 'task_name', label: 'Task Name'},
-    // {key: 'created_at', label: 'Start Date'},
-    // {key: 'updated_at', label: 'End Date'},
-  ];
+  const TaskRowData = [{key: 'task_name', label: 'Task Name'}];
 
   const renderCardItem = ({item, index}: TableItemProps) => {
     const selected_task =
       values?.selected_tasks?.find(ele => ele?.task_id === item?.task_id) ||
       null;
-    if ((isView && selected_task) || !isView) {
-      return (
-        <>
-          <View
-            key={JSON.stringify(item)}
+    return (
+      <>
+        <View
+          key={JSON.stringify(item)}
+          style={{
+            ...styles.tableContainer,
+          }}>
+          <TouchableOpacity
             style={{
-              ...styles.tableContainer,
-              // backgroundColor: 'grey',
-            }}>
-            <TouchableOpacity
-              style={{
-                flex: 1,
-              }}
-              activeOpacity={1}>
-              {!isView && (
-                <View style={[CommonStyles.flexRow]}>
-                  {/* <StyledText style={styles.headerLabel}>
-                    S.No &ensp;:&ensp;
-                  </StyledText>
-                  <StyledText>{index + 1}</StyledText> */}
-                  <CheckBox
-                    checked={selected_task ? true : false}
-                    onChange={() => {
-                      if (!isView) {
-                        onSelectTask(item);
-                      }
-                    }}
-                  />
-                </View>
-              )}
-              {[...TaskRowData]?.map((cardItem, cardIndex) => {
-                return (
-                  <View
-                    style={[
-                      CommonStyles.flexRow,
-                      {flex: 1, alignItems: 'flex-start', paddingVertical: 5},
-                    ]}>
-                    <StyledText style={styles.headerLabel}>
-                      {cardItem?.label}&ensp;:&ensp;
-                    </StyledText>
-                    <View style={{flex: 1}}>
-                      <StyledText
-                        numberOfLines={1}
-                        style={{
-                          color: item?.color ? item?.color : '#000',
-                        }}>
-                        {item?.[cardItem?.key]}
-                      </StyledText>
-                    </View>
-                  </View>
-                );
-              })}
-              {!isView ? (
+              flex: 1,
+            }}
+            activeOpacity={1}>
+            {!isView && (
+              <View style={[CommonStyles.flexRow]}>
+                <CheckBox
+                  checked={selected_task ? true : false}
+                  onChange={() => {
+                    if (!isView) {
+                      onSelectTask(item);
+                    }
+                  }}
+                />
+              </View>
+            )}
+            {[...TaskRowData]?.map((cardItem, cardIndex) => {
+              return (
                 <View
                   style={[
                     CommonStyles.flexRow,
-                    {
-                      justifyContent: 'space-between',
-                      flex: 1,
-                      alignItems: 'flex-start',
-                    },
+                    {flex: 1, alignItems: 'flex-start', paddingVertical: 5},
                   ]}>
-                  <View
-                    style={{
-                      width: '48%',
-                    }}>
-                    <StyledText style={styles.headerLabel}>
-                      Start Date
+                  <StyledText style={styles.headerLabel}>
+                    {cardItem?.label}&ensp;:&ensp;
+                  </StyledText>
+                  <View style={{flex: 1}}>
+                    <StyledText
+                      numberOfLines={1}
+                      style={{
+                        color: item?.color ? item?.color : '#000',
+                      }}>
+                      {item?.[cardItem?.key]}
                     </StyledText>
-                    {selected_task ? (
-                      <DateTimePicker
-                        mode="datetime"
-                        format="YYYY-MM-DD hh:mm A"
-                        title=""
-                        value={selected_task?.start_date || null}
-                        onSelect={date => {
-                          handleTaskDateUpdates(
-                            'start_date',
-                            date,
-                            item?.task_id,
-                          );
-                        }}
-                        errorText={
-                          touched.selected_tasks && errors?.selected_tasks
-                            ? !selected_task?.start_date
-                              ? '* Start date is required'
-                              : moment(
-                                  selected_task?.start_date,
-                                  'YYYY-MM-DD hh:mm A',
-                                ).isAfter(
-                                  moment(
-                                    selected_task?.end_date,
-                                    'YYYY-MM-DD hh:mm A',
-                                  ),
-                                )
-                              ? 'Start date should be before end date!'
-                              : ''
-                            : ''
-                        }
-                        maximumDate={
-                          selected_task?.end_date
-                            ? new Date(
+                  </View>
+                </View>
+              );
+            })}
+            {!isView ? (
+              <View
+                style={[
+                  CommonStyles.flexRow,
+                  {
+                    justifyContent: 'space-between',
+                    flex: 1,
+                    alignItems: 'flex-start',
+                  },
+                ]}>
+                <View
+                  style={{
+                    width: '48%',
+                  }}>
+                  <StyledText style={styles.headerLabel}>Start Date</StyledText>
+                  {selected_task ? (
+                    <DateTimePicker
+                      mode="datetime"
+                      format="YYYY-MM-DD hh:mm A"
+                      title=""
+                      value={selected_task?.start_date || null}
+                      onSelect={date => {
+                        handleTaskDateUpdates(
+                          'start_date',
+                          date,
+                          item?.task_id,
+                        );
+                      }}
+                      errorText={
+                        touched.selected_tasks && errors?.selected_tasks
+                          ? !selected_task?.start_date
+                            ? '* Start date is required'
+                            : moment(
+                                selected_task?.start_date,
+                                'YYYY-MM-DD hh:mm A',
+                              ).isAfter(
                                 moment(
                                   selected_task?.end_date,
                                   'YYYY-MM-DD hh:mm A',
-                                ).format('YYYY-MM-DD'),
+                                ),
                               )
-                            : undefined
-                        }
-                      />
-                    ) : (
-                      <StyledText
-                        numberOfLines={1}
-                        style={{
-                          color: item?.color ? item?.color : '#000',
-                        }}>
-                        {item?.start_date
-                          ? moment(item?.start_date).format(
-                              'YYYY-MM-DD hh:mm A',
-                            )
-                          : '-'}
-                      </StyledText>
-                    )}
-                  </View>
-                  <View
-                    style={{
-                      width: '48%',
-                    }}>
-                    <StyledText style={styles.headerLabel}>End Date</StyledText>
-                    {selected_task && !isView ? (
-                      <DateTimePicker
-                        mode="datetime"
-                        format="YYYY-MM-DD hh:mm A"
-                        title=""
-                        value={selected_task?.end_date || null}
-                        onSelect={date => {
-                          handleTaskDateUpdates(
-                            'end_date',
-                            date,
-                            item?.task_id,
-                          );
-                        }}
-                        errorText={
-                          touched.selected_tasks && errors?.selected_tasks
-                            ? !selected_task?.end_date
-                              ? '* End date is required'
-                              : ''
+                            ? 'Start date should be before end date!'
                             : ''
-                        }
-                        minimumDate={
-                          selected_task?.start_date
-                            ? new Date(
-                                moment(
-                                  selected_task?.start_date,
-                                  'YYYY-MM-DD hh:mm A',
-                                ).format('YYYY-MM-DD'),
-                              )
-                            : undefined
-                        }
-                      />
-                    ) : (
-                      <StyledText
-                        numberOfLines={1}
-                        style={{
-                          color: item?.color ? item?.color : '#000',
-                        }}>
-                        {item?.updated_at
-                          ? moment(item?.updated_at).format(
-                              'YYYY-MM-DD hh:mm A',
+                          : ''
+                      }
+                      maximumDate={
+                        selected_task?.end_date
+                          ? new Date(
+                              moment(
+                                selected_task?.end_date,
+                                'YYYY-MM-DD hh:mm A',
+                              ).format('YYYY-MM-DD'),
                             )
-                          : '-'}
-                      </StyledText>
-                    )}
-                  </View>
-                </View>
-              ) : (
-                <View
-                  style={[
-                    CommonStyles.flexRow,
-                    {
-                      justifyContent: 'space-between',
-                      flex: 1,
-                      alignItems: 'flex-start',
-                    },
-                  ]}>
-                  <View
-                    style={{
-                      width: '48%',
-                    }}>
-                    <StyledText style={styles.headerLabel}>
-                      Start Date
-                    </StyledText>
-
+                          : undefined
+                      }
+                    />
+                  ) : (
                     <StyledText
                       numberOfLines={1}
                       style={{
                         color: item?.color ? item?.color : '#000',
                       }}>
-                      {selected_task?.start_date
-                        ? selected_task?.start_date
+                      {item?.start_date
+                        ? moment(item?.start_date).format('YYYY-MM-DD hh:mm A')
                         : '-'}
                     </StyledText>
-                  </View>
-                  <View
-                    style={{
-                      width: '48%',
-                    }}>
-                    <StyledText style={styles.headerLabel}>End Date</StyledText>
-
+                  )}
+                </View>
+                <View
+                  style={{
+                    width: '48%',
+                  }}>
+                  <StyledText style={styles.headerLabel}>End Date</StyledText>
+                  {selected_task && !isView ? (
+                    <DateTimePicker
+                      mode="datetime"
+                      format="YYYY-MM-DD hh:mm A"
+                      title=""
+                      value={selected_task?.end_date || null}
+                      onSelect={date => {
+                        handleTaskDateUpdates('end_date', date, item?.task_id);
+                      }}
+                      errorText={
+                        touched.selected_tasks && errors?.selected_tasks
+                          ? !selected_task?.end_date
+                            ? '* End date is required'
+                            : ''
+                          : ''
+                      }
+                      minimumDate={
+                        selected_task?.start_date
+                          ? new Date(
+                              moment(
+                                selected_task?.start_date,
+                                'YYYY-MM-DD hh:mm A',
+                              ).format('YYYY-MM-DD'),
+                            )
+                          : undefined
+                      }
+                    />
+                  ) : (
                     <StyledText
                       numberOfLines={1}
                       style={{
                         color: item?.color ? item?.color : '#000',
                       }}>
-                      {selected_task?.end_date ? selected_task?.end_date : '-'}
+                      {item?.updated_at
+                        ? moment(item?.updated_at).format('YYYY-MM-DD hh:mm A')
+                        : '-'}
                     </StyledText>
-                  </View>
+                  )}
                 </View>
-              )}
-            </TouchableOpacity>
-          </View>
-        </>
-      );
-    }
-    return null;
+              </View>
+            ) : (
+              <View
+                style={[
+                  CommonStyles.flexRow,
+                  {
+                    justifyContent: 'space-between',
+                    flex: 1,
+                    alignItems: 'flex-start',
+                  },
+                ]}>
+                <View
+                  style={{
+                    width: '48%',
+                  }}>
+                  <StyledText style={styles.headerLabel}>Start Date</StyledText>
+
+                  <StyledText
+                    numberOfLines={1}
+                    style={{
+                      color: item?.color ? item?.color : '#000',
+                    }}>
+                    {item?.start_date
+                      ? moment(item?.start_date).format('YYYY-MM-DD HH:mm A')
+                      : '-'}
+                  </StyledText>
+                </View>
+                <View
+                  style={{
+                    width: '48%',
+                  }}>
+                  <StyledText style={styles.headerLabel}>End Date</StyledText>
+
+                  <StyledText
+                    numberOfLines={1}
+                    style={{
+                      color: item?.color ? item?.color : '#000',
+                    }}>
+                    {item?.end_date
+                      ? moment(item?.end_date).format('YYYY-MM-DD HH:mm A')
+                      : '-'}
+                  </StyledText>
+                </View>
+              </View>
+            )}
+          </TouchableOpacity>
+        </View>
+      </>
+    );
   };
 
   const handleTaskDateUpdates = (
@@ -284,8 +259,6 @@ const PreventiveTasks = () => {
       }
       return {...ele};
     });
-
-    // setSelectedTasks([...tempdata] || []);
     // @ts-ignore
     setFieldValue('selected_tasks', [...tempdata] || []);
   };
@@ -294,9 +267,6 @@ const PreventiveTasks = () => {
     if (
       values?.selected_tasks?.map(ele => ele?.task_id)?.includes(val?.task_id)
     ) {
-      // setSelectedTasks(pre =>
-      //   [...pre]?.filter(ele => ele?.task_id !== val?.task_id),
-      // );
       setFieldValue(
         'selected_tasks',
         [...values?.selected_tasks]?.filter(
@@ -305,7 +275,6 @@ const PreventiveTasks = () => {
       );
       return;
     }
-    // setSelectedTasks(pre => [...pre, val]);
     setFieldValue('selected_tasks', [...values?.selected_tasks, val]);
   };
 
@@ -324,17 +293,6 @@ const PreventiveTasks = () => {
         style={{
           flex: 1,
         }}>
-        {/* <CustomButton
-          style={{
-            maxWidth: 130,
-            alignSelf: 'flex-end',
-            marginBottom: 10,
-          }}
-          onPress={() => {
-            navigation.navigate('AssignTasks');
-          }}>
-          Assign Task
-        </CustomButton> */}
         {preventiveViewData && (
           <TableView
             dataList={[...preventiveViewData?.all_task]}
@@ -356,11 +314,10 @@ const PreventiveTasks = () => {
         )}
         <CustomButton
           onPress={() => {
-            // // setnavigateStatus(false);
             handleSubmit();
             if (isEmpty(errors)) {
               navigation.navigate('PreventiveFileUpload', {
-                preventiveId: selectedId,
+                preventivReqId: selectedId,
                 isView:
                   route?.params?.preventiveType === 1 ||
                   preventiveViewData?.request_status === 3,

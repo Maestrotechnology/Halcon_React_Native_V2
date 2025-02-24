@@ -215,6 +215,11 @@ const UpdatePreventiveRequest = ({route, navigation}: any) => {
           )
         : '',
       comments: data?.comments ? data?.comments : '',
+      material_list: data?.material_list?.map((ele: any) => ({
+        ...ele,
+        material_id: {...ele, material_name: ele?.name},
+        quantity: ele?.quantity,
+      })),
     }));
   };
 

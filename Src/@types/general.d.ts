@@ -358,3 +358,8 @@ export type ImageBoxProps = {
   keyData?: number;
   isProfile?: boolean;
 };
+
+export type TaskPerformanceDataProps = {
+  completedTaskPercentage: number;
+  faultTaskPercentage: number;
+};

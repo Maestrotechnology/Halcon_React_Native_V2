@@ -1,20 +1,17 @@
-import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {
   getDashboardCardsService,
   getDashboardMonthlyReportService,
-  getMachineListService,
-  getPreventiveRequestReportService,
-  getServiceRequestReportService,
+  SpindleReportGraphListService,
+  TaskPerformanceService,
 } from '../../Services/Services';
 import Toast from '../../Components/Toast';
 import {GetPermissions, GetUserData, UseToken} from '../../Utilities/StoreData';
 import {
   DashboardCardKeyProps,
   DashboardCardsApiResponseProps,
-  DashboardChartDetailsApiResponseProps,
   DashboardChartDetailsItemsResponseProps,
-  DashboardCountApiResponseProps,
   DashboardMonthlyReportProps,
   ServiceRequestReportDataProps,
 } from '../../@types/api';
@@ -23,26 +20,22 @@ import StyledText from '../../Components/StyledText';
 import {IconType} from '../../Utilities/Icons';
 import SVGIcon from '../../Components/SVGIcon';
 import {COLORS, FONTSIZES, WINDOW_WIDTH} from '../../Utilities/Constants';
-import {BarChart, LineChart, barDataItem} from 'react-native-gifted-charts';
-import TableView from '../../Components/TableView';
+import {BarChart, barDataItem} from 'react-native-gifted-charts';
 import moment from 'moment';
 import {FONTS} from '../../Utilities/Fonts';
 import {useNavigation} from '@react-navigation/native';
-import {ConvertJSONtoFormData} from '../../Utilities/Methods';
 import {getCatchMessage} from '../../Utilities/GeneralUtilities';
 import {CommonStyles} from '../../Utilities/CommonStyles';
+import {ConvertJSONtoFormData} from '../../Utilities/Methods';
+import SpindleHoursReport from './Reports/SpindleHoursReport';
+import {SpindleReportFilterProps} from '../../@types/modals';
+import CommonPieChart from '../../Components/CommonPieChart';
+import {TaskPerformanceDataProps} from '../../@types/general';
 
 var isMount = true;
 var currentPage = 1;
 var totalPages = 1;
 
-// type DashboardCardProp = {
-//   displayName: string;
-//   value: number;
-//   bg_color: string;
-//   icon: IconType;
-//   type: number;
-// };
 type DashboardCardProp = {
   displayName: string;
   total: number;
@@ -68,82 +61,14 @@ const Dashboard = () => {
   const token = UseToken();
   const navigation: any = useNavigation();
   const userData = GetUserData();
-  // // @ts-ignore
-  // const DashboardPermissions: DashboardPermissionProps =
-  //   GetUserPermissions('service_dashboard');
 
-  // const {service_dashboard, service_request} = GetPermissions();
-  const [ServiceRequestReportData, setServiceRequestReportData] = useState<
-    ServiceRequestReportDataProps[]
-  >([]);
-  const [PreventiveRequestReportData, setPreventiveRequestReportData] =
-    useState<ServiceRequestReportDataProps[]>([]);
-  const [machineServiceList, setmachineServiceList] = useState<
-    DashboardChartDetailsItemsResponseProps[]
-  >([]);
+  const [SpindleReportList, setSpindleReportList] = useState([]);
+  const [available_running_hours, setRunningHours] = useState(0);
+
   const [showPreventiveReport, setShowPreventiveReport] = useState(false);
   const [monthlyReport, setMonthlyReport] =
     useState<DashboardMonthlyReportProps | null>(null);
 
-  // const [dashboardCards, setDashboardCards] = useState<DashboardCardProp[]>([
-  //   {
-  //     displayName: 'Total Service',
-  //     value: 0,
-  //     bg_color: '#FFF5D9',
-  //     icon: 'totalServiceIcon',
-  //     type: 0,
-  //   },
-  //   {
-  //     displayName: 'ON Going Service',
-  //     value: 0,
-  //     bg_color: '#E7EDFF',
-  //     icon: 'onGoingServiceIcon',
-  //     type: 2,
-  //   },
-  //   {
-  //     displayName: 'Pending Service',
-  //     value: 0,
-  //     bg_color: '#FFE0EB',
-  //     icon: 'pendingServiceIcon',
-  //     type: 1,
-  //   },
-  //   {
-  //     displayName: 'Completed Service',
-  //     value: 0,
-  //     bg_color: '#DCFAF8',
-  //     icon: 'completedServiceIcon',
-  //     type: 3,
-  //   },
-  // ]);
-  const [CardData, setCardData] = useState<DashboardCardDataProp[]>([
-    {
-      displayName: 'Total SR',
-      value: 0,
-      key: 'totalOngoingSR',
-      icon: 'service_req_icon',
-      type: 0,
-    },
-    {
-      displayName: 'Preventive SR',
-      value: 0,
-      key: 'pendingSR',
-      icon: 'preventive_icon',
-    },
-    {
-      displayName: 'Ongoing SR',
-      value: 0,
-      key: 'totalCompletedDataSR',
-      icon: 'onGoingServiceIcon',
-      type: 2,
-    },
-    {
-      displayName: 'Completed SR',
-      value: 0,
-      key: 'totalCompletedDataSR',
-      icon: 'completedServiceIcon',
-      type: 3,
-    },
-  ]);
   const [dashboardCards, setDashboardCards] = useState<DashboardCardProp[]>([
     {
       displayName: 'Service Request',
@@ -169,6 +94,12 @@ const Dashboard = () => {
           value: 0,
           key: 'completed',
           type: 3,
+        },
+        {
+          displayName: 'Over Due',
+          value: 0,
+          key: 'overdue',
+          type: 4,
         },
       ],
     },
@@ -197,31 +128,60 @@ const Dashboard = () => {
           key: 'completed',
           type: 3,
         },
+        {
+          displayName: 'Over Due',
+          value: 0,
+          key: 'overdue',
+          type: 4,
+        },
       ],
     },
   ]);
 
-  const data1 = [
-    {value: 10, label: 'Jul'},
-    {value: 20, label: 'Aug'},
-    {value: 10, label: 'Sep'},
-    {value: 20, label: 'Oct'},
-    {value: 10, label: 'Nov'},
-    {value: 20, label: 'Dec'},
-    {value: 10, label: 'Jan'},
-  ];
+  const handleGetSpindleReportList = (data?: SpindleReportFilterProps) => {
+    let formData = new FormData();
+    formData.append('token', token);
+    if (data?.division_id?.division_id) {
+      formData.append('division_id', data?.division_id?.division_id);
+    }
+    if (data?.work_center_id?.work_center_id) {
+      formData.append(
+        'work_center_id',
+        data?.work_center_id?.work_center_id?.work_center_id,
+      );
+    }
+    SpindleReportGraphListService(formData)
+      .then(response => {
+        if (response?.data?.status === 1) {
+          let chartdata = response?.data?.data?.items?.filter((ele: any) => {
+            if (ele?.spindle_hr !== null) {
+              return {
+                equipment_id: ele?.equipment_id,
+                machine_name: ele?.machine_name,
+                spindle_hr: ele?.spindle_hr,
+              };
+            }
+          });
+
+          setRunningHours(response?.data?.data?.available_running_hours);
+          setSpindleReportList(chartdata);
+        } else {
+          Toast.error(response?.data?.msg);
+        }
+      })
+      .catch(error => {
+        getCatchMessage(error);
+      });
+  };
   useEffect(() => {
     isMount = true;
     currentPage = 1;
     totalPages = 1;
     if (token) {
-      // handleGetServiceRequestReport();
-      // handleGetMachineServiceList(1);
       handleGetDashboardCards();
-      // handleGetPreventiveRequestReport();
-      if (userData?.user_type === 1) {
-        getMonthlyReport();
-      }
+      getMonthlyReport();
+      handleGetSpindleReportList();
+      handleGetTaskperformanceData();
     }
 
     return () => {
@@ -274,143 +234,10 @@ const Dashboard = () => {
               ],
             },
           ]);
-          // setCardData(pre => [
-          //   {
-          //     ...pre[0],
-          //     value: response?.data?.totRequest || 0,
-          //   },
-          //   {
-          //     ...pre[1],
-          //     value: response?.data?.totPreventiveTask || 0,
-          //   },
-          //   {
-          //     ...pre[2],
-          //     value: response?.data?.onGoing || 0,
-          //   },
-          //   {
-          //     ...pre[3],
-          //     value: response?.data?.totCompleted || 0,
-          //   },
-          // ]);
         }
       })
       .catch(err => getCatchMessage(err))
       .finally(() => {});
-  };
-
-  // const handleGetServiceRequestReport = () => {
-  //   const formData = new FormData();
-  //   formData.append('token', token);
-  //   getServiceRequestReportService(formData)
-  //     .then(res => {
-  //       const response: DashboardCountApiResponseProps = res.data;
-  //       if (response.status === 1) {
-  //         const {
-  //           data,
-  //           pendingData,
-  //           totalCompleted,
-  //           totalOnGoing,
-  //           totalService,
-  //         } = response;
-  //         if (isMount) {
-  //           setServiceRequestReportData(data);
-  //         }
-  //       } else if (response.status === 0) {
-  //         Toast.success(response.msg);
-  //       }
-  //     })
-  //     .catch(err => {
-  //       Toast.error(err.message);
-  //     });
-  // };
-  // const handleGetPreventiveRequestReport = () => {
-  //   const formData = new FormData();
-  //   formData.append('token', token);
-  //   getPreventiveRequestReportService(formData)
-  //     .then(res => {
-  //       const response: DashboardCountApiResponseProps = res.data;
-  //       if (response.status === 1) {
-  //         const {
-  //           data,
-  //           pendingData,
-  //           totalCompleted,
-  //           totalOnGoing,
-  //           totalService,
-  //         } = response;
-  //         if (isMount) {
-  //           setPreventiveRequestReportData(data);
-  //         }
-  //       } else if (response.status === 0) {
-  //         Toast.success(response.msg);
-  //       }
-  //     })
-  //     .catch(err => {
-  //       Toast.error(err.message);
-  //     });
-  // };
-
-  const handleGetMachineServiceList = (page = 1, size = 5) => {
-    const data = {
-      token: token,
-      is_top: 1,
-    };
-
-    getMachineListService(ConvertJSONtoFormData(data), page, size)
-      .then(res => {
-        const response: DashboardChartDetailsApiResponseProps = res.data;
-        if (response.status === 1) {
-          totalPages = response.data.total_page;
-          if (page === 1) {
-            if (isMount) {
-              setmachineServiceList([...response.data.items]);
-            }
-          } else {
-            if (isMount) {
-              setmachineServiceList(prev => [...prev, ...response.data.items]);
-            }
-          }
-        } else if (response.status === 0) {
-          Toast.error(response.msg);
-        }
-      })
-      .catch(err => {
-        Toast.error(err.message);
-      });
-  };
-  // const getChartData = () => {
-  //   const tempData = showPreventiveReport
-  //     ? [...PreventiveRequestReportData]
-  //     : [...ServiceRequestReportData];
-
-  //   return [...tempData]?.map(ele => ({
-  //     value: ele?.total,
-  //     dataPointText: ele?.total?.toString(),
-  //     label: moment()
-  //       .month(ele?.month - 1)
-  //       .format('MMMM')
-  //       ?.slice(0, 3),
-  //   }));
-  // };
-
-  const getChartColor = () => {
-    if (showPreventiveReport) {
-      return {
-        color1: '#39BFEA',
-        fill: '#5BCAEE',
-      };
-    }
-    return {
-      color1: '#F45C26',
-      fill: '#e2a089',
-    };
-  };
-
-  const getMachineList = () => {
-    return [...machineServiceList]?.map(ele => ({
-      ...ele,
-      CompletedServiceCount: `${ele?.CompletedServiceCount}/${ele?.TotalServiceCount}`,
-      completedPreventive: `${ele?.completedPreventive}/${ele?.totalPreventive}`,
-    }));
   };
 
   const getChartData = (type: 'preventive' | 'service') => {
@@ -418,6 +245,7 @@ const Dashboard = () => {
       type === 'preventive'
         ? monthlyReport?.preventiveRequest || []
         : monthlyReport?.serviceRequest || [];
+
     const finalArr = [...tempdata]?.reduce((pre: barDataItem[], curr) => {
       const newArray: barDataItem[] = [...pre];
       const data = Object.keys(curr)?.map((ele, index) => {
@@ -489,6 +317,28 @@ const Dashboard = () => {
     // value : item?.
     //       }
     //     })
+  };
+  const [taskPerformanceData, setTaskPerformanceData] =
+    useState<TaskPerformanceDataProps>({
+      completedTaskPercentage: 0,
+      faultTaskPercentage: 0,
+    });
+  const handleGetTaskperformanceData = () => {
+    const data = {
+      token: token,
+    };
+    TaskPerformanceService(ConvertJSONtoFormData(data))
+      .then(res => {
+        const response: any = res?.data;
+        if (response?.status) {
+          setTaskPerformanceData({
+            completedTaskPercentage: response?.data?.completedTaskPercentage,
+            faultTaskPercentage: response?.data?.faultTaskPercentage,
+          });
+        }
+      })
+      .catch(err => getCatchMessage(err))
+      .finally(() => {});
   };
 
   const handleNavigation = (date: string) => {
@@ -689,6 +539,8 @@ const Dashboard = () => {
                   display: 'flex',
                   flexDirection: 'row',
                   justifyContent: 'space-around',
+                  flexWrap: 'wrap',
+                  gap: 4,
                 }}>
                 {cardGroup?.data?.map((card, cardIndex) => {
                   return (
@@ -706,7 +558,7 @@ const Dashboard = () => {
                         }
                       }}
                       style={{
-                        width: '30%',
+                        width: '24%',
                         backgroundColor: COLORS.white,
                         padding: 8,
                         borderRadius: 10,
@@ -715,8 +567,8 @@ const Dashboard = () => {
                         <StyledText
                           style={{
                             color: '#8A8A8A',
-                            fontSize: FONTSIZES.tiny,
-                            fontFamily: FONTS.poppins.medium,
+                            fontSize: FONTSIZES.extraTiny,
+                            fontFamily: FONTS.poppins.regular,
                           }}>
                           {card?.displayName}
                         </StyledText>
@@ -738,60 +590,60 @@ const Dashboard = () => {
         })}
       </View>
 
-      {/* Yearly maintance report */}
-      {userData?.user_type === 1 ? (
-        <View>
-          <StyledText style={styles.subHeader}>Report</StyledText>
+      <View>
+        <StyledText style={styles.subHeader}>Report</StyledText>
 
-          <View
-            style={{
-              ...styles.cardItemContainer,
-              borderRadius: 10,
-              backgroundColor: COLORS.white,
-            }}>
-            <View style={{...CommonStyles.flexRow, justifyContent: 'flex-end'}}>
-              <TouchableOpacity
-                onPress={() => {
-                  setShowPreventiveReport(pre => !pre);
-                }}
+        <View
+          style={{
+            ...styles.cardItemContainer,
+            borderRadius: 10,
+            backgroundColor: COLORS.white,
+          }}>
+          <View style={{...CommonStyles.flexRow, justifyContent: 'flex-end'}}>
+            <TouchableOpacity
+              onPress={() => {
+                setShowPreventiveReport(pre => !pre);
+              }}
+              style={{
+                ...styles.reportBtn,
+                backgroundColor: !showPreventiveReport
+                  ? COLORS.primary
+                  : COLORS.borderColor,
+                marginRight: 10,
+              }}>
+              <StyledText
                 style={{
-                  ...styles.reportBtn,
-                  backgroundColor: !showPreventiveReport
-                    ? COLORS.primary
-                    : COLORS.borderColor,
-                  marginRight: 10,
+                  ...styles.reportBtnText,
+                  paddingTop: 1,
                 }}>
-                <StyledText
-                  style={{
-                    ...styles.reportBtnText,
-                    paddingTop: 1,
-                  }}>
-                  Service
-                </StyledText>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  setShowPreventiveReport(pre => !pre);
-                }}
+                Service
+              </StyledText>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setShowPreventiveReport(pre => !pre);
+              }}
+              style={{
+                ...styles.reportBtn,
+                backgroundColor: showPreventiveReport
+                  ? COLORS.primary
+                  : COLORS.borderColor,
+              }}>
+              <StyledText
                 style={{
-                  ...styles.reportBtn,
-                  backgroundColor: showPreventiveReport
-                    ? COLORS.primary
-                    : COLORS.borderColor,
+                  ...styles.reportBtnText,
+                  paddingTop: 1,
                 }}>
-                <StyledText
-                  style={{
-                    ...styles.reportBtnText,
-                    paddingTop: 1,
-                  }}>
-                  Preventive
-                </StyledText>
-              </TouchableOpacity>
-            </View>
-            {/* <LineChart
+                Preventive
+              </StyledText>
+            </TouchableOpacity>
+          </View>
+          {/* <LineChart
             areaChart
             curved
-            data={[...getChartData()]}
+            data={[
+              ...getChartData(showPreventiveReport ? 'preventive' : 'service'),
+            ]}
             // hideDataPoints
             color1={getChartColor()?.color1}
             startFillColor1={getChartColor()?.fill}
@@ -825,64 +677,42 @@ const Dashboard = () => {
               );
             }}
           /> */}
-
-            <BarChart
-              key={showPreventiveReport ? 'preventive' : 'service'}
-              data={getChartData(
-                showPreventiveReport ? 'preventive' : 'service',
-              )}
-              barWidth={18}
-              spacing={5}
-              barBorderTopLeftRadius={4}
-              barBorderTopRightRadius={4}
-              // roundedBottom
-              // hideRules
-              xAxisThickness={0}
-              yAxisThickness={0}
-              yAxisTextStyle={{color: 'gray'}}
-              noOfSections={3}
-              // maxValue={75}
-            />
-
-            {/* <BarChart width={300} data={data} frontColor="#177AD5" /> */}
-          </View>
-        </View>
-      ) : null}
-
-      {/* Machine Wise Report */}
-      {/* {service_dashboard?.machine_list ? (
-        <View>
-          <StyledText style={styles.subHeader}>Machine Wise report</StyledText>
-          <TableView
-            dataList={getMachineList()}
-            headingList={['Machine Name', 'Service Request', 'Prevent Request']}
-            itemKeysList={[
-              {key: 'machine_name'},
-              {key: 'CompletedServiceCount', center: true},
-              {
-                key: 'completedPreventive',
-              },
+          <BarChart
+            key={showPreventiveReport ? 'preventive' : 'service'}
+            data={[
+              ...getChartData(showPreventiveReport ? 'preventive' : 'service'),
             ]}
-            // isActionAvailable={
-            //   service_request?.service_request_menu ? true : false
-            // }
-            // viewPortColumnDivisionCount={
-            //   service_request?.service_request_menu ? 6 : 3.5
-            // }
-            // viewAction
-            isActionAvailable={false}
-            viewPortColumnDivisionCount={4.5}
-            onActionPress={(
-              type: number,
-              value: DashboardChartDetailsItemsResponseProps,
-            ) => {
-              navigation.navigate('ServiceRequestStack', {
-                machineId: value?.machine_id,
-              });
-            }}
+            barWidth={18}
+            spacing={5}
+            barBorderTopLeftRadius={4}
+            barBorderTopRightRadius={4}
+            xAxisThickness={0}
+            yAxisThickness={0}
+            yAxisTextStyle={{color: 'gray'}}
+            noOfSections={3}
+            width={WINDOW_WIDTH - 100}
           />
         </View>
-      ) : null} */}
+        <SpindleHoursReport
+          SpindleReportList={SpindleReportList}
+          available_running_hours={available_running_hours}
+          handleGetSpindleReportList={handleGetSpindleReportList}
+        />
+        <View style={{gap: 10}}>
+          <StyledText style={[styles.subHeader, {paddingBottom: 0}]}>
+            Tasks performance
+          </StyledText>
+
+          <CommonPieChart
+            taskPerformanceData={taskPerformanceData?.completedTaskPercentage}
+            title="Completed"
+          />
+          <CommonPieChart
+            taskPerformanceData={taskPerformanceData?.faultTaskPercentage}
+            title="Fault"
+          />
+        </View>
+      </View>
     </HOCView>
   );
 };

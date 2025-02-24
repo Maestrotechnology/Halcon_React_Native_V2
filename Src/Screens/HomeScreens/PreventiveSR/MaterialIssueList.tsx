@@ -100,6 +100,7 @@ export default function MaterialissueList({navigation}: any) {
         dispatch(openLoader(false));
       });
   };
+
   return (
     <HOCView
       isEnableKeyboardAware={false}
@@ -115,19 +116,19 @@ export default function MaterialissueList({navigation}: any) {
       isEnableScrollView={false}>
       <View style={{flex: 1}}>
         {renderTitleText('Material issue')}
-        {!ContextValue?.isView && (
-          <MaterialList
-            isEditable={!ContextValue?.isView}
-            handleAddMeterialList={(materialItem: MaterialListProps) => {
-              ContextValue.setFieldValue('material_list', [
-                ...ContextValue?.values?.material_list,
-                materialItem,
-              ]);
-            }}
-            CheckisEditable={!ContextValue.isView}
-            contextValue={ContextValue}
-          />
-        )}
+        {/* {!ContextValue?.isView && ( */}
+        <MaterialList
+          isEditable={!ContextValue?.isView}
+          handleAddMeterialList={(materialItem: MaterialListProps) => {
+            ContextValue.setFieldValue('material_list', [
+              ...ContextValue?.values?.material_list,
+              materialItem,
+            ]);
+          }}
+          CheckisEditable={!ContextValue.isView}
+          contextValue={ContextValue}
+        />
+        {/* )} */}
       </View>
       {!ContextValue.isView &&
         route?.params?.isFrom === 'PreventiveFileUploading' && (
