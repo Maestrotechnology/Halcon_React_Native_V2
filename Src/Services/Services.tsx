@@ -404,6 +404,13 @@ export const DeleteMachineService = (data: FormData) => {
   return axios.post('masters/delete_machine', data);
 };
 
+export const MachineMappingListService = (data: FormData, page: number) => {
+  return axios.post(
+    `machine_task_mapping/viewTaskMachineMapping?page=${page}&size=20`,
+    data,
+  );
+};
+
 // Dropdown Lists
 export const RoleDropdownListService = (data: FormData) => {
   return axios.post('dropdown/dropdown_role', data);

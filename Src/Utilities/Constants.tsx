@@ -211,3 +211,9 @@ export const ReqularDays = [
     holiday_id: 6,
   },
 ];
+
+export const PeriodicCatgory = [
+  {value: 0, label: 'Days'},
+  {value: 1, label: 'Weeks'},
+  {value: 2, label: 'Months'},
+];

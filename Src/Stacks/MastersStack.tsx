@@ -13,6 +13,7 @@ import WorkCenter from '../Screens/HomeScreens/Masters/WorkCenter';
 import Holiday from '../Screens/HomeScreens/Masters/Holiday';
 import AddEditMaterial from '../Screens/HomeScreens/Masters/Matetial/AddEditMaterial';
 import Machines from '../Screens/HomeScreens/Masters/Machines';
+import MachineTasks from '../Screens/HomeScreens/Masters/MachineTasks';
 
 const Stack = createNativeStackNavigator<MasterStackStackParamList>();
 
@@ -32,6 +33,7 @@ const MastersStack = ({route, navigation}: MastersStackNavigationProps) => {
         <Stack.Screen name="AddEditMaterial" component={AddEditMaterial} />
         <Stack.Screen name="WorkCenter" component={WorkCenter} />
         <Stack.Screen name="Holiday" component={Holiday} />
+        <Stack.Screen name="MachineTasks" component={MachineTasks} />
       </Stack.Navigator>
     </>
   );

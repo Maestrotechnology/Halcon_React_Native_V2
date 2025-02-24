@@ -84,3 +84,16 @@ export const AlertMessageBox = () => {
     </StyledText>
   );
 };
+
+export const selectPeriodicCategory = (value: number) => {
+  switch (value) {
+    case 0:
+      return 'Days';
+    case 1:
+      return 'Weeks';
+    case 2:
+      return 'Months';
+    default:
+      return '';
+  }
+};

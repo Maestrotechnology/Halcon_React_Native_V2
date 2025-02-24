@@ -799,6 +799,11 @@ export interface MachinesListDataProps {
   division_id?: any;
 }
 
+//Machine Task Mapping
+export interface MachinesTaskMappingListDataProps {
+  task_name: string;
+  task_id: number;
+}
 // Access Permission List
 export interface AccessPermissionViewList {
   status: number;
