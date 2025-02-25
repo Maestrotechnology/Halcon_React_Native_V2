@@ -15,6 +15,7 @@ import MyProfile from '../../Screens/HomeScreens/Profile/MyProfile';
 import MaintenaceWorkOrderStack from '../../Stacks/MaintenaceWorkOrderStack';
 import UserManagementStack from '../../Stacks/UserManagementStack';
 import MastersStack from '../../Stacks/MastersStack';
+import ReportStack from '../../Stacks/ReportStack';
 
 const Drawer = createDrawerNavigator<DrawerNavigationParamList>();
 
@@ -54,6 +55,12 @@ const DrawerNavigation = () => {
     {
       name: 'PreventiveSRStack',
       component: PreventiveSRStatck,
+      // hasPermission: UserPermissions?.preventive_sr?.preventive_sr_menu,
+      hasPermission: 1,
+    },
+    {
+      name: 'ReportStack',
+      component: ReportStack,
       // hasPermission: UserPermissions?.preventive_sr?.preventive_sr_menu,
       hasPermission: 1,
     },

@@ -3,10 +3,13 @@ import React, {useEffect, useState} from 'react';
 import {UseToken} from '../../../Utilities/StoreData';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useIsFocused} from '@react-navigation/native';
-import {TaskListDataProps} from '../../../@types/api';
+import {SpindleListDataProps, TaskListDataProps} from '../../../@types/api';
 import {actionListProps} from '../../../Components/types';
 import {SpindleReportFilterProps} from '../../../@types/modals';
-import {SpindleReportListService} from '../../../Services/Services';
+import {
+  SpindleReportGraphListService,
+  SpindleReportListService,
+} from '../../../Services/Services';
 import {
   getCatchMessage,
   getMonthName,
@@ -24,12 +27,16 @@ import EditSpindleReportModal from '../../../Modals/ModifyModals/EditSpindleRepo
 import SpindleReportFilterModal from '../../../Modals/Filter/SpindleReportFilterModal';
 import SVGIcon from '../../../Components/SVGIcon';
 import {COLORS} from '../../../Utilities/Constants';
+import SpindleHoursReport from './SpindleHoursReport';
+import ListEmptyComponent from '../../../Components/ListEmptyComponent';
+import StyledText from '../../../Components/StyledText';
+import PaginationButton from '../../../Components/PaginationButton';
 
 var isMount = true;
 var currentPage = 1;
 var totalPages = 1;
 
-export default function SpindlesReportList({
+export default function SpindleReportChart({
   navigation,
 }: ReportStackNavigationProps) {
   const token = UseToken();
@@ -39,6 +46,8 @@ export default function SpindlesReportList({
   const [isRefreshing, setisRefreshing] = useState<boolean>(false);
   const [isEndRefreshing, setisEndRefreshing] = useState<boolean>(false);
   const [isLoading, setisLoading] = useState<boolean>(false);
+  const [spindleOtherDatas, setSpindleOtherDatas] = useState({total_pages: 0});
+  const [available_running_hours, setRunningHours] = useState(0);
   const [permissionLoader, setPermissionLoader] = useState(false);
   const [SpindleReportList, setSpindleReportList] = useState<
     TaskListDataProps[]
@@ -72,7 +81,7 @@ export default function SpindlesReportList({
     totalPages = 1;
 
     if (token) {
-      handleGetSpindleReportList(1);
+      handleGetSpindleChartReportList(1);
     }
     return () => {
       isMount = false;
@@ -81,7 +90,7 @@ export default function SpindlesReportList({
     };
   }, [token, focused]);
 
-  const handleGetSpindleReportList = (
+  const handleGetSpindleChartReportList = (
     page: number = 1,
     filter: SpindleReportFilterProps | null = filterData,
   ) => {
@@ -96,17 +105,28 @@ export default function SpindlesReportList({
     if (filter?.machine_id?.machine_id) {
       formData.append('work_center_id', filter?.machine_id?.machine_id);
     }
-    SpindleReportListService(formData, page)
+    SpindleReportGraphListService(formData, page)
       .then(res => {
-        const response: ApiResponse<TaskListDataProps> = res.data;
+        const response: any = res.data;
 
         if (response.status === 1) {
+          setRunningHours(response?.data?.available_running_hours);
+          setSpindleOtherDatas({items: [], ...response?.data});
+          let chartdata = response?.data?.items?.filter((ele: any) => {
+            if (ele?.spindle_hr !== null) {
+              return {
+                equipment_id: ele?.equipment_id,
+                machine_name: ele?.machine_name,
+                spindle_hr: ele?.spindle_hr,
+              };
+            }
+          });
+
           if (page === 1) {
             totalPages = response.data?.total_page || 1;
-
-            setSpindleReportList(response.data?.items || []);
+            setSpindleReportList(chartdata || []);
           } else {
-            setSpindleReportList(prev => [...prev, ...response.data?.items]);
+            setSpindleReportList(prev => [...prev, ...chartdata]);
           }
         } else if (response.status === 0) {
           Toast.error(response.msg);
@@ -130,7 +150,7 @@ export default function SpindlesReportList({
       if (isMount) {
         setisEndRefreshing(true);
       }
-      handleGetSpindleReportList(currentPage);
+      handleGetSpindleChartReportList(currentPage);
     }
   };
 
@@ -140,7 +160,7 @@ export default function SpindlesReportList({
     }
     totalPages = 1;
     currentPage = 1;
-    handleGetSpindleReportList(1);
+    handleGetSpindleChartReportList(1);
   };
 
   const onApplyFilter = (data: SpindleReportFilterProps | null) => {
@@ -151,7 +171,7 @@ export default function SpindlesReportList({
 
     currentPage = 1;
     totalPages = 1;
-    handleGetSpindleReportList(1, data);
+    handleGetSpindleChartReportList(1, data);
   };
 
   const closeFilterModal = () => {
@@ -169,69 +189,33 @@ export default function SpindlesReportList({
     <HOCView
       isListLoading={isListLoader}
       headerProps={{
-        headerTitle: 'Spindles Report',
+        headerTitle: 'Spindles Hours Report',
       }}
       isLoading={isLoading}>
-      <View style={[CommonStyles.flexRow, {justifyContent: 'space-between'}]}>
-        <CustomButton
-          onPress={() => {
-            setisShowFilter(true);
-          }}
-          type="secondary"
-          style={{width: '30%', marginVertical: 8}}>
-          Filter
-        </CustomButton>
-        <SVGIcon
-          icon="ChartIcon"
-          fill={COLORS.webBlack}
-          width={20}
-          height={20}
-          isButton
-          onPress={() => {
-            navigation.navigate('SpindleReportChart');
-          }}
-        />
-      </View>
       <View style={{marginBottom: bottom, flex: 1}}>
-        <TableView
-          rowData={[
-            {key: 'machine_id', label: 'Machine Id'},
-            {key: 'machine_name', label: 'Machine Name'},
-            {key: 'work_center_name', label: 'Work Center'},
-            {key: 'division_description', label: 'Division'},
-            {
-              key: 'previous_month_consumed_hour',
-              label: `${getMonthName()?.previous} Running Hours`,
-              type: 'converttoHours',
-            },
-            {
-              key: 'previous_month_spindle_hr',
-              label: `${getMonthName()?.previous} Total Running Hours`,
-              type: 'converttoHours',
-            },
-            {
-              key: 'current_month_spindle_hr',
-              label: `${getMonthName()?.current} Total Running Hours`,
-              type: 'converttoHours',
-            },
-          ]}
-          dataList={[...SpindleReportList]?.map(ele => ({
-            ...ele,
-          }))}
-          onEndReached={onEndReached}
-          onRefresh={onRefresh}
-          isEndRefresh={isEndRefreshing}
-          isRefreshing={isRefreshing}
-          isActionAvailable
-          actionsList={actionsList}
-          onActionPress={(actionType: number, val: TaskListDataProps) => {
-            if (actionType === 2) {
-              setAddEditTask({type: 'Update', lineData: val, show: true});
-            } else if (actionType === 3) {
-              setAddEditTask({type: 'View', lineData: val, show: true});
-            }
-          }}
-        />
+        {SpindleReportList?.length > 0 ? (
+          <SpindleHoursReport
+            SpindleReportList={SpindleReportList}
+            available_running_hours={available_running_hours}
+            handleGetSpindleReportList={handleGetSpindleChartReportList}
+          />
+        ) : (
+          <ListEmptyComponent
+            alignItems="center"
+            errorText="No Reports Found"
+          />
+        )}
+        {totalPages > 1 && (
+          <PaginationButton
+            totalPages={spindleOtherDatas?.total_pages}
+            onPressNextButton={page => {
+              handleGetSpindleChartReportList(page);
+            }}
+            onPressPreviousButton={page => {
+              handleGetSpindleChartReportList(page);
+            }}
+          />
+        )}
       </View>
       {isShowFilter && (
         <GlobaModal
@@ -242,7 +226,6 @@ export default function SpindlesReportList({
             filterData={filterData}
             onApplyFilter={onApplyFilter}
             onClose={closeFilterModal}
-            isReport={true}
           />
         </GlobaModal>
       )}
@@ -255,7 +238,7 @@ export default function SpindlesReportList({
             lineData={EditSpindleHours?.lineData}
             type={EditSpindleHours?.type}
             onApplyChanges={() => {
-              handleGetSpindleReportList(1);
+              handleGetSpindleChartReportList(1);
             }}
             onClose={closeTaskModal}
           />

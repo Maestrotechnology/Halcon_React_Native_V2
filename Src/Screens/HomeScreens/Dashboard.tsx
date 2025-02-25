@@ -145,10 +145,7 @@ const Dashboard = () => {
       formData.append('division_id', data?.division_id?.division_id);
     }
     if (data?.work_center_id?.work_center_id) {
-      formData.append(
-        'work_center_id',
-        data?.work_center_id?.work_center_id?.work_center_id,
-      );
+      formData.append('work_center_id', data?.work_center_id?.work_center_id);
     }
     SpindleReportGraphListService(formData)
       .then(response => {

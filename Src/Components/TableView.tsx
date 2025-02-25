@@ -21,6 +21,7 @@ import {
   LIST_TYPE_MAP,
   TASK_DONE_BY_OPTIONS,
 } from '../Utilities/StaticDropdownOptions';
+import {converttoHours} from '../Utilities/GeneralUtilities';
 export type TableItemProps = {
   item: any;
   index: number;
@@ -79,6 +80,8 @@ const TableView = ({
       return item?.[cardItem?.key]
         ? FormateDate(item[cardItem.key], 'datetime')
         : '';
+    } else if (cardItem.type === 'converttoHours') {
+      return converttoHours(item[cardItem.key] || 0);
     }
     if (cardItem?.ListType) {
       return getLabelName(item, cardItem);

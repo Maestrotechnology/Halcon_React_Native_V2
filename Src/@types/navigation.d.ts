@@ -23,6 +23,7 @@ export type DrawerNavigationParamList = {
   MaintenaceWorkOrderStack: undefined;
   UserManagementStack: undefined;
   MastersStack: undefined;
+  ReportStack: undefined;
 };
 
 export type DrawerScreensProps = {
@@ -100,6 +101,10 @@ export type PreventiveSRStackParamList = {
 };
 export type ReportStackStackParamList = {
   SpindlesReportList: undefined;
+  MttrReport: undefined;
+  MtbfReport: undefined;
+  SpindleReportChart: undefined;
+  MttrMonthlyReport: undefined;
 };
 
 export type MaintananceWorkOrderParamList = {

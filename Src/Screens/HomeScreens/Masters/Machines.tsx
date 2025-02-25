@@ -8,7 +8,6 @@ import {actionListProps} from '../../../Components/types';
 import {MachinesListFilterProps} from '../../../@types/modals';
 import {
   DeleteMachineService,
-  deleteWorkCenterService,
   listMachinesService,
 } from '../../../Services/Services';
 import {getCatchMessage} from '../../../Utilities/GeneralUtilities';

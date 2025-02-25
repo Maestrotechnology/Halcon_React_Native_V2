@@ -807,7 +807,22 @@ export interface ApprovalStatusListDataProps {
   updated_at?: any;
 }
 
-// Regular Holiday List
+// Spindle List
+export interface SpindleListDataProps {
+  machine_id: number;
+  division_id: number;
+  division_description: string;
+  row_id: number;
+  work_center_name: string;
+  machine_name: string;
+  equipment_id: string;
+  current_month: string;
+  previous_month: string;
+  current_month_spindle_hr: number;
+  current_month_consumed_hour: any;
+  previous_month_spindle_hr: number;
+  previous_month_consumed_hour: number;
+}
 
 //Machnes List
 export interface MachinesListDataProps {

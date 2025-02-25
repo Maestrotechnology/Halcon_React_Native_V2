@@ -49,8 +49,14 @@ import FilterIcon from '../Assets/Svg/FilterIcon.svg';
 
 import DummyImage from '../Assets/Images/dummyImage.png';
 import TaskAssignIcon from '../Assets/Svg/task_assign_icon.svg';
+import ChartIcon from '../Assets/Svg/ChartIcon.svg';
+import leftArrowIcon from '../Assets/Svg/leftArrow.svg';
+import rightArrowIcon from '../Assets/Svg/rightArrow.svg';
 
 export type IconType =
+  | 'leftArrowIcon'
+  | 'rightArrowIcon'
+  | 'ChartIcon'
   | 'FilterIcon'
   | 'ApprovalIcon'
   | 'DummyImage'
@@ -153,4 +159,7 @@ export const ICONS = {
   TaskAssignIcon,
   ApprovalIcon,
   FilterIcon,
+  ChartIcon,
+  rightArrowIcon,
+  leftArrowIcon,
 };

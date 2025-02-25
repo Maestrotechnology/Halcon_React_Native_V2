@@ -44,4 +44,5 @@ export type FilterModalProps<T> = {
   onApplyFilter: (val: T | null) => void;
   onClose: () => void;
   initialValue?: T;
+  isReport?: boolean;
 };

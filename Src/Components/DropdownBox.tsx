@@ -41,6 +41,7 @@ const DropdownBox = ({
   uniqueKey,
   onMultipleSelect,
   isDisabledInPopup = false,
+  isShowClearIcon = true,
 }: DropdownBoxProps) => {
   const [isOpenModal, setisOpenModal] = useState<boolean>(false);
 
@@ -108,9 +109,13 @@ const DropdownBox = ({
               }}
               style={styles.iconContainer}>
               <SVGIcon
-                icon={value ? 'close_rounded_black' : 'down_arrow'}
-                width={value ? 20 : iconWidth}
-                height={value ? 20 : iconHeight}
+                icon={
+                  isShowClearIcon && value
+                    ? 'close_rounded_black'
+                    : 'down_arrow'
+                }
+                width={isShowClearIcon && value ? 20 : iconWidth}
+                height={isShowClearIcon && value ? 20 : iconHeight}
               />
             </TouchableOpacity>
           )}

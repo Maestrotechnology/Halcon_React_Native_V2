@@ -3,8 +3,6 @@ import React, {useEffect} from 'react';
 import {useFormik} from 'formik';
 import {SpindleReportFilterProps} from '../../@types/modals';
 import CustomButton from '../../Components/CustomButton';
-import TextInputBox from '../../Components/TextInputBox';
-import {COLORS} from '../../Utilities/Constants';
 import {FilterModalProps} from '../../@types/Global';
 import DropdownBox from '../../Components/DropdownBox';
 
@@ -12,6 +10,7 @@ const SpindleReportFilterModal = ({
   filterData,
   onApplyFilter,
   onClose,
+  isReport = false,
 }: FilterModalProps<SpindleReportFilterProps>) => {
   const {
     setFieldValue,
@@ -41,6 +40,24 @@ const SpindleReportFilterModal = ({
 
   return (
     <View>
+      {isReport && (
+        <DropdownBox
+          title="Machine"
+          value={values.machine_id}
+          placeHolder="Select machine"
+          apiType="machineList"
+          onSelect={val => {
+            setFieldValue('machine_id', val);
+          }}
+          type="search"
+          fieldName="equipment_id"
+          isLocalSearch
+          searchFieldName="equipment_id"
+          onIconPress={() => {
+            setFieldValue('machine_id', null);
+          }}
+        />
+      )}
       <DropdownBox
         title="Division"
         value={values.division_id}

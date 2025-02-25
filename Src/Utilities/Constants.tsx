@@ -52,6 +52,7 @@ export const COLORS = {
   textSecondary: '#1A2C41',
   webBlack: '#363543',
   darkNavy: '#1E1E2F',
+  lightWhightGreen: '#07bc0c',
 };
 
 export const BOX_SHADOW = {

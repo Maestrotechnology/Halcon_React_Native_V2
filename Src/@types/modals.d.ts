@@ -42,6 +42,8 @@ export type TaskListFilterProps = {
 export type SpindleReportFilterProps = {
   division_id: DevisionDropdownListReponseProps | null;
   work_center_id: WorkCenterropdownListReponseProps | nul;
+  machine_id?: MachineDropdownListDataProps | null;
+  isReport?: boolean;
 };
 export type SearchDropdownBoxModalRenderOptionsProps = {
   item: any;
@@ -115,4 +117,10 @@ export type MachinesListFilterProps = {
   is_spindle?: string | number;
   division_description?: string;
   work_center_name?: string;
+};
+
+export type MTTRReportFilterProps = {
+  machine_id: MachineDropdownListDataProps | null;
+  year: {year: string} | null;
+  month?: StatusOptionProps | null;
 };

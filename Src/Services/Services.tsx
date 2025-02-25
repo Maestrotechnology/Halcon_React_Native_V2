@@ -435,9 +435,26 @@ export const MaterialDropdownListService = (data: FormData) => {
 
 // Reports
 
-export const SpindleReportGraphListService = (data: FormData) => {
-  return axios.post(`/report/spindle_report_graph?page=1&size=10`, data);
+export const SpindleReportGraphListService = (data: FormData, page = 1) => {
+  return axios.post(`/report/spindle_report_graph?page=${page}&size=10`, data);
 };
 export const TaskPerformanceService = (data: FormData) => {
   return axios.post('dashboard/performance', data);
+};
+
+export const SpindleReportListService = (data: FormData, page: number) => {
+  return axios.post(`/report/spindle_report?page=${page}&size=${10}`, data);
+};
+
+export const AddSpindleHoursService = (data: FormData) => {
+  return axios.post(`/spindle/add_spindle`, data);
+};
+export const ListMTTRreportService = (data: FormData) => {
+  return axios.post(`/report/mttrReport`, data);
+};
+export const ListMTBFreportService = (data: FormData) => {
+  return axios.post(`/report/mtbfReport`, data);
+};
+export const ListMTTRMonthlyreportService = (data: FormData, page: number) => {
+  return axios.post(`/report/month_mttrReport?page=${page}&size=10`, data);
 };

@@ -180,6 +180,7 @@ export interface DropdownBoxProps
   uniqueKey?: 'role_id';
   onMultipleSelect?: (item: any[]) => void;
   isDisabledInPopup?: boolean;
+  isShowClearIcon?: boolean;
 }
 
 export type TextInputBoxProps = {
@@ -363,4 +364,11 @@ export type ImageBoxProps = {
 export type TaskPerformanceDataProps = {
   completedTaskPercentage: number;
   faultTaskPercentage: number;
+};
+export type LegendItemProps = {
+  color: string;
+  label: string;
+};
+export type DotProps = {
+  color: string;
 };

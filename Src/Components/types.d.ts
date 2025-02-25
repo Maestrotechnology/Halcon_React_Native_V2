@@ -47,7 +47,7 @@ export type TableViewProps = {
 export type TableRowDataProps = {
   label: string;
   key: string;
-  type?: 'date';
+  type?: 'date' | 'converttoHours';
   ListType?:
     | 'deviceStatusOptions'
     | 'TASK_DONE_BY_OPTIONS'

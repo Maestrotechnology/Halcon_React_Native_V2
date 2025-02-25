@@ -254,3 +254,16 @@ export const RESTRICKT_SPACE = (data: string): string => {
 export const converttoHours = (timeInHour: any) => {
   return Math.round(timeInHour / 60);
 };
+export const converttoMinutes = (timeInHour: any) => {
+  return Math.floor(timeInHour * 60);
+};
+export const getMonthName = () => {
+  const date = new Date();
+  return {
+    current: date.toLocaleString('default', {month: 'long'}),
+    previous: new Date(date.setMonth(date.getMonth() - 1)).toLocaleString(
+      'default',
+      {month: 'long'},
+    ),
+  };
+};

@@ -1,7 +1,11 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import {PieChart} from 'react-native-gifted-charts';
-import {TaskPerformanceDataProps} from '../@types/general';
+import {
+  DotProps,
+  LegendItemProps,
+  TaskPerformanceDataProps,
+} from '../@types/general';
 import {COLORS} from '../Utilities/Constants';
 
 type PieDataType = {
@@ -9,10 +13,6 @@ type PieDataType = {
   color: string;
   gradientCenterColor: string;
   focused?: boolean;
-};
-
-type DotProps = {
-  color: string;
 };
 
 const Dot: React.FC<DotProps> = ({color}) => (
@@ -26,11 +26,6 @@ const Dot: React.FC<DotProps> = ({color}) => (
     }}
   />
 );
-
-type LegendItemProps = {
-  color: string;
-  label: string;
-};
 
 const LegendItem: React.FC<LegendItemProps> = ({color, label}) => (
   <View

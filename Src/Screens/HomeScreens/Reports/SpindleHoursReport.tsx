@@ -52,6 +52,7 @@ export default function SpindleHoursReport({
 
     handleGetSpindleReportList(data);
   };
+
   return (
     <View>
       <View style={styles.rowStyle}>
@@ -91,6 +92,8 @@ export default function SpindleHoursReport({
             hideDataPoints: true,
             strokeDashArray: [6, 4],
           }}
+          initialSpacing={0}
+          endSpacing={0}
           width={WINDOW_WIDTH - 100}
           lineData={lineData} // Add separate line data
         />
