@@ -166,7 +166,8 @@ export interface DropdownBoxProps
     | 'division'
     | 'roleList'
     | 'assignedUsersList'
-    | 'MaterialList';
+    | 'MaterialList'
+    | 'TaskList';
   isRequired?: boolean;
   placeHolder?: string;
   iconHeight?: number;
@@ -177,7 +178,7 @@ export interface DropdownBoxProps
   ContainerStyle?: StyleProp<ViewStyle>;
   mainContainerStyle?: StyleProp<ViewStyle>;
   multiSelect?: boolean;
-  uniqueKey?: 'role_id';
+  uniqueKey?: 'role_id' | 'task_id';
   onMultipleSelect?: (item: any[]) => void;
   isDisabledInPopup?: boolean;
   isShowClearIcon?: boolean;

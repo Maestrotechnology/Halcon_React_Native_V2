@@ -837,6 +837,10 @@ export interface MachinesListDataProps {
 export interface MachinesTaskMappingListDataProps {
   task_name: string;
   task_id: number;
+  category: string;
+  duration: string;
+  starting_date: string;
+  starting_time: string;
 }
 // Access Permission List
 export interface AccessPermissionViewList {
@@ -877,6 +881,10 @@ export interface AssignedUserLtemProps {
   name: string;
 }
 
+export interface TaskListProps {
+  task_id: number;
+  task_name: string;
+}
 export type DevisionDropdownListReponseProps = {
   description: string;
   division_id: number;

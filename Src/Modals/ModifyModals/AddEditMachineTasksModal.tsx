@@ -3,11 +3,18 @@ import {AddEditModalProps} from '../../@types/Global';
 import {MachinesTaskMappingListDataProps} from '../../@types/api';
 import DropdownBox from '../../Components/DropdownBox';
 import {useFormik} from 'formik';
-import {selectPeriodicCategory} from '../../Utilities/Methods';
+import {isLoading, selectPeriodicCategory} from '../../Utilities/Methods';
 import {COLORS, INPUT_SIZE, PeriodicCatgory} from '../../Utilities/Constants';
 import TextInputBox from '../../Components/TextInputBox';
 import * as Yup from 'yup';
 import DateTimePicker from '../../Components/DateTimePicker';
+import CustomButton from '../../Components/CustomButton';
+import {UseToken} from '../../Utilities/StoreData';
+import {MachineTasksFilterprops} from '../../@types/modals';
+import {CreateTasksMachineService} from '../../Services/Services';
+import Toast from '../../Components/Toast';
+import {getCatchMessage} from '../../Utilities/GeneralUtilities';
+import {useEffect} from 'react';
 
 const validationSchema = Yup.object().shape({
   duration: Yup.string().required('Duration is required'),
@@ -30,21 +37,97 @@ export default function AddEditMachineTasksModal({
     handleSubmit,
     setFieldValue,
     setValues,
-  } = useFormik({
+    resetForm,
+    initialValues,
+  } = useFormik<MachineTasksFilterprops>({
     initialValues: {
       starting_date: '',
       starting_time: '',
       duration: '',
-      tasks: [
-        {
-          task_id: 0,
-        },
-      ],
+      tasks: [],
       category: {value: category, label: selectPeriodicCategory(category)},
     },
     validationSchema,
-    onSubmit: () => {},
+    onSubmit: () => {
+      if (type === 'Create') {
+        handleAddTasks(values);
+      } else if (type === 'Update') {
+        // handleUpdateTasks(values);
+      }
+    },
   });
+  const token = UseToken();
+
+  const handleAddTasks = (values: MachineTasksFilterprops) => {
+    isLoading(true);
+
+    let finalObj = {
+      token: token,
+      category: values.category,
+      duration: values.duration,
+      starting_date: values.starting_date,
+      starting_time: values.starting_time,
+      tasks: values.tasks?.map((ele: MachinesTaskMappingListDataProps) => {
+        return {task_id: ele?.task_id};
+      }),
+    };
+
+    CreateTasksMachineService(finalObj)
+      .then(async res => {
+        if (res.data.status === 1) {
+          Toast.success(res?.data?.msg);
+          onApplyChanges();
+          onClose();
+        } else {
+          Toast.error(res.data.msg);
+        }
+      })
+      .catch(err => {
+        getCatchMessage(err);
+      })
+      .finally(() => isLoading(false));
+  };
+
+  // // update user
+  // const handleUpdateTasks = (values: MachinesTaskMappingListDataProps) => {
+  //   isLoading(true);
+  //   let finalObj = {
+  //     ...values,
+  //     token: token,
+  //     division_id: values.division_id.division_id,
+  //     work_center_id: values.work_center_id.work_center_id,
+  //   };
+
+  //   UpdateMachineService(ConvertJSONtoFormData(finalObj))
+  //     .then(async res => {
+  //       if (res.data.status === 1) {
+  //         Toast.success(res?.data?.msg);
+  //         onApplyChanges();
+  //         onClose();
+  //       } else {
+  //         Toast.error(res.data.msg);
+  //       }
+  //     })
+  //     .catch(err => {
+  //       getCatchMessage(err);
+  //     })
+  //     .finally(() => isLoading(false));
+  // };
+
+  useEffect(() => {
+    if (lineData) {
+      setValues({
+        tasks: {
+          task_id: lineData.task_id,
+          task_name: lineData.task_name,
+        },
+        category: lineData.category,
+        duration: lineData.duration,
+        starting_date: lineData.starting_date,
+        starting_time: lineData.starting_time,
+      });
+    }
+  }, []);
 
   return (
     <>
@@ -76,8 +159,8 @@ export default function AddEditMachineTasksModal({
             maxLength: INPUT_SIZE.Machine_ID,
           }}
           isRequired
-          placeHolder="Enter Machine ID"
-          title="Machine ID"
+          placeHolder="Enter Duration"
+          title="Timeframe In Days"
           isEditable={type !== 'View'}
           errorText={
             errors?.duration && touched?.duration ? errors?.duration : ''
@@ -85,8 +168,8 @@ export default function AddEditMachineTasksModal({
         />
 
         <DateTimePicker
-          mode="datetime"
-          format="YYYY-MM-DD hh:mm A"
+          mode="date"
+          format="YYYY-MM-DD"
           title="Starting Date"
           placeHolder="Select Date"
           value={values.starting_date}
@@ -102,7 +185,7 @@ export default function AddEditMachineTasksModal({
         />
         <DateTimePicker
           mode="time"
-          format="hh:mm A"
+          format="hh:mm"
           title="Starting Time"
           placeHolder="Select Time"
           value={values.starting_time}
@@ -116,6 +199,49 @@ export default function AddEditMachineTasksModal({
           }
           minimumDate={new Date()}
         />
+
+        <DropdownBox
+          title="Tasks"
+          value={values.tasks?.length ? values.tasks : ''}
+          placeHolder="Select Tasks"
+          apiType="TaskList"
+          onMultipleSelect={val => {
+            console.log(val, 'val');
+            setFieldValue('tasks', val);
+          }}
+          multiSelect
+          isEnableRightIcon={false}
+          isRequired
+          uniqueKey="task_id"
+          type="search"
+          fieldName="task_name"
+          isLocalSearch
+          searchFieldName="task_name"
+        />
+
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginTop: 10,
+          }}>
+          <CustomButton
+            style={{width: '45%'}}
+            type="secondary"
+            onPress={() => {
+              resetForm({
+                values: {
+                  ...initialValues,
+                },
+              });
+              onClose();
+            }}>
+            Close
+          </CustomButton>
+          <CustomButton style={{width: '45%'}} onPress={handleSubmit}>
+            {type || 'SUbmit'}
+          </CustomButton>
+        </View>
       </View>
     </>
   );
