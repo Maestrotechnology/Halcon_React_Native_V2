@@ -23,6 +23,7 @@ import {
   getDivisionDropdownListService,
   getMachineDropdownListService,
   getRoleDropdownListService,
+  getTasksListService,
   getUserDropdownListService,
   getWorkCenterDropdownListService,
   MaterialDropdownListService,
@@ -32,6 +33,7 @@ import {
   AssignedUserLtemProps,
   MachineDropdownListApiResponseProps,
   RoleItemProps,
+  TaskListProps,
 } from '../@types/api';
 import {ObjectType} from '../Components/types';
 
@@ -111,10 +113,46 @@ const SearchDropdownBoxModal = ({
       case 'MaterialList':
         handlegetMaterialList();
         break;
+      case 'TaskList':
+        handlegetTaskList(page);
       default:
         break;
     }
   };
+
+  const handlegetTaskList = (page = 1) => {
+    const formData = new FormData();
+    formData.append('token', token);
+    getTasksListService(formData, page)
+      .then(res => {
+        const response = res.data;
+        console.log(JSON.stringify(response, null, 4), 'reposnse');
+
+        if (response.status === 1) {
+          if (isMount) {
+            let finalList = response?.data?.items?.map(
+              (item: TaskListProps) => ({
+                ...item,
+                unique_id: item?.task_id,
+              }),
+            );
+            setoptionsList(finalList || []);
+            globalDataList.current = finalList || [];
+          }
+        } else if (response.status === 0) {
+          Toast.error(response.msg);
+        }
+      })
+      .catch(err => {
+        Toast.error(err.message);
+      })
+      .finally(() => {
+        if (isMount) {
+          setisListLoading(false);
+        }
+      });
+  };
+
   const handlegetMaterialList = () => {
     const formData = new FormData();
     formData.append('token', token);

@@ -819,6 +819,10 @@ export interface MachinesListDataProps {
 export interface MachinesTaskMappingListDataProps {
   task_name: string;
   task_id: number;
+  category: string;
+  duration: string;
+  starting_date: string;
+  starting_time: string;
 }
 // Access Permission List
 export interface AccessPermissionViewList {
@@ -857,4 +861,9 @@ export interface InnerChildRolePermission {
 export interface AssignedUserLtemProps {
   user_id: number;
   name: string;
+}
+
+export interface TaskListProps {
+  task_id: number;
+  task_name: string;
 }

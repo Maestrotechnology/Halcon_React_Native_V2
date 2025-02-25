@@ -219,6 +219,9 @@ export const getDivisionDropdownListService = (data: FormData) => {
 export const getRoleDropdownListService = (data: FormData) => {
   return axios.post('dropdown/dropdown_role', data);
 };
+export const getTasksListService = (data: FormData, page: number) => {
+  return axios.post(`masters/list_tasks?page=${page}&size=500`, data);
+};
 
 // Profile
 export const getProfileService = (data: FormData) => {
@@ -420,6 +423,10 @@ export const MachineMappingListService = (data: FormData, page: number) => {
     `machine_task_mapping/viewTaskMachineMapping?page=${page}&size=20`,
     data,
   );
+};
+
+export const CreateTasksMachineService = (data: any) => {
+  return axios.post(`machine_task_mapping/createTaskstoMachine`, data);
 };
 
 // Dropdown Lists

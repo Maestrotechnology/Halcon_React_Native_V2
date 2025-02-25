@@ -13,7 +13,9 @@ export interface SearchDropdownBoxModalProps {
     | 'division'
     | 'roleList'
     | 'assignedUsersList'
-    | 'MaterialList';
+    | 'MaterialList'
+    | 'TaskList';
+
   searchFieldName?: string;
   icon?: IconType;
   onEndReached?: ((info: {distanceFromEnd: number}) => void) | null | undefined;
@@ -27,7 +29,7 @@ export interface SearchDropdownBoxModalProps {
   fieldName?: string;
   multiSelect?: boolean;
   value?: any;
-  uniqueKey?: 'role_id';
+  uniqueKey?: 'role_id' | 'task_id';
   onMultipleSelect?: (items: any[]) => void;
 }
 
@@ -107,4 +109,12 @@ export type MachinesListFilterProps = {
   is_spindle?: string | number;
   division_description?: string;
   work_center_name?: string;
+};
+
+export type MachineTasksFilterprops = {
+  starting_date: string;
+  starting_time: string;
+  duration: string;
+  tasks: Array[any];
+  category: any;
 };
