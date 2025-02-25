@@ -251,3 +251,6 @@ export const NUMBER_VALIDATION = (value: string) => {
 export const RESTRICKT_SPACE = (data: string): string => {
   return data.trim();
 };
+export const converttoHours = (timeInHour: any) => {
+  return Math.round(timeInHour / 60);
+};

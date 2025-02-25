@@ -19,11 +19,13 @@ export type DashboardCardsApiDataProps = {
     pending: number;
     ongoing: number;
     completed: number;
+    overdue: number;
   };
   PreventiveSR: {
     total: number;
     pending: number;
     ongoing: number;
+    overdue: number;
     completed: number;
   };
 };
@@ -32,7 +34,8 @@ export type DashboardCardKeyProps =
   | 'ongoing'
   | 'completed'
   | 'total'
-  | 'pending';
+  | 'pending'
+  | 'overdue';
 
 export type DashboardChartDetailsApiResponseProps = {
   status: number;
@@ -867,3 +870,11 @@ export interface TaskListProps {
   task_id: number;
   task_name: string;
 }
+export type DevisionDropdownListReponseProps = {
+  description: string;
+  division_id: number;
+};
+export type WorkCenterropdownListReponseProps = {
+  work_center_name: string;
+  work_center_id: number;
+};

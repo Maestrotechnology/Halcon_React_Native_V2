@@ -35,6 +35,7 @@ const PreventiveSRStatck = ({route}: any) => {
     selected_tasks: [],
     material_list: [],
   };
+
   const validationSchema = yup.object().shape({
     selected_tasks: yup.array().of(
       yup.object().shape({

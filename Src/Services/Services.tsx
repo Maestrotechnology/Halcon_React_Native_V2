@@ -49,11 +49,11 @@ export const getMachineListService = (
 };
 
 export const getDashboardCardsService = (data: FormData) => {
-  return axios.post('srStatusCards', data);
+  return axios.post('dashboard/srStatusCards', data);
 };
 
 export const getDashboardMonthlyReportService = (data: FormData) => {
-  return axios.post('monthly_report', data);
+  return axios.post('report/monthly_report', data);
 };
 
 // Preventive Service Request
@@ -438,4 +438,13 @@ export const AssignedUserDropdownListService = (data: FormData) => {
 };
 export const MaterialDropdownListService = (data: FormData) => {
   return axios.post('dropdown/material_dropdown', data);
+};
+
+// Reports
+
+export const SpindleReportGraphListService = (data: FormData) => {
+  return axios.post(`/report/spindle_report_graph?page=1&size=10`, data);
+};
+export const TaskPerformanceService = (data: FormData) => {
+  return axios.post('dashboard/performance', data);
 };

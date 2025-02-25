@@ -1,11 +1,7 @@
-import {
-  Image,
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Image, Modal, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {useFormik} from 'formik';
+import {useDispatch} from 'react-redux';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import React, {useEffect, useState} from 'react';
 import HOCView from '../../../Components/HOCView';
 import {ImageInputBoxOptionsProps, ImageProps} from '../../../@types/general';
@@ -14,7 +10,6 @@ import {
   deleteAttachmentsService,
   fileUploadService,
   getAttachmentsListService,
-  updatePreventiveTaskService,
 } from '../../../Services/Services';
 import {
   AttachmentsListApiResponseProps,
@@ -22,24 +17,13 @@ import {
   FileUploadApiResponseProps,
 } from '../../../@types/api';
 import Toast from '../../../Components/Toast';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import SVGIcon from '../../../Components/SVGIcon';
-import StyledText from '../../../Components/StyledText';
-import {FONTS} from '../../../Utilities/Fonts';
-import {WINDOW_HEIGHT, WINDOW_WIDTH} from '../../../Utilities/Constants';
+import {WINDOW_WIDTH} from '../../../Utilities/Constants';
 import TextInputBox from '../../../Components/TextInputBox';
-import {useFormik} from 'formik';
-import GlobaModal from '../../../Components/GlobalModal';
 import CustomButton from '../../../Components/CustomButton';
-import {AlertBox, getCatchMessage} from '../../../Utilities/GeneralUtilities';
+import {AlertBox} from '../../../Utilities/GeneralUtilities';
 import ImageUpload from '../../../Components/ImageUpload';
-import {openLoader} from '../../../Store/Slices/LoaderSlice';
-import {useDispatch} from 'react-redux';
 import {usePreventiveRequestContext} from '../../../Utilities/Contexts';
-import moment from 'moment';
-import {renderTitleText} from '../../../Utilities/UiComponents';
-import MaterialList from '../ServiceRequest/RequestCreation/MaterialList';
-import {MaterialListProps} from '../../../@types/context';
 
 type ViewImageStateProps = {
   status: boolean;
@@ -53,13 +37,11 @@ const PreventiveFileUploading = ({route, navigation}: any) => {
   const ContextValue = usePreventiveRequestContext();
 
   const token = UseToken();
-  const dispatch = useDispatch();
   const [isViewImage, setisViewImage] = useState<ViewImageStateProps>({
     status: false,
     uri: '',
   });
-  const preventivReqId = route?.params?.preventiveId;
-  // const isView = route?.params?.isView;
+  const preventivReqId = route?.params?.preventivReqId;
   const [isLoading, setisLoading] = useState<boolean>(false);
   const [isRefreshing, setisRefreshing] = useState<boolean>(false);
   const [isEndRefreshing, setisEndRefreshing] = useState<boolean>(false);
@@ -114,6 +96,7 @@ const PreventiveFileUploading = ({route, navigation}: any) => {
     getAttachmentsListService(formData, page)
       .then(res => {
         const response: AttachmentsListApiResponseProps = res.data;
+
         if (response.status === 1) {
           let tempData: ImageProps[] = [...response.data.items].map(ele => {
             return {
@@ -386,10 +369,6 @@ const PreventiveFileUploading = ({route, navigation}: any) => {
           Upload
         </CustomButton>
       )}
-      <View></View>
-      {/* <GlobaModal visible={isViewImage.status} onClose={closeViewImageModal}>
-          <RenderImageView />
-        </GlobaModal> */}
       <Modal visible={isViewImage.status} onRequestClose={closeViewImageModal}>
         <RenderImageView />
       </Modal>

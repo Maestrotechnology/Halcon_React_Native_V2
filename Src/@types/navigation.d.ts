@@ -98,6 +98,9 @@ export type PreventiveSRStackParamList = {
   ApprovalStatusList: undefined;
   MaterialissueList: undefined;
 };
+export type ReportStackStackParamList = {
+  SpindlesReportList: undefined;
+};
 
 export type MaintananceWorkOrderParamList = {
   MaintenacneWorkOrder: undefined;
@@ -149,3 +152,6 @@ export type ServiceRequestCreationScreensNavigationProps =
 
 export type PreventiveRequestUpdateScreensNavigationProps =
   NativeStackScreenProps<ServiceRequestCreationStackParamList>;
+
+export type ReportStackNavigationProps =
+  NativeStackScreenProps<ReportStackStackParamList>;

@@ -50,6 +50,8 @@ export const COLORS = {
   dimColor: 'rgba(207, 32, 39, 0.2)',
   authBg: '#f5f5f6',
   textSecondary: '#1A2C41',
+  webBlack: '#363543',
+  darkNavy: '#1E1E2F',
 };
 
 export const BOX_SHADOW = {

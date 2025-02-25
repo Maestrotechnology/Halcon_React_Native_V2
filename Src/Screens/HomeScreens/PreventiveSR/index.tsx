@@ -252,20 +252,18 @@ const PreventiveSR = ({route}: any) => {
           justifyContent: 'flex-end',
           paddingBottom: 15,
         }}>
-        {preventiveList?.length > 0 ? (
-          <CustomButton
-            onPress={() => {
-              setisShowFilter(true);
-            }}
-            type="secondary"
-            style={{
-              width: '30%',
-              alignSelf: 'flex-end',
-              // , marginRight: 8
-            }}>
-            Filter
-          </CustomButton>
-        ) : null}
+        <CustomButton
+          onPress={() => {
+            setisShowFilter(true);
+          }}
+          type="secondary"
+          style={{
+            width: '30%',
+            alignSelf: 'flex-end',
+            // , marginRight: 8
+          }}>
+          Filter
+        </CustomButton>
         {/* <CustomButton
           onPress={() => {
             navigation.navigate('UpdatePreventiveRequest', {
@@ -328,6 +326,8 @@ const PreventiveSR = ({route}: any) => {
             },
           ]}
           onActionPress={(type: number, val: PreventiveSRListDataProps) => {
+            setselectedId(val?.request_id);
+
             if (type === 1) {
               setIsView(true);
               navigation.navigate('UpdatePreventiveRequest', {
@@ -349,7 +349,6 @@ const PreventiveSR = ({route}: any) => {
               });
               return;
             }
-            setselectedId(val?.request_id);
             navigation.navigate('UpdatePreventiveRequest', {
               type: type,
               data: val?.request_id,
