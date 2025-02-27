@@ -7,6 +7,7 @@ import {
   WorkCenterropdownListReponseProps,
 } from './api';
 import {DivisionDropdownProp, WorkCenterDropdownProp} from './dropdown';
+import {ObjectType} from '../Components/types';
 
 export interface SearchDropdownBoxModalProps {
   options?: any[];
@@ -35,6 +36,7 @@ export interface SearchDropdownBoxModalProps {
   value?: any;
   uniqueKey?: 'role_id' | 'task_id';
   onMultipleSelect?: (items: any[]) => void;
+  apiFilters?: ObjectType;
 }
 
 export type TaskListFilterProps = {
@@ -132,5 +134,4 @@ export type MachineTasksFilterprops = {
   starting_time: string;
   duration: string;
   tasks: Array[any];
-  category: any;
 };

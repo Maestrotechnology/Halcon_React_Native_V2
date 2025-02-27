@@ -97,7 +97,7 @@ const Machines = ({navigation, route}: MastersStackNavigationProps) => {
       currentPage = 1;
       totalPages = 1;
     };
-  }, [token, route, focused]);
+  }, [token, focused]);
 
   const handleGetMachineList = (
     page: number = 1,
@@ -288,6 +288,7 @@ const Machines = ({navigation, route}: MastersStackNavigationProps) => {
                 show: true,
               });
             } else if (actionType === 4) {
+              // @ts-ignore
               navigation.navigate('MachineTasks', {
                 item: val,
               });

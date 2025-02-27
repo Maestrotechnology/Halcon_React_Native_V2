@@ -42,6 +42,7 @@ const DropdownBox = ({
   onMultipleSelect,
   isDisabledInPopup = false,
   isShowClearIcon = true,
+  apiFilters,
 }: DropdownBoxProps) => {
   const [isOpenModal, setisOpenModal] = useState<boolean>(false);
 
@@ -175,6 +176,7 @@ const DropdownBox = ({
             onMultipleSelect={onMultipleSelect}
             uniqueKey={uniqueKey}
             value={value}
+            apiFilters={apiFilters}
             {...bigListProps}
           />
         )}

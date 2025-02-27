@@ -310,6 +310,7 @@ const TableView = ({
         refreshControl={
           <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
         }
+        removeClippedSubviews={false}
         ListEmptyComponent={() => {
           return (
             <ListEmptyComponent errorText="No data found" alignItems="center" />

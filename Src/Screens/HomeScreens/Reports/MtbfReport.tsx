@@ -77,12 +77,10 @@ export default function MtbfReport({navigation}: ReportStackNavigationProps) {
         const response = res.data;
         if (response.status === 1) {
           if (isMount) {
-            setfilterData((pre: any) => ({
-              ...pre,
-
-              machine_id: response?.data[0],
-            }));
+            let result: any = {...filterData, machine_id: response?.data[0]};
+            setfilterData(result);
             setMachineList([...response?.data]);
+            handleGetListMTBFreport(result);
           }
         } else if (response.status === 0) {
           Toast.error(response.msg);
@@ -96,30 +94,7 @@ export default function MtbfReport({navigation}: ReportStackNavigationProps) {
         }
       });
   };
-  const d1 = [
-    {value: 110},
-    {value: 90},
-    {value: 100},
-    {value: 120},
-    {value: 100, label: '2005', showXAxisIndex: true},
-    {value: 80},
-    {value: 90},
-    {value: 110},
-    {value: 120},
-    {value: 100, label: '2010', showXAxisIndex: true},
-    {value: 90},
-    {value: 100},
-    {value: 88},
-    {value: 80},
-    {value: 120, label: '2015', showXAxisIndex: true},
-    {value: 76},
-    {value: 104},
-    {value: 112},
-  ];
-  const d2 = [
-    0.055, 0.02, 0.1, 0.01, 0.05, 0.06, 0.08, 0.1, 0.08, 0.07, 0.06, 0.025,
-    0.04, 0.06, 0.045, 0.09, 0.06, 0.04,
-  ];
+
   const maxYValue = Math.max(
     ...MTBFReportList.map((item: any) => item.average), // Highest data value
     RunningHour, // Include the reference line value
@@ -130,7 +105,6 @@ export default function MtbfReport({navigation}: ReportStackNavigationProps) {
     totalPages = 1;
 
     if (token) {
-      handleGetListMTBFreport();
       handleGetMachineList();
     }
     return () => {

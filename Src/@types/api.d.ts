@@ -841,6 +841,8 @@ export interface MachinesTaskMappingListDataProps {
   duration: string;
   starting_date: string;
   starting_time: string;
+  master_task_map_id?: number;
+  machine_id?: number;
 }
 // Access Permission List
 export interface AccessPermissionViewList {
@@ -893,3 +895,16 @@ export type WorkCenterropdownListReponseProps = {
   work_center_name: string;
   work_center_id: number;
 };
+export interface taskMappingResponseDatas {
+  page: number;
+  size: number;
+  total_page: number;
+  total_count: number;
+  is_exist: number;
+  starting_date: string;
+  master_task_map_id: number;
+  category: number;
+  duration: number;
+  starting_time: string;
+  items: any[];
+}

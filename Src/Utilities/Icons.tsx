@@ -53,7 +53,82 @@ import ChartIcon from '../Assets/Svg/ChartIcon.svg';
 import leftArrowIcon from '../Assets/Svg/leftArrow.svg';
 import rightArrowIcon from '../Assets/Svg/rightArrow.svg';
 
+//
+import MasterIconWhite from '../Assets/Icons/MasterIconWhite.png';
+import MasterIconBlack from '../Assets/Icons/MasterIconDark.png';
+import MachinesIconBlack from '../Assets/Icons/MachinesIconBlack.png';
+import MachinesIconWhite from '../Assets/Icons/MachinesIconWhite.png';
+
+import TaskIconBlack from '../Assets/Icons/TaskIconBlack.png';
+import TaskIconWhite from '../Assets/Icons/TaskIconWhite.png';
+import PolicyIconBlack from '../Assets/Icons/PolicyIconBlack.png';
+import PolicyIconWhite from '../Assets/Icons/PolicyIconWhite.png';
+import DivisionIconBlack from '../Assets/Icons/DivisionIconBlack.png';
+import DivisionIconWhite from '../Assets/Icons/DivisionIconWhite.png';
+import MaterialIconBlack from '../Assets/Icons/materialIconBlack.png';
+import MaterialIconWhite from '../Assets/Icons/materialIconWhite.png';
+import WorkCenterIconBlack from '../Assets/Icons/WorkCenterBlack.png';
+import WorkCenterIconWhite from '../Assets/Icons/WorkCenterBlack.png';
+import HolidayIconBlack from '../Assets/Icons/HolidayIconBlack.png';
+import HolidayIconWhite from '../Assets/Icons/HolidayIconWhite.png';
+import PreventiveIconBlack from '../Assets/Icons/PreventiveIconBlack.png';
+import PreventiveIconWhite from '../Assets/Icons/PreventiveIconWhite.png';
+
+import DowntimeIconBlack from '../Assets/Icons/DowntimeIconBlack.png';
+import DowntimeIconWhite from '../Assets/Icons/DowntimeIconWhite.png';
+import UserIconBlack from '../Assets/Icons/userIconBlack.png';
+import UserIconWhite from '../Assets/Icons/userIconWhite.png';
+
+import UserListIconBlack from '../Assets/Icons/userListIconBlack.png';
+import UserListIconWhite from '../Assets/Icons/userListIconWhite.png';
+
+import RoleIconBlack from '../Assets/Icons/RoleIconBlack.png';
+import RoleIconWhite from '../Assets/Icons/RoleIconWhite.png';
+
+import MTTRMonthlyIconBlack from '../Assets/Icons/MttrMonthlyBlack.png';
+import MTTRMonthlyIconWhite from '../Assets/Icons/MttrMonthlyWhite.png';
+import SpindleIconBlack from '../Assets/Icons/spindleIconBlack.png';
+import SpindleIconWhite from '../Assets/Icons/spindleIconWhite.png';
+import YearlyIconBlack from '../Assets/Icons/YearlyReportBlackIcon.png';
+import YearlyIconWhite from '../Assets/Icons/YearlyReportWhiteIcon.png';
+
+import MTBFIconBlack from '../Assets/Icons/MtbfIconBlack.png';
+import MTBFIconWhite from '../Assets/Icons/MtbfIconWhite.png';
 export type IconType =
+  | 'MTBFIconBlack'
+  | 'MTBFIconWhite'
+  | 'YearlyIconBlack'
+  | 'YearlyIconWhite'
+  | 'SpindleIconBlack'
+  | 'SpindleIconWhite'
+  | 'MTTRMonthlyIconBlack'
+  | 'MTTRMonthlyIconWhite'
+  | 'RoleIconBlack'
+  | 'RoleIconWhite'
+  | 'UserListIconBlack'
+  | 'UserListIconWhite'
+  | 'UserIconBlack'
+  | 'UserIconWhite'
+  | 'DowntimeIconBlack'
+  | 'DowntimeIconWhite'
+  | 'PreventiveIconBlack'
+  | 'PreventiveIconWhite'
+  | 'MaterialIconBlack'
+  | 'MaterialIconWhite'
+  | 'WorkCenterIconBlack'
+  | 'WorkCenterIconWhite'
+  | 'HolidayIconBlack'
+  | 'HolidayIconWhite'
+  | 'DivisionIconBlack'
+  | 'DivisionIconWhite'
+  | 'PolicyIconBlack'
+  | 'PolicyIconWhite'
+  | 'TaskIconBlack'
+  | 'TaskIconWhite'
+  | 'MachinesIconWhite'
+  | 'MachinesIconBlack'
+  | 'MasterIconBlack'
+  | 'MasterIconWhite'
   | 'leftArrowIcon'
   | 'rightArrowIcon'
   | 'ChartIcon'
@@ -162,4 +237,39 @@ export const ICONS = {
   ChartIcon,
   rightArrowIcon,
   leftArrowIcon,
+  MasterIconWhite,
+  MasterIconBlack,
+  MachinesIconBlack,
+  MachinesIconWhite,
+  TaskIconBlack,
+  TaskIconWhite,
+  PolicyIconBlack,
+  PolicyIconWhite,
+  DivisionIconBlack,
+  DivisionIconWhite,
+  MaterialIconBlack,
+  MaterialIconWhite,
+  WorkCenterIconBlack,
+  WorkCenterIconWhite,
+  HolidayIconBlack,
+  HolidayIconWhite,
+  PreventiveIconBlack,
+  PreventiveIconWhite,
+  DowntimeIconBlack,
+  DowntimeIconWhite,
+  UserIconBlack,
+  UserIconWhite,
+  UserListIconBlack,
+  UserListIconWhite,
+  RoleIconBlack,
+  RoleIconWhite,
+  MTTRMonthlyIconBlack,
+  MTTRMonthlyIconWhite,
+  SpindleIconBlack,
+  SpindleIconWhite,
+  YearlyIconBlack,
+  YearlyIconWhite,
+
+  MTBFIconBlack,
+  MTBFIconWhite,
 };

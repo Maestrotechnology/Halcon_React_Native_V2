@@ -271,6 +271,7 @@ const ImageUpload = ({
           flexDirection: 'row',
           columnGap: 5,
         }}
+        removeClippedSubviews={false}
         showsVerticalScrollIndicator={false}
         renderItem={RenderImage}
         style={{flexGrow: 0}}

@@ -3,18 +3,25 @@ import {AddEditModalProps} from '../../@types/Global';
 import {MachinesTaskMappingListDataProps} from '../../@types/api';
 import DropdownBox from '../../Components/DropdownBox';
 import {useFormik} from 'formik';
-import {isLoading, selectPeriodicCategory} from '../../Utilities/Methods';
-import {COLORS, INPUT_SIZE, PeriodicCatgory} from '../../Utilities/Constants';
+import {isLoading} from '../../Utilities/Methods';
+import {COLORS, INPUT_SIZE} from '../../Utilities/Constants';
 import TextInputBox from '../../Components/TextInputBox';
 import * as Yup from 'yup';
 import DateTimePicker from '../../Components/DateTimePicker';
 import CustomButton from '../../Components/CustomButton';
 import {UseToken} from '../../Utilities/StoreData';
 import {MachineTasksFilterprops} from '../../@types/modals';
-import {CreateTasksMachineService} from '../../Services/Services';
+import {
+  AddNewTasksMappingService,
+  CreateTasksMachineService,
+  UpdateTaskMappingService,
+} from '../../Services/Services';
 import Toast from '../../Components/Toast';
 import {getCatchMessage} from '../../Utilities/GeneralUtilities';
 import {useEffect} from 'react';
+import {TaskDurationList} from '../../Utilities/StaticDropdownOptions';
+import StyledText from '../../Components/StyledText';
+import {useRoute} from '@react-navigation/native';
 
 const validationSchema = Yup.object().shape({
   duration: Yup.string().required('Duration is required'),
@@ -27,8 +34,11 @@ export default function AddEditMachineTasksModal({
   type,
   onApplyChanges,
   onClose,
-  category,
+  category = 1,
 }: AddEditModalProps<MachinesTaskMappingListDataProps>) {
+  const token = UseToken();
+  const route: any = useRoute();
+  const {item} = route.params || {};
   const {
     values,
     errors,
@@ -45,32 +55,60 @@ export default function AddEditMachineTasksModal({
       starting_time: '',
       duration: '',
       tasks: [],
-      category: {value: category, label: selectPeriodicCategory(category)},
     },
     validationSchema,
     onSubmit: () => {
       if (type === 'Create') {
         handleAddTasks(values);
       } else if (type === 'Update') {
-        // handleUpdateTasks(values);
+        handleUpdateTasks(values);
+      } else if (type === 'Assigntask') {
+        handleAddMachineTasks(values);
       }
     },
   });
-  const token = UseToken();
+
+  const handleAddMachineTasks = (values: MachineTasksFilterprops) => {
+    isLoading(false);
+    let finalObj = {
+      token: token,
+      machine_id: item?.machine_id,
+      master_task_map_id: lineData?.master_task_map_id,
+      tasks: values.tasks?.map((ele: MachinesTaskMappingListDataProps) => {
+        return {task_id: ele?.task_id};
+      }),
+    };
+    AddNewTasksMappingService(finalObj)
+      .then(response => {
+        if (response.data.status === 1) {
+          Toast.success(response?.data?.msg);
+          onApplyChanges();
+          onClose();
+        } else {
+          Toast.error(response.data.msg);
+        }
+      })
+      .catch(err => {
+        getCatchMessage(err);
+      })
+      .finally(() => isLoading(false));
+  };
 
   const handleAddTasks = (values: MachineTasksFilterprops) => {
     isLoading(true);
 
     let finalObj = {
       token: token,
-      category: values.category,
       duration: values.duration,
       starting_date: values.starting_date,
       starting_time: values.starting_time,
+      machine_id: item?.machine_id,
+      category: category + 1,
       tasks: values.tasks?.map((ele: MachinesTaskMappingListDataProps) => {
         return {task_id: ele?.task_id};
       }),
     };
+    console.log(finalObj, 'finalObj');
 
     CreateTasksMachineService(finalObj)
       .then(async res => {
@@ -87,42 +125,36 @@ export default function AddEditMachineTasksModal({
       })
       .finally(() => isLoading(false));
   };
+  const handleUpdateTasks = (values: MachineTasksFilterprops) => {
+    isLoading(true);
 
-  // // update user
-  // const handleUpdateTasks = (values: MachinesTaskMappingListDataProps) => {
-  //   isLoading(true);
-  //   let finalObj = {
-  //     ...values,
-  //     token: token,
-  //     division_id: values.division_id.division_id,
-  //     work_center_id: values.work_center_id.work_center_id,
-  //   };
+    let finalObj = {
+      token: token,
+      duration: values.duration,
+      master_task_map_id: lineData?.master_task_map_id,
+    };
 
-  //   UpdateMachineService(ConvertJSONtoFormData(finalObj))
-  //     .then(async res => {
-  //       if (res.data.status === 1) {
-  //         Toast.success(res?.data?.msg);
-  //         onApplyChanges();
-  //         onClose();
-  //       } else {
-  //         Toast.error(res.data.msg);
-  //       }
-  //     })
-  //     .catch(err => {
-  //       getCatchMessage(err);
-  //     })
-  //     .finally(() => isLoading(false));
-  // };
+    UpdateTaskMappingService(finalObj)
+      .then(async res => {
+        if (res.data.status === 1) {
+          Toast.success(res?.data?.msg);
+          onApplyChanges();
+          onClose();
+        } else {
+          Toast.error(res.data.msg);
+        }
+      })
+      .catch(err => {
+        getCatchMessage(err);
+      })
+      .finally(() => isLoading(false));
+  };
 
   useEffect(() => {
     if (lineData) {
       setValues({
-        tasks: {
-          task_id: lineData.task_id,
-          task_name: lineData.task_name,
-        },
-        category: lineData.category,
-        duration: lineData.duration,
+        tasks: null,
+        duration: lineData.duration ? lineData.duration?.toString() : '',
         starting_date: lineData.starting_date,
         starting_time: lineData.starting_time,
       });
@@ -132,93 +164,92 @@ export default function AddEditMachineTasksModal({
   return (
     <>
       <View>
-        <DropdownBox
-          title="Category"
-          value={values.category}
-          placeHolder="Select Category"
-          onSelect={val => {
-            setFieldValue('category', val);
-          }}
-          type="miniList"
-          options={PeriodicCatgory}
-          fieldName="label"
-          isDisabled
-          isRequired
-          isDisabledInPopup
-        />
+        <StyledText>
+          Interval Selector : {TaskDurationList[category]?.name}
+        </StyledText>
+        {type !== 'Assigntask' && (
+          <>
+            <TextInputBox
+              value={values?.duration}
+              onChangeText={(val: string) => {
+                setFieldValue('duration', val);
+              }}
+              customInputBoxContainerStyle={{
+                borderColor: COLORS.primary,
+              }}
+              validationType="NUMBER"
+              keyboardType="number-pad"
+              textInputProps={{
+                maxLength: INPUT_SIZE.Machine_ID,
+              }}
+              isRequired
+              placeHolder="Enter Duration"
+              title={`Timeframe In ${TaskDurationList[category]?.name}`}
+              isEditable={type !== 'View'}
+              errorText={
+                errors?.duration && touched?.duration ? errors?.duration : ''
+              }
+            />
 
-        <TextInputBox
-          value={values?.duration}
-          onChangeText={(val: string) => {
-            setFieldValue('duration', val);
-          }}
-          customInputBoxContainerStyle={{
-            borderColor: COLORS.primary,
-          }}
-          textInputProps={{
-            maxLength: INPUT_SIZE.Machine_ID,
-          }}
-          isRequired
-          placeHolder="Enter Duration"
-          title="Timeframe In Days"
-          isEditable={type !== 'View'}
-          errorText={
-            errors?.duration && touched?.duration ? errors?.duration : ''
-          }
-        />
+            <DateTimePicker
+              mode="date"
+              format="YYYY-MM-DD"
+              title="Starting Date"
+              placeHolder="Select Date"
+              value={values.starting_date}
+              onSelect={date => {
+                setFieldValue('starting_date', date);
+              }}
+              errorText={
+                errors?.starting_date && touched.starting_date
+                  ? errors?.starting_date
+                  : ''
+              }
+              minimumDate={new Date()}
+            />
+            <DateTimePicker
+              mode="time"
+              format="hh:mm"
+              title="Starting Time"
+              placeHolder="Select Time"
+              value={values.starting_time}
+              onSelect={date => {
+                setFieldValue('starting_time', date);
+              }}
+              errorText={
+                errors?.starting_time && touched.starting_time
+                  ? errors?.starting_time
+                  : ''
+              }
+              minimumDate={new Date()}
+            />
+          </>
+        )}
 
-        <DateTimePicker
-          mode="date"
-          format="YYYY-MM-DD"
-          title="Starting Date"
-          placeHolder="Select Date"
-          value={values.starting_date}
-          onSelect={date => {
-            setFieldValue('starting_date', date);
-          }}
-          errorText={
-            errors?.starting_date && touched.starting_date
-              ? errors?.starting_date
-              : ''
-          }
-          minimumDate={new Date()}
-        />
-        <DateTimePicker
-          mode="time"
-          format="hh:mm"
-          title="Starting Time"
-          placeHolder="Select Time"
-          value={values.starting_time}
-          onSelect={date => {
-            setFieldValue('starting_time', date);
-          }}
-          errorText={
-            errors?.starting_time && touched.starting_time
-              ? errors?.starting_time
-              : ''
-          }
-          minimumDate={new Date()}
-        />
-
-        <DropdownBox
-          title="Tasks"
-          value={values.tasks?.length ? values.tasks : ''}
-          placeHolder="Select Tasks"
-          apiType="TaskList"
-          onMultipleSelect={val => {
-            console.log(val, 'val');
-            setFieldValue('tasks', val);
-          }}
-          multiSelect
-          isEnableRightIcon={false}
-          isRequired
-          uniqueKey="task_id"
-          type="search"
-          fieldName="task_name"
-          isLocalSearch
-          searchFieldName="task_name"
-        />
-
+        {type === 'Create' || type === 'Assigntask' ? (
+          <DropdownBox
+            title="Tasks"
+            value={values.tasks?.length ? values.tasks : ''}
+            placeHolder="Select Tasks"
+            apiType="TaskList"
+            onMultipleSelect={val => {
+              setFieldValue('tasks', val);
+            }}
+            apiFilters={{
+              machine_id: item?.machine_id,
+              non_assigned_task: 1,
+              category: category + 1,
+            }}
+            multiSelect
+            isEnableRightIcon={false}
+            isRequired
+            uniqueKey="task_id"
+            type="search"
+            fieldName="task_name"
+            isLocalSearch
+            searchFieldName="task_name"
+          />
+        ) : null}
         <View
           style={{
             flexDirection: 'row',
@@ -239,7 +270,7 @@ export default function AddEditMachineTasksModal({
             Close
           </CustomButton>
           <CustomButton style={{width: '45%'}} onPress={handleSubmit}>
-            {type || 'SUbmit'}
+            {!lineData?.master_task_map_id ? 'Create' : 'Update'}
           </CustomButton>
         </View>
       </View>

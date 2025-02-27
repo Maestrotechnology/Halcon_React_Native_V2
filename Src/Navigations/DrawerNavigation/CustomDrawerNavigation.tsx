@@ -45,6 +45,8 @@ import {AccessPermissionProps} from '../../Utilities/Reducertype';
 import GlobaModal from '../../Components/GlobalModal';
 import ConfirmationModal from '../../Modals/ConfirmationModal';
 import {number} from 'yup';
+import CustomImageBox from '../../Components/CustomImageBox';
+import {ICONS} from '../../Utilities/Icons';
 
 const CustomDrawerNavigation = ({
   navigation,
@@ -81,25 +83,28 @@ const CustomDrawerNavigation = ({
       isMenu: true,
       displayName: 'User Management',
       navigate: 'UserManagementStack',
-      leftIcon: 'userIcon',
-      activeIcon: 'userIcon',
+      leftIcon: 'UserIconBlack',
+      activeIcon: 'UserIconWhite',
       isVisible: true,
+      isImage: true,
       children: [
         {
           id: 21,
           displayName: 'User',
           navigate: 'UserList',
-          leftIcon: 'RoleIcon',
-          activeIcon: 'RoleIcon',
+          leftIcon: 'UserListIconBlack',
+          activeIcon: 'UserListIconWhite',
           isVisible: true,
+          isImage: true,
         },
         {
           id: 22,
           displayName: 'Role Access',
           navigate: 'AccessRoleList',
-          leftIcon: 'RoleIcon',
-          activeIcon: 'RoleIcon',
+          leftIcon: 'RoleIconBlack',
+          activeIcon: 'RoleIconWhite',
           isVisible: true,
+          isImage: true,
         },
       ],
     },
@@ -108,65 +113,73 @@ const CustomDrawerNavigation = ({
       isMenu: true,
       displayName: 'Masters',
       navigate: 'MastersStack',
-      leftIcon: 'userIcon',
-      activeIcon: 'userIcon',
+      isImage: true,
+      activeIcon: 'MasterIconWhite',
+      leftIcon: 'MasterIconBlack',
       isVisible: true,
       children: [
         {
           id: 31,
           displayName: 'Machines',
-          navigate: 'Machines',
-          leftIcon: 'RoleIcon',
-          activeIcon: 'RoleIcon',
+          navigate: 'MachineStack',
+          leftIcon: 'MachinesIconBlack',
+          activeIcon: 'MachinesIconWhite',
           isVisible: true,
+          isImage: true,
         },
         {
           id: 32,
           displayName: 'Periodic Tasks',
           navigate: 'TasksList',
-          leftIcon: 'RoleIcon',
-          activeIcon: 'RoleIcon',
+          leftIcon: 'TaskIconBlack',
+          activeIcon: 'TaskIconWhite',
           isVisible: true,
+          isImage: true,
         },
         {
           id: 33,
           displayName: 'Policy',
           navigate: 'Policy',
-          leftIcon: 'RoleIcon',
-          activeIcon: 'RoleIcon',
+          leftIcon: 'PolicyIconBlack',
+          activeIcon: 'PolicyIconWhite',
           isVisible: true,
+          isImage: true,
         },
         {
           id: 34,
           displayName: 'Division',
           navigate: 'Division',
-          leftIcon: 'RoleIcon',
-          activeIcon: 'RoleIcon',
+          leftIcon: 'DivisionIconBlack',
+          activeIcon: 'DivisionIconWhite',
           isVisible: true,
+          isImage: true,
         },
         {
           id: 35,
           displayName: 'Material',
           navigate: 'Material',
-          leftIcon: 'RoleIcon',
-          activeIcon: 'RoleIcon',
+          leftIcon: 'MaterialIconBlack',
+          activeIcon: 'MaterialIconWhite',
           isVisible: true,
+          isImage: true,
         },
         {
           id: 36,
           displayName: 'Work Center',
           navigate: 'WorkCenter',
-          leftIcon: 'RoleIcon',
-          activeIcon: 'RoleIcon',
+          leftIcon: 'WorkCenterIconBlack',
+          activeIcon: 'WorkCenterIconWhite',
           isVisible: true,
+          isImage: true,
         },
         {
           id: 37,
           displayName: 'Holiday',
           navigate: 'Holiday',
-          leftIcon: 'RoleIcon',
-          activeIcon: 'RoleIcon',
+          leftIcon: 'HolidayIconBlack',
+          activeIcon: 'HolidayIconWhite',
           isVisible: true,
+          isImage: true,
         },
       ],
     },
@@ -175,17 +188,19 @@ const CustomDrawerNavigation = ({
       id: 4,
       displayName: 'Downtime SR',
       navigate: 'ServiceRequestStack',
-      leftIcon: 'service_req_icon',
-      activeIcon: 'serviceReqActiveIcon',
+      leftIcon: 'DowntimeIconBlack',
+      activeIcon: 'DowntimeIconWhite',
       isVisible: true,
+      isImage: true,
     },
     {
       id: 5,
       displayName: 'Preventive SR',
       navigate: 'PreventiveSRStack',
-      leftIcon: 'preventive_icon',
-      activeIcon: 'preventiveActiveIcon',
+      leftIcon: 'PreventiveIconBlack',
+      activeIcon: 'PreventiveIconWhite',
       isVisible: true,
+      isImage: true,
     },
     {
       id: 7,
@@ -200,33 +215,37 @@ const CustomDrawerNavigation = ({
           id: 71,
           displayName: 'Spindle',
           navigate: 'SpindlesReportList',
-          leftIcon: 'preventive_icon',
-          activeIcon: 'preventiveActiveIcon',
+          leftIcon: 'SpindleIconBlack',
+          activeIcon: 'SpindleIconWhite',
           isVisible: true,
+          isImage: true,
         },
         {
           id: 72,
           displayName: 'MTTR - Yearly',
           navigate: 'MttrReport',
-          leftIcon: 'preventive_icon',
-          activeIcon: 'preventiveActiveIcon',
+          leftIcon: 'YearlyIconBlack',
+          activeIcon: 'YearlyIconWhite',
           isVisible: true,
+          isImage: true,
         },
         {
           id: 73,
           displayName: 'MTTR - Monthly',
           navigate: 'MttrMonthlyReport',
-          leftIcon: 'preventive_icon',
-          activeIcon: 'preventiveActiveIcon',
+          leftIcon: 'MTTRMonthlyIconBlack',
+          activeIcon: 'MTTRMonthlyIconWhite',
           isVisible: true,
+          isImage: true,
         },
         {
           id: 74,
           displayName: 'MTBF',
           navigate: 'MtbfReport',
-          leftIcon: 'preventive_icon',
-          activeIcon: 'preventiveActiveIcon',
+          leftIcon: 'MTBFIconBlack',
+          activeIcon: 'MTBFIconWhite',
           isVisible: true,
+          isImage: true,
         },
       ],
     },
@@ -361,16 +380,27 @@ const CustomDrawerNavigation = ({
         activeOpacity={activeOpacityValue}>
         <>
           <View style={[styles.rowStyle, {paddingLeft: 0}]}>
-            <SVGIcon
-              icon={
-                state?.index === item?.id - 1
-                  ? item?.activeIcon
-                  : item?.leftIcon
-              }
-              width={18}
-              fill={COLORS.gray}
-              height={18}
-            />
+            {item?.isImage ? (
+              <CustomImageBox
+                src={
+                  state?.index === item?.id - 1
+                    ? ICONS[item?.activeIcon]
+                    : ICONS[item?.leftIcon]
+                }
+                alt="Icon"
+                width={100}
+              />
+            ) : (
+              <SVGIcon
+                icon={
+                  state?.index === item?.id - 1
+                    ? item?.activeIcon
+                    : item?.leftIcon
+                }
+                width={18}
+                height={18}
+              />
+            )}
             <StyledText
               style={{
                 fontFamily: FONTS.poppins.medium,
@@ -451,6 +481,7 @@ const CustomDrawerNavigation = ({
                 ? COLORS.orange
                 : 'transparent',
             marginBottom: 10,
+            borderRadius: 10,
           },
         ]}
         onPress={() => {
@@ -464,25 +495,39 @@ const CustomDrawerNavigation = ({
               {
                 backgroundColor:
                   state?.index === item?.id - 1 ? COLORS.orange : 'transparent',
+                padding: item?.isMenu ? 5 : 0,
+                borderRadius: 10,
               },
             ]}>
             <View style={[styles.rowStyle]}>
-              <SVGIcon
-                icon={
-                  state?.index === item?.id - 1
-                    ? item?.activeIcon
-                    : item?.leftIcon
-                }
-                width={18}
-                height={18}
-              />
+              {item?.isImage ? (
+                <CustomImageBox
+                  src={
+                    state?.index === item?.id - 1
+                      ? ICONS[item?.activeIcon]
+                      : ICONS[item?.leftIcon]
+                  }
+                  alt="Icon"
+                  width={100}
+                />
+              ) : (
+                <SVGIcon
+                  icon={
+                    state?.index === item?.id - 1
+                      ? item?.activeIcon
+                      : item?.leftIcon
+                  }
+                  width={18}
+                  height={18}
+                />
+              )}
               <StyledText
                 style={{
                   fontFamily: FONTS.poppins.medium,
                   marginLeft: 10,
                   fontSize: FONTSIZES.medium,
                   color:
-                    state?.index === item?.id - 1 && !item?.isMenu
+                    state?.index === item?.id - 1
                       ? COLORS.white
                       : COLORS.textSecondary,
                 }}>
@@ -511,6 +556,7 @@ const CustomDrawerNavigation = ({
       {renderDrawerHeader()}
       <View style={styles.screen}>
         <FlatList
+          removeClippedSubviews={false}
           style={{flexGrow: 0}}
           data={[...drawerNavigationOptions]}
           renderItem={renderDrawerOptions}

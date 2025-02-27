@@ -31,6 +31,7 @@ import CollapsableContainer from '../../../Components/CollapsableContainer';
 import {TableItemProps} from '../../../@types/Global';
 import CheckBox from '../../../Components/CheckBox';
 import TableView from '../../../Components/TableView';
+import {RenderChildItems} from './AccessRolechild';
 const UserValidation = Yup.object().shape({
   name: Yup.string().trim().required('* Name is required.'),
 });
@@ -198,42 +199,18 @@ const AddEditRole = ({navigation}: UserScreensNavigationProps) => {
     }
   };
 
-  const RenderChildItems = React.memo(({item}: {item: RolePermission}) => {
-    return (
-      <View style={styles.ChildPermissionsCart}>
-        {item?.child?.map((childItem: ChildRolePermission) => {
-          const handleChildChange = useCallback(
-            (status: boolean) => {
-              handleChangePermissionStatus(
-                status,
-                item,
-                'child',
-                childItem?.id,
-              );
-            },
-            [handleChangePermissionStatus, item, childItem?.id],
-          );
-
-          return (
-            <View key={childItem?.id} style={styles.childItemCard}>
-              <CheckBox
-                checked={childItem?.status ? true : false}
-                label={childItem?.name}
-                onChange={handleChildChange}
-              />
-            </View>
-          );
-        })}
-      </View>
-    );
-  });
-
   const RenderCardItem = React.memo(
     ({item}: TableItemProps<RolePermission>) => {
       const isExpanded = expanded[item.id] ?? false;
 
       const memoizedChildItems = useMemo(() => {
-        return isExpanded ? <RenderChildItems item={item} /> : null;
+        return (
+          <RenderChildItems
+            item={item}
+            handleChangePermissionStatus={handleChangePermissionStatus}
+          />
+        );
+        // ) : null;
       }, [isExpanded, item]);
 
       const handleParentChange = useCallback(
@@ -255,9 +232,9 @@ const AddEditRole = ({navigation}: UserScreensNavigationProps) => {
               />
             </View>
           </TouchableOpacity>
-          <CollapsableContainer expanded={isExpanded}>
-            {memoizedChildItems}
-          </CollapsableContainer>
+          {/* <CollapsableContainer expanded={isExpanded}> */}
+          {memoizedChildItems}
+          {/* </CollapsableContainer> */}
         </View>
       );
     },

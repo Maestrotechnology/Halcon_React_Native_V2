@@ -49,6 +49,7 @@ const MenuContainer = ({
         activeOpacity={activeOpacityValue}>
         <View style={styles.optionsContainer}>
           <FlatList
+            removeClippedSubviews={false}
             data={buttonsOptions}
             renderItem={({item}) => {
               return (

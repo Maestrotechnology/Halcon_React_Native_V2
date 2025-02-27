@@ -182,3 +182,20 @@ export const MttrReportTabs = [
     id: 2,
   },
 ];
+export const TaskDurationList = [
+  {
+    name: 'Days',
+    id: 1,
+    title: 'Daily',
+  },
+  {
+    name: 'Weeks',
+    id: 2,
+    title: 'Weekly',
+  },
+  {
+    name: 'Months',
+    id: 3,
+    title: 'Monthly',
+  },
+];

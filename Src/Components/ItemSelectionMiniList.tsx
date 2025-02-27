@@ -68,6 +68,7 @@ const ItemSelectionMiniList = ({
           ItemSeparatorComponent={() => {
             return <ItemSeperator />;
           }}
+          removeClippedSubviews={false}
           showsVerticalScrollIndicator={false}
         />
       </View>

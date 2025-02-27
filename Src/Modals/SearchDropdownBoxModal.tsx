@@ -36,6 +36,7 @@ import {
   TaskListProps,
 } from '../@types/api';
 import {ObjectType} from '../Components/types';
+import {ConvertJSONtoFormData} from '../Utilities/Methods';
 
 var isMount = true;
 var currentPage = 1;
@@ -57,6 +58,7 @@ const SearchDropdownBoxModal = ({
   value,
   uniqueKey,
   onMultipleSelect,
+  apiFilters,
 }: SearchDropdownBoxModalProps) => {
   const token = UseToken();
   const isScrollBeginRef = useRef<boolean>(true);
@@ -121,12 +123,11 @@ const SearchDropdownBoxModal = ({
   };
 
   const handlegetTaskList = (page = 1) => {
-    const formData = new FormData();
-    formData.append('token', token);
-    getTasksListService(formData, page)
+    let finalObj = {token, ...(apiFilters || {})};
+
+    getTasksListService(ConvertJSONtoFormData(finalObj), page)
       .then(res => {
         const response = res.data;
-        console.log(JSON.stringify(response, null, 4), 'reposnse');
 
         if (response.status === 1) {
           if (isMount) {
@@ -504,6 +505,7 @@ const SearchDropdownBoxModal = ({
           </View>
         ) : (
           <FlatList
+            removeClippedSubviews={false}
             keyboardShouldPersistTaps="handled"
             data={isLocalSearch ? [...getList()] : [...optionsList]}
             keyExtractor={(item, index) => index.toString()}

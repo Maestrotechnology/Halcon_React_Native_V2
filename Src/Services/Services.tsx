@@ -99,11 +99,7 @@ export const updatePreventiveTaskService = (data: any) => {
 };
 
 export const createTaskMappingService = (data: any) => {
-  return axios.post('create_task_mapping', data, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  return axios.post('create_task_mapping', data, JSONHeaderType);
 };
 
 export const createPreventiveTaskService = (data: FormData) => {
@@ -320,6 +316,7 @@ export const UpdateTasksService = (data: FormData) => {
 export const deleteTasksService = (data: FormData) => {
   return axios.post('/masters/delete_task', data);
 };
+
 // Policy
 
 export const listPolicyService = (data: FormData, page: number) => {
@@ -426,9 +423,19 @@ export const MachineMappingListService = (data: FormData, page: number) => {
 };
 
 export const CreateTasksMachineService = (data: any) => {
-  return axios.post(`machine_task_mapping/createTaskstoMachine`, data);
+  return axios.post(
+    `machine_task_mapping/createTaskstoMachine`,
+    data,
+    JSONHeaderType,
+  );
 };
-
+export const deleteMachineMappedTasksService = (data: ObjectType) => {
+  return axios.post(
+    '/machine_task_mapping/deleteTaskMapping',
+    data,
+    JSONHeaderType,
+  );
+};
 // Dropdown Lists
 export const RoleDropdownListService = (data: FormData) => {
   return axios.post('dropdown/dropdown_role', data);
@@ -464,4 +471,18 @@ export const ListMTBFreportService = (data: FormData) => {
 };
 export const ListMTTRMonthlyreportService = (data: FormData, page: number) => {
   return axios.post(`/report/month_mttrReport?page=${page}&size=10`, data);
+};
+export const UpdateTaskMappingService = (data: any) => {
+  return axios.post(
+    '/machine_task_mapping/updateTaskMachineMapping',
+    data,
+    JSONHeaderType,
+  );
+};
+export const AddNewTasksMappingService = (data: any) => {
+  return axios.post(
+    '/machine_task_mapping/addMachineTasks',
+    data,
+    JSONHeaderType,
+  );
 };

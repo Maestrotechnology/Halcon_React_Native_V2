@@ -11,6 +11,7 @@ export interface PaginationData<T> {
   total_count: number;
   total_page: number;
   items: T[];
+  master_task_map_id?: number;
 }
 export type DeleteApiResposneProps = {
   msg: string;
@@ -36,7 +37,7 @@ export type AddEditModalProps<T> = {
   onClose: () => void;
   type: 'Create' | 'Update' | 'View' | 'Assigntask' | '';
   lineData: T | null;
-  category?: any;
+  category?: number;
 };
 
 export type FilterModalProps<T> = {

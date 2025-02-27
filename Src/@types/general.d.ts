@@ -22,6 +22,7 @@ import {NativePickerProps} from 'react-native-modal-datetime-picker';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import {BottomSheetModalProps} from '@gorhom/bottom-sheet';
 import {DeviceStatusProps} from '../Utilities/StaticDropdownOptions';
+import {ObjectType} from '../Components/types';
 
 export type DashboardDetailsStateProps = {
   data: DashboardChartProps[];
@@ -40,6 +41,7 @@ export type CustomDrawerNavigationOptionsProps = {
   activeIcon: IconType;
   isMenu?: boolean;
   screenName?: string;
+  isImage?: boolean;
   children?: CustomDrawerNavigationOptionsProps[];
 };
 
@@ -182,6 +184,7 @@ export interface DropdownBoxProps
   onMultipleSelect?: (item: any[]) => void;
   isDisabledInPopup?: boolean;
   isShowClearIcon?: boolean;
+  apiFilters?: ObjectType;
 }
 
 export type TextInputBoxProps = {
