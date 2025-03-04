@@ -4,7 +4,11 @@ import {DotProps, LegendItemProps} from '../@types/general';
 import {COLORS, FONTSIZES} from '../Utilities/Constants';
 import {FONTS} from '../Utilities/Fonts';
 
-export default function CustomLegend({legendList}: {legendList: any[]}) {
+export default function CustomLegend({
+  legendList,
+}: {
+  legendList: {color: string; label: string}[];
+}) {
   const Dot: React.FC<DotProps> = ({color}) => (
     <View
       style={{

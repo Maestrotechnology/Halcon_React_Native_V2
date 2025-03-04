@@ -1,13 +1,12 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import HOCView from '../../../Components/HOCView';
 import {
   deletePreventiveRequestService,
   getPreventiveSRListService,
 } from '../../../Services/Services';
-import {GetUserPermissions, UseToken} from '../../../Utilities/StoreData';
+import {UseToken} from '../../../Utilities/StoreData';
 import {
-  PreventiveSRListApiDataProps,
   PreventiveSRListApiProps,
   PreventiveSRListDataProps,
 } from '../../../@types/api';
@@ -21,7 +20,6 @@ import {ConvertJSONtoFormData} from '../../../Utilities/Methods';
 import GlobaModal from '../../../Components/GlobalModal';
 import ConfirmationModal from '../../../Modals/ConfirmationModal';
 import {getCatchMessage} from '../../../Utilities/GeneralUtilities';
-import {PreventivePermissionProps} from '../../../Utilities/Reducertype';
 import ServiceRequestListFilterModal from '../../../Modals/Filter/ServiceRequestListFilterModal';
 import {
   ServiceRequestFilterDataProps,
@@ -37,14 +35,11 @@ var isMount = true;
 var currentPage = 1;
 var totalPages = 1;
 
-const PreventiveSR = ({route}: any) => {
-  const {setselectedId, setIsView} = usePreventiveRequestContext();
+const PreventiveSR = () => {
+  const {setselectedId, setIsView, route, type} = usePreventiveRequestContext();
   const token = UseToken();
   const dispatch = useDispatch();
   const {bottom} = useSafeAreaInsets();
-  // @ts-ignore
-  // const PreventivePermissions: PreventivePermissionProps =
-  //   GetUserPermissions('preventive_sr');
   const navigation: any = useNavigation();
   const [preventiveList, setPreventiveList] = useState<
     PreventiveSRListDataProps[]
@@ -69,9 +64,7 @@ const PreventiveSR = ({route}: any) => {
       work_center: null,
       report_no: '',
       from_date: route?.params?.date ? route?.params?.date?.start_date : '',
-      //  moment(new Date()).startOf("month").format("YYYY-MM-DD")
       to_date: route?.params?.date ? route?.params?.date?.end_date : '',
-      // moment(new Date()).endOf("month").format("YYYY-MM-DD")
     });
   const [StateFilterData, setStateFilterData] =
     useState<null | ServiceRequestFilterInitialProp>(null);
@@ -82,22 +75,21 @@ const PreventiveSR = ({route}: any) => {
     currentPage = 1;
     totalPages = 1;
     if (token) {
-      handleGetPreventiveServiceList(1);
-      // @ts-ignore
-      setfilterData(pre => ({
-        ...pre,
+      let filters: any = {
+        ...filterData,
         reqStatus:
-          [...requestStatusOptions]?.find(
-            ele => ele?.id === route?.params?.preventiveType || 0,
-          ) || null,
-      }));
+          [...requestStatusOptions]?.find(ele => ele?.id === type || 0) || null,
+      };
+
+      handleGetPreventiveServiceList(1, type || 0, filters);
+      setfilterData(filters);
     }
     return () => {
       isMount = false;
       currentPage = 1;
       totalPages = 1;
     };
-  }, [route?.params?.render, token]);
+  }, [route?.params?.render, token, type]);
 
   useEffect(() => {
     if (route) {
@@ -124,15 +116,18 @@ const PreventiveSR = ({route}: any) => {
     if (data?.machine) {
       formData.append('machine_id', data?.machine.machine_id);
     }
-    // if (data?.priority) {
-    //   formData.append('priority', data?.priority.id);
-    // }
 
     if (data?.from_date) {
-      formData.append('start_date', `${data?.from_date} 00:00`);
+      formData.append(
+        'from_date',
+        moment(data?.from_date).format('YYYY-MM-DD 00:00:00'),
+      );
     }
     if (data?.to_date) {
-      formData.append('end_date', `${data?.to_date} 23:59`);
+      formData.append(
+        'to_date',
+        moment(data?.to_date).format('YYYY-MM-DD 23:59:59'),
+      );
     }
     if (data?.division) {
       formData.append('division_id', data?.division?.division_id);

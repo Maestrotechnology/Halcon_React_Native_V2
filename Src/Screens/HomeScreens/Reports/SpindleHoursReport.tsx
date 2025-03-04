@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {BarChart} from 'react-native-gifted-charts';
 import {COLORS, FONTSIZES, WINDOW_WIDTH} from '../../../Utilities/Constants';
 import {converttoHours} from '../../../Utilities/GeneralUtilities';
@@ -9,6 +9,8 @@ import SVGIcon from '../../../Components/SVGIcon';
 import GlobaModal from '../../../Components/GlobalModal';
 import SpindleReportFilterModal from '../../../Modals/Filter/SpindleReportFilterModal';
 import {SpindleReportFilterProps} from '../../../@types/modals';
+import CustomImageBox from '../../../Components/CustomImageBox';
+import {ICONS} from '../../../Utilities/Icons';
 var isMount = true;
 export default function SpindleHoursReport({
   SpindleReportList,
@@ -57,13 +59,11 @@ export default function SpindleHoursReport({
     <View>
       <View style={styles.rowStyle}>
         <StyledText style={styles.subHeader}>Spindles Hours Report</StyledText>
-        <SVGIcon
-          icon="FilterIcon"
-          fill={COLORS.darkBlue}
-          width={25}
-          height={25}
-          isButton
+        <CustomImageBox
+          alt="Filter Icon"
+          src={ICONS.FilterIcon}
           onPress={() => setisShowFilter(true)}
+          ImageStyle={{width: 20, height: 20}}
         />
       </View>
 
@@ -96,6 +96,24 @@ export default function SpindleHoursReport({
           endSpacing={0}
           width={WINDOW_WIDTH - 100}
           lineData={lineData} // Add separate line data
+          // showValuesAsTopLabel={true}
+          renderTooltip={(item: any) => (
+            <Text
+              style={{
+                color: COLORS.orange,
+                fontSize: 12,
+
+                fontFamily: FONTS.poppins.regular,
+                backgroundColor: COLORS.lightOrange,
+                paddingHorizontal: 10,
+                paddingVertical: 4,
+                borderRadius: 5,
+                top: 20,
+                textAlign: 'center',
+              }}>
+              {item.value || '0'} Hrs{/* Ensure 0 is displayed */}
+            </Text>
+          )}
         />
         <View style={styles.LableBox}>
           {CartNames?.map(item => {

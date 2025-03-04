@@ -106,10 +106,7 @@ const PreventiveSRStatck = ({route}: any) => {
         }}>
         <Stack.Screen
           // @ts-ignore
-          initialParams={{
-            preventiveType: route?.params?.preventiveType,
-            date: route?.params?.date,
-          }}
+          initialParams={route?.params}
           name="PreventiveSR"
           component={PreventiveSR}
         />

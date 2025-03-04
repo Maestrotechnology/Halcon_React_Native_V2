@@ -12,6 +12,7 @@ import {
 import DropdownBox from '../../Components/DropdownBox';
 import CustomButton from '../../Components/CustomButton';
 import DateTimePicker from '../../Components/DateTimePicker';
+import {getCurrentMonthDates} from '../../Utilities/GeneralUtilities';
 
 const reqStatusOptions: DeviceStatusProps[] = [...requestStatusOptions];
 
@@ -33,8 +34,8 @@ const ServiceRequestListFilterModal = ({
       machine: null,
       sort_type: null,
       reqStatus: null,
-      from_date: '',
-      to_date: '',
+      from_date: getCurrentMonthDates().start_date,
+      to_date: getCurrentMonthDates().end_date,
       work_center: null,
       division: null,
       report_no: '',
@@ -84,22 +85,7 @@ const ServiceRequestListFilterModal = ({
           setFieldValue('machine', null);
         }}
       />
-      {/* <DropdownBox
-        title="Work Center"
-        value={values.work_center}
-        placeHolder="Select Work Center"
-        apiType="work_center"
-        onSelect={val => {
-          setFieldValue('work_center', val);
-        }}
-        type="search"
-        fieldName="description"
-        isLocalSearch
-        searchFieldName="description"
-        onIconPress={() => {
-          setFieldValue('work_center', null);
-        }}
-      /> */}
+
       <DropdownBox
         title="Division"
         value={values.division}
@@ -116,18 +102,7 @@ const ServiceRequestListFilterModal = ({
           setFieldValue('division', null);
         }}
       />
-      {/* <TextInputBox
-        value={values?.report_no}
-        onChangeText={(val: string) => {
-          setFieldValue('report_no', val);
-        }}
-        customInputBoxContainerStyle={{
-          borderColor: COLORS.primary,
-        }}
-        placeHolder="Enter Report No"
-        title="Report No"
-        isEditable
-      /> */}
+
       <DateTimePicker
         format="YYYY-MM-DD"
         value={values.from_date}
@@ -147,20 +122,7 @@ const ServiceRequestListFilterModal = ({
         minimumDate={values.from_date ? new Date(values.from_date) : null}
         maximumDate={new Date()}
       />
-      {/* <DropdownBox
-        title="Sort Type"
-        options={[...SORT_OPTIONS]}
-        value={values.sort_type}
-        placeHolder="Sort Type"
-        onSelect={val => {
-          setFieldValue('sort_type', val);
-        }}
-        type="miniList"
-        fieldName="name"
-        onIconPress={() => {
-          setFieldValue('sort_type', null);
-        }}
-      /> */}
+
       <DropdownBox
         title="Request Status"
         options={[...reqStatusOptions]}
@@ -185,14 +147,8 @@ const ServiceRequestListFilterModal = ({
           style={{width: '45%'}}
           type="secondary"
           onPress={() => {
-            resetForm({
-              values: {
-                ...initialValues,
-                reqStatus: null,
-              },
-            });
-            onApplyFilter(null);
-            onClose();
+            resetForm();
+            handleSubmit();
           }}>
           Reset
         </CustomButton>

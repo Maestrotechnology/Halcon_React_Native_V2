@@ -4,6 +4,7 @@ import {AlertBoxProps} from '../@types/general';
 import {IS_IOS, REGEX} from './Constants';
 import RNFetchBlob, {RNFetchBlobConfig} from 'rn-fetch-blob';
 import {getCatchMsgType} from './Types';
+import moment from 'moment';
 
 type DownloadTypeProps = 'latest_app' | 'pdf_download';
 
@@ -277,4 +278,14 @@ export const extractIds = (data: any, filteredIds: any) => {
       extractIds(item.child, filteredIds);
     }
   });
+};
+
+export const getCurrentMonthDates = () => {
+  return {
+    start_date: moment()
+      .subtract(1, 'month')
+      .startOf('day')
+      .format('YYYY-MM-DD HH:mm:ss'),
+    end_date: moment().endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+  };
 };

@@ -68,7 +68,7 @@ export const RequiringProblemsList: DeviceStatusProps[] = [
 export const requestStatusOptions: DeviceStatusProps[] = [
   {
     id: 1,
-    name: 'Created',
+    name: 'Pending',
   },
   {
     id: 2,
@@ -77,6 +77,10 @@ export const requestStatusOptions: DeviceStatusProps[] = [
   {
     id: 3,
     name: 'Completed',
+  },
+  {
+    id: 4,
+    name: 'Over Due',
   },
 ];
 
@@ -197,5 +201,20 @@ export const TaskDurationList = [
     name: 'Months',
     id: 3,
     title: 'Monthly',
+  },
+];
+
+export const ReportLegentOptions = [
+  {
+    label: 'Total',
+    color: '#017efa',
+  },
+  {
+    label: 'Completed',
+    color: '#4ab58e',
+  },
+  {
+    label: 'Ongoing',
+    color: '#fab101',
   },
 ];

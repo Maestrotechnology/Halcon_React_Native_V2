@@ -1,3 +1,6 @@
+import {BarChart, barDataItem} from 'react-native-gifted-charts';
+import React, {useEffect, useState} from 'react';
+import moment from 'moment';
 import {
   RefreshControl,
   StyleSheet,
@@ -5,7 +8,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
 import {
   getDashboardCardsService,
   getDashboardMonthlyReportService,
@@ -13,34 +15,30 @@ import {
   TaskPerformanceService,
 } from '../../Services/Services';
 import Toast from '../../Components/Toast';
-import {GetPermissions, GetUserData, UseToken} from '../../Utilities/StoreData';
+import {GetUserData, UseToken} from '../../Utilities/StoreData';
 import {
   DashboardCardKeyProps,
   DashboardCardsApiResponseProps,
-  DashboardChartDetailsItemsResponseProps,
   DashboardMonthlyReportProps,
-  ServiceRequestReportDataProps,
 } from '../../@types/api';
 import HOCView from '../../Components/HOCView';
 import StyledText from '../../Components/StyledText';
 import {IconType} from '../../Utilities/Icons';
 import SVGIcon from '../../Components/SVGIcon';
 import {COLORS, FONTSIZES, WINDOW_WIDTH} from '../../Utilities/Constants';
-import {BarChart, barDataItem} from 'react-native-gifted-charts';
-import moment from 'moment';
 import {FONTS} from '../../Utilities/Fonts';
 import {useNavigation} from '@react-navigation/native';
 import {getCatchMessage} from '../../Utilities/GeneralUtilities';
 import {CommonStyles} from '../../Utilities/CommonStyles';
 import {ConvertJSONtoFormData} from '../../Utilities/Methods';
 import SpindleHoursReport from './Reports/SpindleHoursReport';
-import {SpindleReportFilterProps} from '../../@types/modals';
 import CommonPieChart from '../../Components/CommonPieChart';
+import {SpindleReportFilterProps} from '../../@types/modals';
 import {TaskPerformanceDataProps} from '../../@types/general';
+import CustomLegend from '../../Components/CustomLegend';
+import {ReportLegentOptions} from '../../Utilities/StaticDropdownOptions';
 
 var isMount = true;
-var currentPage = 1;
-var totalPages = 1;
 
 type DashboardCardProp = {
   displayName: string;
@@ -56,13 +54,6 @@ type DashboardCardProp = {
   }[];
 };
 
-type DashboardCardDataProp = {
-  displayName: string;
-  value: number;
-  key: string;
-  icon: IconType;
-  type?: number;
-};
 const Dashboard = () => {
   const token = UseToken();
   const navigation: any = useNavigation();
@@ -85,16 +76,16 @@ const Dashboard = () => {
       icon_bg: '#FF7E5C',
       data: [
         {
-          displayName: 'On Going',
-          value: 0,
-          key: 'ongoing',
-          type: 2,
-        },
-        {
           displayName: 'Pending',
           value: 0,
           key: 'pending',
           type: 1,
+        },
+        {
+          displayName: 'On Going',
+          value: 0,
+          key: 'ongoing',
+          type: 2,
         },
         {
           displayName: 'Completed',
@@ -118,16 +109,16 @@ const Dashboard = () => {
       icon_bg: '#39BFEA',
       data: [
         {
-          displayName: 'On Going',
-          value: 0,
-          key: 'ongoing',
-          type: 2,
-        },
-        {
           displayName: 'Pending',
           value: 0,
           key: 'pending',
           type: 1,
+        },
+        {
+          displayName: 'On Going',
+          value: 0,
+          key: 'ongoing',
+          type: 2,
         },
         {
           displayName: 'Completed',
@@ -180,8 +171,7 @@ const Dashboard = () => {
   };
   useEffect(() => {
     isMount = true;
-    currentPage = 1;
-    totalPages = 1;
+
     if (token) {
       handleGetDashboardCards();
       getMonthlyReport();
@@ -191,8 +181,6 @@ const Dashboard = () => {
 
     return () => {
       isMount = false;
-      currentPage = 1;
-      totalPages = 1;
     };
   }, [token, userData]);
 
@@ -317,12 +305,6 @@ const Dashboard = () => {
     }, []);
 
     return finalArr;
-
-    //     return [...tempdata]?.map((item, itemIndex)=>{
-    //       return {
-    // value : item?.
-    //       }
-    //     })
   };
   const [taskPerformanceData, setTaskPerformanceData] =
     useState<TaskPerformanceDataProps>({
@@ -357,9 +339,12 @@ const Dashboard = () => {
 
     if (!showPreventiveReport) {
       navigation.navigate('ServiceRequestStack', {
-        date: {
-          start_date,
-          end_date,
+        screen: 'ServiceRequest',
+        params: {
+          date: {
+            start_date,
+            end_date,
+          },
         },
       });
     } else {
@@ -375,8 +360,7 @@ const Dashboard = () => {
     if (isMount) {
       setisRefreshing(true);
     }
-    totalPages = 1;
-    currentPage = 1;
+
     try {
       await Promise.all([
         handleGetSpindleReportList(),
@@ -430,7 +414,7 @@ const Dashboard = () => {
                   }}>
                   <SVGIcon width={20} icon={cardGroup?.icon} />
                 </View>
-                <View style={styles.cardTextContainer}>
+                <View>
                   <StyledText
                     style={{
                       color: '#242425',
@@ -481,7 +465,10 @@ const Dashboard = () => {
                       onPress={() => {
                         if (cardGroupIndex === 0) {
                           navigation.navigate('ServiceRequestStack', {
-                            serviceType: card?.type,
+                            screen: 'ServiceRequest',
+                            params: {
+                              serviceType: card?.type,
+                            },
                           });
                         } else {
                           navigation.navigate('PreventiveSRStack', {
@@ -495,7 +482,7 @@ const Dashboard = () => {
                         padding: 8,
                         borderRadius: 10,
                       }}>
-                      <View style={styles.cardTextContainer}>
+                      <View>
                         <StyledText
                           style={{
                             color: '#8A8A8A',
@@ -585,6 +572,13 @@ const Dashboard = () => {
             yAxisTextStyle={{color: 'gray'}}
             noOfSections={3}
             width={WINDOW_WIDTH - 100}
+          />
+          <CustomLegend
+            legendList={
+              showPreventiveReport
+                ? ReportLegentOptions.filter((ele, index) => index !== 2)
+                : ReportLegentOptions
+            }
           />
         </View>
         <SpindleHoursReport
@@ -679,9 +673,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
   },
-  cardTextContainer: {
-    // width: WINDOW_WIDTH / 2 - 90,
-  },
+
   reportBtn: {
     alignSelf: 'flex-end',
     height: 30,
