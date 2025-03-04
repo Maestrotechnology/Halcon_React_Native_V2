@@ -1,3 +1,7 @@
+import * as Yup from 'yup';
+import {useFormik} from 'formik';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {RouteProp, useIsFocused, useRoute} from '@react-navigation/native';
 import {
   UserScreensNavigationProps,
@@ -6,12 +10,8 @@ import {
 import {GetUserAccessPermissions, UseToken} from '../../../Utilities/StoreData';
 import {BOX_SHADOW, COLORS, WINDOW_WIDTH} from '../../../Utilities/Constants';
 import HOCView from '../../../Components/HOCView';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import * as Yup from 'yup';
-import {useFormik} from 'formik';
 import CustomButton from '../../../Components/CustomButton';
 import TextInputBox from '../../../Components/TextInputBox';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
   CreateAccessRoleService,
   UpdateAccessRoleService,
@@ -154,12 +154,6 @@ const AddEditRole = ({navigation}: UserScreensNavigationProps) => {
       [item.id]: !prev[item.id], // Toggle only the clicked item
     }));
   }, []);
-  //   const onItemPress = (item: RolePermission) => {
-  //     setExpanded({
-  //       isExpand: item?.id === expanded?.uniqueId ? false : true,
-  //       uniqueId: item?.id === expanded?.uniqueId ? 0 : item?.id,
-  //     });
-  //   };
   const handleChangePermissionStatus = (
     status: boolean,
     item: any,
@@ -273,9 +267,7 @@ const AddEditRole = ({navigation}: UserScreensNavigationProps) => {
               />
             </View>
           </TouchableOpacity>
-          {/* <CollapsableContainer expanded={isExpanded}> */}
           {memoizedChildItems}
-          {/* </CollapsableContainer> */}
         </View>
       );
     },

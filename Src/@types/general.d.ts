@@ -104,6 +104,8 @@ export interface HOCViewProps extends CustomHeaderProps {
   headerProps?: CustomHeaderProps;
   secondaryBtnTextStyle?: StyleProp<TextStyle>;
   isBtnLoading?: boolean;
+  isShowFilterBtn?: boolean;
+  onPressisShowFilterBtn?: () => void;
 }
 
 export interface CustomHeaderProps {
@@ -375,4 +377,9 @@ export type LegendItemProps = {
 };
 export type DotProps = {
   color: string;
+};
+
+export type ChangesPasswordProps = {
+  show: boolean;
+  lineData: UserRequestListDataProps | null;
 };

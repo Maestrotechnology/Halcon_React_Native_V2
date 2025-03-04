@@ -101,67 +101,6 @@ const TableView = ({
         )?.name || ''
       : '';
   };
-  const renderTableHeader = () => {
-    return (
-      <>
-        <View
-          style={[
-            styles.headingContainer,
-            {backgroundColor: 'transparent', marginBottom: 5},
-          ]}>
-          <View style={[styles.heading, {width: 50, alignItems: 'center'}]}>
-            <StyledText
-              style={[
-                styles.headingtext,
-                {
-                  textAlign: 'center',
-                  color: COLORS.black,
-                },
-              ]}>
-              {checkedKey ? '' : 'S.No'}
-            </StyledText>
-          </View>
-          {headingList?.map((title, index) => {
-            return (
-              <View
-                key={index.toString()}
-                style={[styles.heading, {width: columnWidth}]}>
-                <StyledText
-                  style={[
-                    styles.headingtext,
-                    {
-                      textAlign: 'left',
-                      color: COLORS.black,
-                    },
-                  ]}>
-                  {title}
-                </StyledText>
-              </View>
-            );
-          })}
-          {isActionAvailable && (
-            <View
-              style={[
-                styles.heading,
-                {width: columnWidth, alignItems: 'center'},
-              ]}>
-              <StyledText
-                style={[
-                  styles.headingtext,
-                  {
-                    textAlign: 'center',
-                    color: COLORS.black,
-                  },
-                ]}>
-                Actions
-              </StyledText>
-            </View>
-          )}
-        </View>
-        <ItemSeparator my={0} />
-      </>
-    );
-  };
 
   const getActionsList = (item: any) => {
     if (

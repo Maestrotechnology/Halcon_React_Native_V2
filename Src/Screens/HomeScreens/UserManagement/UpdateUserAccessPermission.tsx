@@ -1,3 +1,5 @@
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {RouteProp, useIsFocused, useRoute} from '@react-navigation/native';
 import {
   UserScreensNavigationProps,
@@ -6,16 +8,11 @@ import {
 import {GetUserAccessPermissions, UseToken} from '../../../Utilities/StoreData';
 import {BOX_SHADOW, COLORS, WINDOW_WIDTH} from '../../../Utilities/Constants';
 import HOCView from '../../../Components/HOCView';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import * as Yup from 'yup';
-import {useFormik} from 'formik';
 import CustomButton from '../../../Components/CustomButton';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
   CreateAccessRoleService,
   listUserAccessPermissionsService,
-  UpdateAccessRoleService,
-  ViewAccessRoleService,
+  UpdateUserAccessPermissionsService,
 } from '../../../Services/Services';
 import {
   ConvertJSONtoFormData,
@@ -23,23 +20,18 @@ import {
 } from '../../../Utilities/Methods';
 import Toast from '../../../Components/Toast';
 import {extractIds, getCatchMessage} from '../../../Utilities/GeneralUtilities';
-import {AccessAddEditDataProps} from '../../../@types/apirequestDatas';
 import {RolePermissionList} from '../../../Utilities/AccessConstants';
 import {RolePermission} from '../../../@types/api';
 import {renderTitleText} from '../../../Utilities/UiComponents';
 import {TableItemProps} from '../../../@types/Global';
 import CheckBox from '../../../Components/CheckBox';
 import {RenderChildItems} from './AccessRolechild';
-const UserValidation = Yup.object().shape({
-  name: Yup.string().trim().required('* Name is required.'),
-});
 
 const UpdateUserAccessPermission = ({
   navigation,
 }: UserScreensNavigationProps) => {
   const focused = useIsFocused();
   const token = UseToken();
-  const UserPermissions = GetUserAccessPermissions();
   const route =
     useRoute<
       RouteProp<UserStackStackParamList, 'UpdateUserAccessPermission'>
@@ -50,58 +42,18 @@ const UpdateUserAccessPermission = ({
   const [accessPermissionList, setAccessPermissionList] =
     useState<RolePermission[]>(RolePermissionList);
   const [selectedPermissions, setSelectedPermissions] = useState<number[]>([]);
-  //   const [expanded, setExpanded] = useState({isExpand: false, uniqueId: 0});
   const [expanded, setExpanded] = useState<{[key: number]: boolean}>({});
-  const {values, errors, touched, setFieldValue, handleSubmit, setValues} =
-    useFormik<AccessAddEditDataProps>({
-      initialValues: {
-        name: '',
-        description: '',
-      },
-      validationSchema: UserValidation,
-      onSubmit: values => {
-        if (type === 'Create') {
-          handleCreateAccessRole(values);
-        } else if (type === 'Update') {
-          handleUpdateAccessRole(values);
-        }
-      },
-    });
 
-  const handleCreateAccessRole = (values: any) => {
+  // update Access Role
+  const handleUpdateAccessRole = () => {
     setIsLoading(true);
     let finalObj = FilterValidObj({
-      ...values,
       token: token,
-      role_id: values?.role_id?.role_id || 0,
-    });
-
-    CreateAccessRoleService(finalObj)
-      .then(async res => {
-        if (res.data.status === 1) {
-          Toast.success(res?.data?.msg);
-          navigation.goBack();
-        } else {
-          Toast.error(res.data.msg);
-        }
-      })
-      .catch(err => {
-        getCatchMessage(err);
-      })
-      .finally(() => setIsLoading(false));
-  };
-
-  // update user
-  const handleUpdateAccessRole = (values: any) => {
-    setIsLoading(true);
-    let finalObj = FilterValidObj({
-      ...values,
-      token: token,
-      role_id: route?.params?.lineData?.role_id || 0,
+      user_id: route?.params?.lineData?.user_id,
       permissionData: selectedPermissions,
     });
 
-    UpdateAccessRoleService(finalObj)
+    UpdateUserAccessPermissionsService(finalObj)
       .then(async res => {
         if (res.data.status === 1) {
           Toast.success(res?.data?.msg);
@@ -116,24 +68,19 @@ const UpdateUserAccessPermission = ({
       .finally(() => setIsLoading(false));
   };
 
-  const handleUpdateAccessRoleData = () => {
-    const updateData = route?.params?.lineData;
-    // setValues({
-    //   name: updateData?.role_name || '',
-    //   description: updateData?. || '',
-    // });
-  };
   const handleViewAccessRoleData = () => {
     setIsLoading(true);
     let finalObj = {
       token,
-      role_id: route?.params?.lineData?.role_id,
+      user_id: route?.params?.lineData?.user_id,
     };
+
     listUserAccessPermissionsService(ConvertJSONtoFormData(finalObj))
       .then(response => {
         if (response?.data?.status === 1) {
           const filteredIds: any = [];
-          extractIds(response?.data?.data?.role_permission, filteredIds);
+
+          extractIds(response?.data?.data?.user_permission, filteredIds);
           setSelectedPermissions(filteredIds);
         } else {
           Toast.error(response?.data?.msg);
@@ -146,7 +93,6 @@ const UpdateUserAccessPermission = ({
   };
   useEffect(() => {
     if (focused && type !== 'Create' && route?.params?.lineData) {
-      handleUpdateAccessRoleData();
       handleViewAccessRoleData();
     }
   }, [focused]);
@@ -157,18 +103,11 @@ const UpdateUserAccessPermission = ({
       [item.id]: !prev[item.id], // Toggle only the clicked item
     }));
   }, []);
-  //   const onItemPress = (item: RolePermission) => {
-  //     setExpanded({
-  //       isExpand: item?.id === expanded?.uniqueId ? false : true,
-  //       uniqueId: item?.id === expanded?.uniqueId ? 0 : item?.id,
-  //     });
-  //   };
+
   const handleChangePermissionStatus = (
-    status: boolean,
     item: any,
     type: 'parent' | 'child' | 'Innerchild',
     parentId?: number,
-    InnerParentId?: number,
   ) => {
     if (type === 'parent') {
       let childIds = item?.child?.map((ele: any) => ele?.id);
@@ -179,66 +118,12 @@ const UpdateUserAccessPermission = ({
       } else {
         setSelectedPermissions(pre => [...pre, item?.id, ...childIds]);
       }
-      // let finalList=selectedPermissions?.includes(ite)
-      // setSelectedPermissions(prev =>
-      //   ([...prev].includes(item?.id) ? null : item?.id).filter(ele => ele),
-      // );
-      // setAccessPermissionList(prev =>
-      //   prev.map(ele =>
-      //     ele.id !== item.id ? ele : {...ele, status: status ? 1 : 0},
-      //   ),
-      // );
     } else if (type === 'child') {
-      let childIds = item?.child?.map((ele: any) => ele?.id);
       if (selectedPermissions?.includes(parentId || 0)) {
         setSelectedPermissions(pre => pre?.filter(ele => ele !== parentId));
       } else {
         setSelectedPermissions(pre => [...pre, parentId || 0]);
       }
-
-      // setAccessPermissionList((prevItems: any) =>
-      //   prevItems.map((ele: any) =>
-      //     ele.id !== item.id
-      //       ? ele
-      //       : {
-      //           ...ele,
-      //           child: ele.child.map((childData: ChildRolePermission) =>
-      //             childData.id !== parentId
-      //               ? childData
-      //               : {...childData, status: status ? 1 : 0},
-      //           ),
-      //         },
-      //   ),
-      // );
-    } else if (type === 'Innerchild') {
-      // let UpdatedInnerChildPermission: InnerChildRolePermission[] =
-      //   accessPermissionList?.map(ele =>
-      //     ele?.id === InnerParentId
-      //       ? {
-      //           ...ele,
-      //           status: status ? 1 : 0,
-      //         }
-      //       : ele,
-      //   );
-      // let UpdatedChildPermission: ChildRolePermission[] =
-      //   accessPermissionList?.map(ele =>
-      //     ele?.id === parentId
-      //       ? {
-      //           ...ele,
-      //           child: UpdatedInnerChildPermission,
-      //         }
-      //       : ele,
-      //   );
-      // let UpdatesParentPermissionItem: RolePermission[] =
-      //   accessPermissionList?.map(ele =>
-      //     ele?.id === item?.id
-      //       ? {
-      //           ...ele,
-      //           child: UpdatedChildPermission,
-      //         }
-      //       : ele,
-      //   );
-      // setAccessPermissionList(UpdatesParentPermissionItem);
     }
   };
 
@@ -257,8 +142,7 @@ const UpdateUserAccessPermission = ({
       }, [isExpanded, item]);
 
       const handleParentChange = useCallback(
-        (status: boolean) =>
-          handleChangePermissionStatus(status, item, 'parent'),
+        (status: boolean) => handleChangePermissionStatus(item, 'parent'),
         [item],
       );
 
@@ -302,7 +186,9 @@ const UpdateUserAccessPermission = ({
 
       {type !== 'View' && (
         <CustomButton
-          onPress={handleSubmit}
+          onPress={() => {
+            handleUpdateAccessRole();
+          }}
           style={{marginVertical: 10, marginBottom: 20}}>
           Submit
         </CustomButton>

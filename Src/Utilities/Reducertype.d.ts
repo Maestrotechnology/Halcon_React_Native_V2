@@ -18,6 +18,14 @@ export type LoginReducersProp = {
   baseurl: string;
   selectedDrawerOption: number;
 };
+export type USerDetailsPros = {
+  msg: string;
+  name: string;
+  permission: any[];
+  status: number;
+  token: string;
+  user_id: number;
+};
 export type LoaderReducerProp = {
   loader: boolean;
 };
@@ -55,6 +63,7 @@ export type userDataProp = {
   verifyStatus: number;
   remember: boolean;
   password: string;
+  name?: string;
 };
 
 export type UserProfileDataProp = {

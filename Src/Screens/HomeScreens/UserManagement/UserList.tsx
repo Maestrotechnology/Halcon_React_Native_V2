@@ -12,17 +12,17 @@ import {UserRequestListDataProps} from '../../../@types/api';
 import TableView from '../../../Components/TableView';
 import {actionListProps} from '../../../Components/types';
 import {FONTSIZES} from '../../../Utilities/Constants';
-import CustomButton from '../../../Components/CustomButton';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {UserListFilterdataProps} from '../../../@types/modals';
 import GlobaModal from '../../../Components/GlobalModal';
 import ConfirmationModal from '../../../Modals/ConfirmationModal';
-import {CommonStyles} from '../../../Utilities/CommonStyles';
 import UserFilterModal from '../../../Modals/Filter/UserFilterModal';
 import {useIsFocused} from '@react-navigation/native';
 import {getCatchMessage} from '../../../Utilities/GeneralUtilities';
 import {UserScreensNavigationProps} from '../../../@types/navigation';
 import {ApiResponse, DeleteApiResposneProps} from '../../../@types/Global';
+import {ChangesPasswordProps} from '../../../@types/general';
+import ChangePasswordModal from '../../../Modals/ModifyModals/ChangePasswordModal';
 
 var isMount = true;
 var currentPage = 1;
@@ -36,11 +36,15 @@ const UserList = ({navigation, route}: UserScreensNavigationProps) => {
   const [isRefreshing, setisRefreshing] = useState<boolean>(false);
   const [isEndRefreshing, setisEndRefreshing] = useState<boolean>(false);
   const [isLoading, setisLoading] = useState<boolean>(false);
-  const [permissionLoader, setPermissionLoader] = useState(false);
   const [UserList, setUserList] = useState<UserRequestListDataProps[]>([]);
+  const [showPasswordModal, setShowPasswordModal] =
+    useState<ChangesPasswordProps>({
+      lineData: null,
+      show: false,
+    });
   const [actionsList, setActionList] = useState<actionListProps[]>([
     {
-      id: 1,
+      id: 4,
       name: 'deleteIcon',
       // isShow: ServiceRequestPermissions.delete ? true : false,
       isShow: true,
@@ -60,11 +64,10 @@ const UserList = ({navigation, route}: UserScreensNavigationProps) => {
       disableKey: 'disableUpdateIcon',
     },
     {
-      id: 4,
-      name: 'viewIcon',
-      // isShow: ServiceRequestPermissions.edit ? true : false,
+      id: 5,
+      name: 'LockIcon',
+      // isShow: ServiceRequestPermissions.delete ? true : false,
       isShow: true,
-      disableKey: 'disableEditIcon',
     },
   ]);
   const [filterData, setfilterData] = useState<UserListFilterdataProps | null>({
@@ -108,11 +111,9 @@ const UserList = ({navigation, route}: UserScreensNavigationProps) => {
     listUserService(formData, page)
       .then(res => {
         const response: ApiResponse<UserRequestListDataProps> = res.data;
-
         if (response.status === 1) {
           if (page === 1) {
             totalPages = response.data?.total_page || 1;
-
             setUserList(response.data?.items || []);
           } else {
             setUserList(prev => [...prev, ...response.data?.items]);
@@ -236,6 +237,11 @@ const UserList = ({navigation, route}: UserScreensNavigationProps) => {
     }
   };
 
+  const closeChangePassswordModal = () => {
+    if (isMount) {
+      setShowPasswordModal({show: false, lineData: null});
+    }
+  };
   const handleCloseDelete = () => {
     setIsShowDelete(pre => ({...pre, status: false}));
   };
@@ -252,19 +258,12 @@ const UserList = ({navigation, route}: UserScreensNavigationProps) => {
       headerProps={{
         headerTitle: 'User',
       }}
-      secondaryBtnTitle="Add User"
+      secondaryBtnTitle="Add"
+      onPressisShowFilterBtn={() => {
+        setisShowFilter(true);
+      }}
       isLoading={isLoading}
-      isBtnLoading={permissionLoader}>
-      <View style={CommonStyles.flexRow}>
-        <CustomButton
-          onPress={() => {
-            setisShowFilter(true);
-          }}
-          type="secondary"
-          style={{width: '30%', marginVertical: 8}}>
-          Filter
-        </CustomButton>
-      </View>
+      isShowFilterBtn={true}>
       <View style={{marginBottom: bottom, flex: 1}}>
         <TableView
           rowData={[
@@ -294,7 +293,7 @@ const UserList = ({navigation, route}: UserScreensNavigationProps) => {
             actionType: number,
             val: UserRequestListDataProps,
           ) => {
-            if (actionType === 1) {
+            if (actionType === 4) {
               setIsShowDelete({
                 id: val.user_id,
                 status: true,
@@ -309,8 +308,10 @@ const UserList = ({navigation, route}: UserScreensNavigationProps) => {
                 type: 'Update',
                 lineData: val,
               });
-            } else if (actionType === 4) {
+            } else if (actionType === 1) {
               navigation.navigate('AddEditUser', {type: 'View', lineData: val});
+            } else if (actionType === 5) {
+              setShowPasswordModal({lineData: val, show: true});
             }
           }}
         />
@@ -324,6 +325,20 @@ const UserList = ({navigation, route}: UserScreensNavigationProps) => {
             filterData={filterData}
             onApplyFilter={onApplyFilter}
             onClose={closeFilterModal}
+          />
+        </GlobaModal>
+      )}
+
+      {showPasswordModal?.show && (
+        <GlobaModal
+          title="Change Password"
+          visible={showPasswordModal?.show}
+          onClose={closeChangePassswordModal}>
+          <ChangePasswordModal
+            type=""
+            lineData={showPasswordModal?.lineData}
+            onApplyChanges={closeChangePassswordModal}
+            onClose={() => {}}
           />
         </GlobaModal>
       )}

@@ -96,8 +96,10 @@ import MTBFIconBlack from '../Assets/Icons/MtbfIconBlack.png';
 import MTBFIconWhite from '../Assets/Icons/MtbfIconWhite.png';
 import editSettingIcon from '../Assets/Icons/Editsettings.png';
 import editTimeIcon from '../Assets/Icons/editTime.png';
+import LockIcon from '../Assets/Svg/lock.svg';
 
 export type IconType =
+  | 'LockIcon'
   | 'editSettingIcon'
   | 'editTimeIcon'
   | 'MTBFIconBlack'
@@ -279,4 +281,5 @@ export const ICONS = {
   MTBFIconWhite,
   editSettingIcon,
   editTimeIcon,
+  LockIcon,
 };

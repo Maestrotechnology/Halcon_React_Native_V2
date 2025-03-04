@@ -2,24 +2,16 @@ import {
   Animated,
   Easing,
   FlatList,
-  Image,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import React, {useRef, useState} from 'react';
 import {
   CustomDrawerNavigationOptionsProps,
-  RenderDrawerOptionsProps,
   RenderSubMenuItemProps,
 } from '../../@types/general';
-import {
-  COLORS,
-  FONTSIZES,
-  activeOpacityValue,
-  BOX_SHADOW,
-} from '../../Utilities/Constants';
+import {COLORS, FONTSIZES, activeOpacityValue} from '../../Utilities/Constants';
 import StyledText from '../../Components/StyledText';
 import {FONTS} from '../../Utilities/Fonts';
 import SVGIcon from '../../Components/SVGIcon';
@@ -30,33 +22,23 @@ import {
   StoreUserDetails,
   setSelectedDrawerOption,
 } from '../../Store/Slices/LoginSlice';
-import {AlertBox, getTrimedText} from '../../Utilities/GeneralUtilities';
+import {getTrimedText} from '../../Utilities/GeneralUtilities';
 import {DrawerActions} from '@react-navigation/native';
 import {baseUrl} from '../../Services/ServiceConstatnts';
 import instance from '../../Services/Axios';
 import {DrawerContentComponentProps} from '@react-navigation/drawer';
-import {
-  GetPermissions,
-  GetUserData,
-  GetUserProfileData,
-  useSelectedDrawerOption,
-} from '../../Utilities/StoreData';
-import {AccessPermissionProps} from '../../Utilities/Reducertype';
+import {GetUserData} from '../../Utilities/StoreData';
 import GlobaModal from '../../Components/GlobalModal';
 import ConfirmationModal from '../../Modals/ConfirmationModal';
-import {number} from 'yup';
 import CustomImageBox from '../../Components/CustomImageBox';
 import {ICONS} from '../../Utilities/Icons';
 
 const CustomDrawerNavigation = ({
   navigation,
-  descriptors,
   state,
 }: DrawerContentComponentProps) => {
   const dispatch = useDispatch();
-  const userData = GetUserProfileData();
-  const UserPermissions = GetPermissions();
-  const selectedDrawerOption = useSelectedDrawerOption();
+  const userData = GetUserData();
   const [isShowLogout, setIsShowLogout] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState({
     menu: 0,
@@ -304,20 +286,7 @@ const CustomDrawerNavigation = ({
               borderColor: 'rgba(255,255,255,0.25)',
               // ...BOX_SHADOW,
             }}>
-            {userData?.pic ? (
-              <Image
-                source={{
-                  uri: userData?.pic,
-                }}
-                style={{
-                  width: '50%',
-                  height: '50%',
-                  borderRadius: 100,
-                }}
-              />
-            ) : (
-              <SVGIcon icon="profile_vector" width={50} height={50} />
-            )}
+            <SVGIcon icon="profile_vector" width={50} height={50} />
           </TouchableOpacity>
           <SVGIcon
             icon="white_cross"
@@ -333,14 +302,6 @@ const CustomDrawerNavigation = ({
           <StyledText
             style={{fontFamily: FONTS.poppins.medium, color: COLORS.black}}>
             {getTrimedText(userData?.name || 'User', 15)}
-          </StyledText>
-          <StyledText
-            style={{
-              fontFamily: FONTS.poppins.medium,
-              fontSize: FONTSIZES.tiny,
-              color: 'rgba(0,0,0,0.5)',
-            }}>
-            {getTrimedText(userData?.designation || 'User', 15)}
           </StyledText>
         </View>
       </View>

@@ -8,6 +8,9 @@ export const loginService = (data: FormData) => {
   return axios.post('/login', data);
 };
 
+export const ChangePasswordService = (data: FormData) => {
+  return axios.post('/change_password', data);
+};
 export const forgotPasswordService = (data: FormData) => {
   return axios.post('/forgotPassword', data);
 };
@@ -484,4 +487,7 @@ export const AddNewTasksMappingService = (data: any) => {
 };
 export const listUserAccessPermissionsService = (data: any) => {
   return axios.post('/user/get_permission', data);
+};
+export const UpdateUserAccessPermissionsService = (data: any) => {
+  return axios.post('/user/edit_user_permission', data, JSONHeaderType);
 };

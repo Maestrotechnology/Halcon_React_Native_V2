@@ -19,12 +19,7 @@ export const RenderChildItems = React.memo(
         {item?.child?.map((childItem: ChildRolePermission) => {
           const handleChildChange = useCallback(
             (status: boolean) => {
-              handleChangePermissionStatus(
-                status,
-                item,
-                'child',
-                childItem?.id,
-              );
+              handleChangePermissionStatus(item, 'child', childItem?.id);
             },
             [handleChangePermissionStatus, item, childItem?.id],
           );

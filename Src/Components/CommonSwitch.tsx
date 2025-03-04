@@ -11,10 +11,10 @@ export default function CommonSwitch({
 }: CommonSwitchProps) {
   return (
     <Switch
-      //   trackColor={{
-      //     false: ActiveColor ?? COLORS.orange,
-      //     true: inActiveColor ?? COLORS.black,
-      //   }}
+      trackColor={{
+        false: ActiveColor ?? !isEnabled ? COLORS.lightOrange : '#C1D8C3',
+        true: inActiveColor ?? '#C1D8C3',
+      }}
       thumbColor={
         isEnabled ? ActiveColor ?? COLORS.green : inActiveColor ?? COLORS.red
       }

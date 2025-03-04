@@ -1,7 +1,6 @@
 import {
   ScrollView,
   StyleSheet,
-  Text,
   TextInput,
   TouchableOpacity,
   View,
@@ -23,7 +22,6 @@ const TextInputBox = ({
   value,
   onChangeText,
   textInputProps,
-  innerRef,
   errorText,
   customInputBoxContainerStyle,
   customContainerStyle,
@@ -133,7 +131,11 @@ const TextInputBox = ({
         style={[
           styles.inputContainer,
           {
-            borderColor: errorText ? COLORS.red : COLORS.borderColor,
+            borderColor: errorText
+              ? COLORS.red
+              : !isEditable
+              ? COLORS.white
+              : COLORS.orange,
           },
           customInputBoxContainerStyle,
         ]}>

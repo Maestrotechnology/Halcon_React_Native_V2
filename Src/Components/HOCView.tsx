@@ -1,26 +1,20 @@
-import {
-  ActivityIndicator,
-  ImageBackground,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import React from 'react';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {ScrollView} from 'react-native';
 import {SafeAreaView} from 'react-native';
 import CustomHeader from './CustomHeader';
 import {HOCViewProps} from '../@types/general';
-import BackgroundImage from '../Assets/Png/background.png';
 import {COLORS, FONTSIZES, BOX_SHADOW} from '../Utilities/Constants';
 import StyledText from './StyledText';
 import {FONTS} from '../Utilities/Fonts';
 import CustomButton from './CustomButton';
 import Loader from './Loader';
-import SVGIcon from './SVGIcon';
 import {useNavigation} from '@react-navigation/native';
 import {MainStackParamList} from '../@types/navigation';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import CustomImageBox from './CustomImageBox';
+import {ICONS} from '../Utilities/Icons';
 
 const HOCView = ({
   children,
@@ -45,6 +39,8 @@ const HOCView = ({
   headerProps,
   secondaryBtnTextStyle,
   isBtnLoading = false,
+  isShowFilterBtn = false,
+  onPressisShowFilterBtn,
 }: HOCViewProps) => {
   const navigation: NativeStackNavigationProp<MainStackParamList> =
     useNavigation();
@@ -125,12 +121,20 @@ const HOCView = ({
             </StyledText>
           </View>
         )}
+        {isShowFilterBtn && (
+          <CustomImageBox
+            alt="Filter Icon"
+            src={ICONS.FilterIcon}
+            onPress={onPressisShowFilterBtn}
+            ImageStyle={{width: 20, height: 20, marginRight: 10}}
+          />
+        )}
         {isShowSecondaryHeaderBtn && (
           <CustomButton
             textStyle={secondaryBtnTextStyle}
             isDisabled={isDisabledSecondaryHeaderBtn}
             onPress={onHeaderBtnPress}
-            style={[{width: '45%'}, secondaryBtnStyle]}>
+            style={[{width: '20%'}, secondaryBtnStyle]}>
             {isBtnLoading ? (
               <ActivityIndicator color={COLORS.white} />
             ) : (

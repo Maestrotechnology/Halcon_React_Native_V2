@@ -135,3 +135,9 @@ export type MachineTasksFilterprops = {
   duration: string;
   tasks: Array[any];
 };
+
+export type ChangePasswordprops = {
+  newpassword: string;
+  confirmpassword: string;
+  user_id?: number;
+};

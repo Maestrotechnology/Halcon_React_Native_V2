@@ -1,10 +1,13 @@
+import {View} from 'react-native';
+import * as Yup from 'yup';
+import {useEffect} from 'react';
+import {useFormik} from 'formik';
 import {RouteProp, useIsFocused, useRoute} from '@react-navigation/native';
 import {
   UserScreensNavigationProps,
   UserStackStackParamList,
 } from '../../../@types/navigation';
-import {GetUserData, UseToken} from '../../../Utilities/StoreData';
-
+import {UseToken} from '../../../Utilities/StoreData';
 import {
   COLORS,
   EMAIL_REGEX,
@@ -13,17 +16,14 @@ import {
 } from '../../../Utilities/Constants';
 import HOCView from '../../../Components/HOCView';
 import DropdownBox from '../../../Components/DropdownBox';
-import {StyleSheet, View} from 'react-native';
-import * as Yup from 'yup';
-import {useFormik} from 'formik';
 import CustomButton from '../../../Components/CustomButton';
 import TextInputBox from '../../../Components/TextInputBox';
-import {useEffect} from 'react';
 import {CreateUserService, UpdateUserService} from '../../../Services/Services';
 import {FilterValidObj, isLoading} from '../../../Utilities/Methods';
 import Toast from '../../../Components/Toast';
 import {getCatchMessage} from '../../../Utilities/GeneralUtilities';
 import {UserAddEditDataProps} from '../../../@types/apirequestDatas';
+
 const UserValidation = Yup.object().shape({
   isupdate: Yup.boolean(),
   name: Yup.string().trim().required('* Name is required.'),
@@ -58,10 +58,8 @@ const UserValidation = Yup.object().shape({
 
 const AddEditUser = ({navigation}: UserScreensNavigationProps) => {
   const focused = useIsFocused();
-  const userData = GetUserData();
   const token = UseToken();
   const route = useRoute<RouteProp<UserStackStackParamList, 'AddEditUser'>>();
-  // @ts-ignore
   const {type} = route?.params;
 
   const {values, errors, touched, setFieldValue, handleSubmit, setValues} =
@@ -185,9 +183,6 @@ const AddEditUser = ({navigation}: UserScreensNavigationProps) => {
           onChangeText={(val: string) => {
             setFieldValue('username', val);
           }}
-          customInputBoxContainerStyle={{
-            borderColor: COLORS.primary,
-          }}
           placeHolder="Enter User Name"
           title="User Name"
           isEditable={isEditable}
@@ -199,9 +194,6 @@ const AddEditUser = ({navigation}: UserScreensNavigationProps) => {
           value={values?.name}
           onChangeText={(val: string) => {
             setFieldValue('name', val);
-          }}
-          customInputBoxContainerStyle={{
-            borderColor: COLORS.primary,
           }}
           placeHolder="Enter Name"
           title="Name"
@@ -215,9 +207,6 @@ const AddEditUser = ({navigation}: UserScreensNavigationProps) => {
           value={values?.email_id}
           onChangeText={(val: string) => {
             setFieldValue('email_id', val);
-          }}
-          customInputBoxContainerStyle={{
-            borderColor: COLORS.primary,
           }}
           placeHolder="Enter Email"
           title="Email"
@@ -250,9 +239,6 @@ const AddEditUser = ({navigation}: UserScreensNavigationProps) => {
           value={values?.mobile_no}
           onChangeText={(val: string) => {
             setFieldValue('mobile_no', val);
-          }}
-          customInputBoxContainerStyle={{
-            borderColor: COLORS.primary,
           }}
           keyboardType="number-pad"
           placeHolder="Enter Mobile No"
@@ -290,9 +276,6 @@ const AddEditUser = ({navigation}: UserScreensNavigationProps) => {
           onChangeText={(val: string) => {
             setFieldValue('state', val);
           }}
-          customInputBoxContainerStyle={{
-            borderColor: COLORS.primary,
-          }}
           placeHolder="Enter State"
           title="State"
           isEditable={isEditable}
@@ -303,9 +286,6 @@ const AddEditUser = ({navigation}: UserScreensNavigationProps) => {
           value={values?.city}
           onChangeText={(val: string) => {
             setFieldValue('city', val);
-          }}
-          customInputBoxContainerStyle={{
-            borderColor: COLORS.primary,
           }}
           placeHolder="Enter City"
           title="City"
@@ -318,9 +298,6 @@ const AddEditUser = ({navigation}: UserScreensNavigationProps) => {
           onChangeText={(val: string) => {
             setFieldValue('country', val);
           }}
-          customInputBoxContainerStyle={{
-            borderColor: COLORS.primary,
-          }}
           placeHolder="Enter Country"
           title="Country"
           isEditable={isEditable}
@@ -332,9 +309,6 @@ const AddEditUser = ({navigation}: UserScreensNavigationProps) => {
           value={values?.address}
           onChangeText={(val: string) => {
             setFieldValue('address', val);
-          }}
-          customInputBoxContainerStyle={{
-            borderColor: COLORS.primary,
           }}
           placeHolder="Enter Address"
           title="Address"
@@ -357,5 +331,3 @@ const AddEditUser = ({navigation}: UserScreensNavigationProps) => {
 };
 
 export default AddEditUser;
-
-const styles = StyleSheet.create({});
