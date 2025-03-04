@@ -267,3 +267,14 @@ export const getMonthName = () => {
     ),
   };
 };
+
+export const extractIds = (data: any, filteredIds: any) => {
+  data.forEach((item: any) => {
+    if (item.status === 1) {
+      filteredIds.push(item.id);
+    }
+    if (item.child) {
+      extractIds(item.child, filteredIds);
+    }
+  });
+};

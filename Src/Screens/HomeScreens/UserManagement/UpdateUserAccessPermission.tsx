@@ -10,10 +10,10 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import * as Yup from 'yup';
 import {useFormik} from 'formik';
 import CustomButton from '../../../Components/CustomButton';
-import TextInputBox from '../../../Components/TextInputBox';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
   CreateAccessRoleService,
+  listUserAccessPermissionsService,
   UpdateAccessRoleService,
   ViewAccessRoleService,
 } from '../../../Services/Services';
@@ -34,13 +34,17 @@ const UserValidation = Yup.object().shape({
   name: Yup.string().trim().required('* Name is required.'),
 });
 
-const AddEditRole = ({navigation}: UserScreensNavigationProps) => {
+const UpdateUserAccessPermission = ({
+  navigation,
+}: UserScreensNavigationProps) => {
   const focused = useIsFocused();
   const token = UseToken();
   const UserPermissions = GetUserAccessPermissions();
-  const route = useRoute<RouteProp<UserStackStackParamList, 'AddEditRole'>>();
+  const route =
+    useRoute<
+      RouteProp<UserStackStackParamList, 'UpdateUserAccessPermission'>
+    >();
   const {type} = route?.params;
-  const isEditable = type === 'View' ? false : true;
   const [loading, setIsLoading] = useState(false);
 
   const [accessPermissionList, setAccessPermissionList] =
@@ -54,7 +58,6 @@ const AddEditRole = ({navigation}: UserScreensNavigationProps) => {
         name: '',
         description: '',
       },
-
       validationSchema: UserValidation,
       onSubmit: values => {
         if (type === 'Create') {
@@ -115,10 +118,10 @@ const AddEditRole = ({navigation}: UserScreensNavigationProps) => {
 
   const handleUpdateAccessRoleData = () => {
     const updateData = route?.params?.lineData;
-    setValues({
-      name: updateData?.role_name || '',
-      description: updateData?.role_description || '',
-    });
+    // setValues({
+    //   name: updateData?.role_name || '',
+    //   description: updateData?. || '',
+    // });
   };
   const handleViewAccessRoleData = () => {
     setIsLoading(true);
@@ -126,7 +129,7 @@ const AddEditRole = ({navigation}: UserScreensNavigationProps) => {
       token,
       role_id: route?.params?.lineData?.role_id,
     };
-    ViewAccessRoleService(ConvertJSONtoFormData(finalObj))
+    listUserAccessPermissionsService(ConvertJSONtoFormData(finalObj))
       .then(response => {
         if (response?.data?.status === 1) {
           const filteredIds: any = [];
@@ -251,7 +254,6 @@ const AddEditRole = ({navigation}: UserScreensNavigationProps) => {
             handleChangePermissionStatus={handleChangePermissionStatus}
           />
         );
-        // ) : null;
       }, [isExpanded, item]);
 
       const handleParentChange = useCallback(
@@ -273,9 +275,7 @@ const AddEditRole = ({navigation}: UserScreensNavigationProps) => {
               />
             </View>
           </TouchableOpacity>
-          {/* <CollapsableContainer expanded={isExpanded}> */}
           {memoizedChildItems}
-          {/* </CollapsableContainer> */}
         </View>
       );
     },
@@ -291,60 +291,14 @@ const AddEditRole = ({navigation}: UserScreensNavigationProps) => {
         onBackPress() {
           navigation.goBack();
         },
-        headerTitle: `${type} Role`,
+        headerTitle: `Access Permissions`,
       }}
       isEnableKeyboardAware>
-      {renderTitleText('Role Details')}
-      <View style={{paddingBottom: 10}}>
-        <TextInputBox
-          value={values?.name}
-          onChangeText={(val: string) => {
-            setFieldValue('name', val);
-          }}
-          customInputBoxContainerStyle={{
-            borderColor: COLORS.primary,
-          }}
-          placeHolder="Enter Role Name"
-          title="Role Name"
-          isEditable={isEditable}
-          disableNonEditableBg={true}
-          isRequired
-          errorText={errors.name && touched.name ? errors.name : ''}
-        />
-        <TextInputBox
-          value={values?.description}
-          onChangeText={(val: string) => {
-            setFieldValue('description', val);
-          }}
-          customInputBoxContainerStyle={{
-            borderColor: COLORS.primary,
-          }}
-          placeHolder="Enter Description"
-          title="Description"
-          isEditable={isEditable}
-          disableNonEditableBg={true}
-          multiline
-          numberOfLines={3}
-          errorText={
-            errors.description && touched.description ? errors.description : ''
-          }
-        />
-      </View>
       {renderTitleText('Access Permission')}
 
       {accessPermissionList?.map((item, index) => {
         return <RenderCardItem item={item} index={index} />;
       })}
-      {/* <TableView
-        dataList={accessPermissionList}
-        rowData={[
-          {
-            label: 'name',
-            key: 'name',
-          },
-        ]}
-        customRenderer={RenderCardItem}
-      /> */}
 
       {type !== 'View' && (
         <CustomButton
@@ -357,7 +311,7 @@ const AddEditRole = ({navigation}: UserScreensNavigationProps) => {
   );
 };
 
-export default AddEditRole;
+export default UpdateUserAccessPermission;
 
 const styles = StyleSheet.create({
   tabCard: {

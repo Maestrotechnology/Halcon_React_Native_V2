@@ -94,7 +94,12 @@ import YearlyIconWhite from '../Assets/Icons/YearlyReportWhiteIcon.png';
 
 import MTBFIconBlack from '../Assets/Icons/MtbfIconBlack.png';
 import MTBFIconWhite from '../Assets/Icons/MtbfIconWhite.png';
+import editSettingIcon from '../Assets/Icons/Editsettings.png';
+import editTimeIcon from '../Assets/Icons/editTime.png';
+
 export type IconType =
+  | 'editSettingIcon'
+  | 'editTimeIcon'
   | 'MTBFIconBlack'
   | 'MTBFIconWhite'
   | 'YearlyIconBlack'
@@ -272,4 +277,6 @@ export const ICONS = {
 
   MTBFIconBlack,
   MTBFIconWhite,
+  editSettingIcon,
+  editTimeIcon,
 };

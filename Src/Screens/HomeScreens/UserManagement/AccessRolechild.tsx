@@ -8,9 +8,11 @@ export const RenderChildItems = React.memo(
   ({
     item,
     handleChangePermissionStatus,
+    selectedPermissions,
   }: {
     item: RolePermission;
     handleChangePermissionStatus: any;
+    selectedPermissions: number[];
   }) => {
     return (
       <View style={styles.ChildPermissionsCart}>
@@ -30,7 +32,9 @@ export const RenderChildItems = React.memo(
           return (
             <View key={childItem?.id} style={styles.childItemCard}>
               <CheckBox
-                checked={childItem?.status ? true : false}
+                checked={
+                  selectedPermissions.includes(childItem?.id) ? true : false
+                }
                 label={childItem?.name}
                 onChange={handleChildChange}
               />

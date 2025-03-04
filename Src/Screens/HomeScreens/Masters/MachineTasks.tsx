@@ -36,6 +36,8 @@ import CheckBox from '../../../Components/CheckBox';
 import SVGIcon from '../../../Components/SVGIcon';
 import ConfirmationModal from '../../../Modals/ConfirmationModal';
 import {TaskDurationList} from '../../../Utilities/StaticDropdownOptions';
+import {ICONS} from '../../../Utilities/Icons';
+import CustomImageBox from '../../../Components/CustomImageBox';
 
 var isMount = true;
 var currentPage = 1;
@@ -145,7 +147,11 @@ export default function MachineTasks({route}: any) {
 
   const closeTaskModal = () => {
     if (isMount) {
-      setAddEditMachineTask({lineData: null, show: false, type: ''});
+      setAddEditMachineTask({
+        lineData: null,
+        show: false,
+        type: '',
+      });
     }
   };
 
@@ -221,7 +227,7 @@ export default function MachineTasks({route}: any) {
       <HOCView
         isListLoading={isListLoader}
         secondaryHeaderTitle={item.machine_name || 'Machine'}
-        isShowSecondaryHeaderBtn
+        isShowSecondaryHeaderBtn={!taskSettingDatas?.is_exist}
         secondaryBtnTextStyle={{fontSize: FONTSIZES.small}}
         onHeaderBtnPress={() => {
           // handleCheckAccessToAdd();
@@ -241,6 +247,37 @@ export default function MachineTasks({route}: any) {
         secondaryBtnTitle={taskSettingDatas?.is_exist ? 'Settings' : 'Add Task'}
         isLoading={isLoading}
         isBtnLoading={permissionLoader}>
+        {taskSettingDatas?.is_exist ? (
+          <View style={styles.ActionIconsFlex}>
+            <CustomImageBox
+              alt="Setting"
+              src={ICONS.editSettingIcon}
+              onPress={() => {
+                setAddEditMachineTask({
+                  type: 'settings',
+                  lineData: null,
+                  show: true,
+                });
+              }}
+              ImageStyle={{
+                height: 20,
+                width: 20,
+              }}
+            />
+            <CustomImageBox
+              alt="Time"
+              src={ICONS.editTimeIcon}
+              ImageStyle={{height: 24, width: 24}}
+              onPress={() => {
+                setAddEditMachineTask({
+                  type: 'time',
+                  lineData: null,
+                  show: true,
+                });
+              }}
+            />
+          </View>
+        ) : null}
         <View
           style={[
             CommonStyles.flexRow,
@@ -391,5 +428,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  ActionIconsFlex: {
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'center',
+    alignSelf: 'flex-end',
   },
 });

@@ -39,14 +39,14 @@ const LegendItem: React.FC<LegendItemProps> = ({color, label}) => (
   </View>
 );
 
-const Legend = ({percentage}: {percentage: number}) => (
+const Legend = ({percentage, title}: {percentage: number; title: string}) => (
   <View
     style={{
       flexDirection: 'row',
       justifyContent: 'center',
       marginBottom: 10,
     }}>
-    <LegendItem color={COLORS.orange} label={`Completed: ${percentage}%`} />
+    <LegendItem color={COLORS.orange} label={`${title}: ${percentage}%`} />
     <LegendItem
       color={COLORS.webBlack}
       label={`Others: ${100 - (percentage || 0)}%`}
@@ -70,12 +70,7 @@ const PerformanceChart = ({
   taskPerformanceData: number;
   title: string;
 }) => (
-  <View
-    style={{
-      padding: 16,
-      borderRadius: 20,
-      backgroundColor: '#fff',
-    }}>
+  <>
     <View style={{padding: 20, alignItems: 'center'}}>
       <PieChart
         data={[
@@ -100,8 +95,8 @@ const PerformanceChart = ({
         centerLabelComponent={() => CenterLabel(taskPerformanceData, title)}
       />
     </View>
-    <Legend percentage={taskPerformanceData} />
-  </View>
+    <Legend percentage={taskPerformanceData} title={title} />
+  </>
 );
 
 const CommonPieChart = ({

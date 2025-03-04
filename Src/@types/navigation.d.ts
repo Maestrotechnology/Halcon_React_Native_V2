@@ -60,6 +60,7 @@ export type UserStackStackParamList = {
   AddEditUser: AddEditUserNavigationProps;
   AccessRoleList: undefined;
   AddEditRole: AddEditRoleNavigationProps;
+  UpdateUserAccessPermission: AddEditUserNavigationProps;
 };
 export type AddEditUserNavigationProps = {
   type: 'Create' | 'Update' | 'View';

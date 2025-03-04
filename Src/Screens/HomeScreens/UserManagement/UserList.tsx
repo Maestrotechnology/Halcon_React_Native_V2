@@ -305,7 +305,10 @@ const UserList = ({navigation, route}: UserScreensNavigationProps) => {
                 lineData: val,
               });
             } else if (actionType === 3) {
-              navigation.navigate('AddEditUser', {type: 'View'});
+              navigation.navigate('UpdateUserAccessPermission', {
+                type: 'Update',
+                lineData: val,
+              });
             } else if (actionType === 4) {
               navigation.navigate('AddEditUser', {type: 'View', lineData: val});
             }

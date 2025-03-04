@@ -1,7 +1,6 @@
 import React, {useEffect, useCallback, useState} from 'react';
 import {
   Animated,
-  Dimensions,
   Image,
   StyleSheet,
   Text,
@@ -13,7 +12,7 @@ import {ICONS} from '../Utilities/Icons';
 import {WINDOW_WIDTH} from '../Utilities/Constants';
 
 type SegmentedControlProps = {
-  tabs: {name: string}[];
+  tabs: {name: string; icon?: string}[];
   onChange: (index: number) => void;
   currentIndex: number | null;
   segmentedControlBackgroundColor?: string;
@@ -27,8 +26,8 @@ const segmentWidth = WINDOW_WIDTH - 32;
 const shadow = {
   shadowColor: '#000',
   shadowOffset: {width: 0, height: 2},
-  shadowOpacity: 0.23,
-  shadowRadius: 2.62,
+  shadowOpacity: 0.15,
+  shadowRadius: 3,
   elevation: 4,
 };
 
@@ -40,9 +39,9 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
   activeSegmentBackgroundColor = 'white',
   textColor = 'black',
   activeTextColor = 'black',
-  paddingVertical = 12,
+  paddingVertical = 8,
 }) => {
-  const translateValue = (segmentWidth - 4) / tabs.length;
+  const segmentItemWidth = segmentWidth / tabs.length;
   const [tabTranslate] = useState(new Animated.Value(0));
 
   const handleTabPress = useCallback(
@@ -53,7 +52,7 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
   useEffect(() => {
     if (currentIndex !== null) {
       Animated.spring(tabTranslate, {
-        toValue: currentIndex * translateValue,
+        toValue: currentIndex * segmentItemWidth,
         stiffness: 180,
         damping: 20,
         mass: 1,
@@ -66,14 +65,14 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
     <View
       style={[
         styles.wrapper,
-        {backgroundColor: segmentedControlBackgroundColor},
+        {backgroundColor: segmentedControlBackgroundColor, paddingVertical},
       ]}>
       {currentIndex !== null && (
         <Animated.View
           style={[
             styles.activeSegment,
             {
-              width: translateValue,
+              width: segmentItemWidth,
               backgroundColor: activeSegmentBackgroundColor,
               transform: [{translateX: tabTranslate}],
             },
@@ -81,32 +80,31 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
           ]}
         />
       )}
-      {tabs.map((tab, index) => {
-        return (
-          <TouchableOpacity
-            key={index}
-            style={styles.PaymentBox}
-            onPress={() => {
-              handleTabPress(index);
-            }}
-            activeOpacity={0.7}>
+      {tabs.map((tab, index) => (
+        <TouchableOpacity
+          key={index}
+          style={styles.PaymentBox}
+          onPress={() => handleTabPress(index)}
+          activeOpacity={0.7}>
+          {tab.icon && (
             <Image
-              // @ts-ignore
-              source={ICONS?.[tab?.icon]}
+              source={
+                // @ts-ignore
+                ICONS?.[tab.icon] ?? require('../Assets/Images/dummyImage.png')
+              }
               style={styles.PayIcon}
-              alt="Product"
               resizeMode="contain"
             />
-            <Text
-              style={[
-                styles.text,
-                {color: currentIndex === index ? activeTextColor : textColor},
-              ]}>
-              {tab.name}
-            </Text>
-          </TouchableOpacity>
-        );
-      })}
+          )}
+          <Text
+            style={[
+              styles.text,
+              {color: currentIndex === index ? activeTextColor : textColor},
+            ]}>
+            {tab.name}
+          </Text>
+        </TouchableOpacity>
+      ))}
     </View>
   );
 };
@@ -116,33 +114,32 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 8,
-    width: '100%',
+    width: segmentWidth,
     height: 40,
     gap: 5,
     ...shadow,
   },
   activeSegment: {
     position: 'absolute',
-    height: '100%',
     borderRadius: 8,
+    height: 40,
   },
   PaymentBox: {
     flexDirection: 'row',
-    gap: 5,
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
     height: 40,
+    gap: 5,
   },
   text: {
-    fontSize: 10,
+    fontSize: 12,
     textAlign: 'center',
     fontFamily: FONTS.poppins.regular,
-    verticalAlign: 'middle',
   },
   PayIcon: {
-    width: 15,
-    height: 15,
+    width: 18,
+    height: 18,
   },
 });
 

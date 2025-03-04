@@ -1,4 +1,10 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  RefreshControl,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {
   getDashboardCardsService,
@@ -64,8 +70,9 @@ const Dashboard = () => {
 
   const [SpindleReportList, setSpindleReportList] = useState([]);
   const [available_running_hours, setRunningHours] = useState(0);
-
+  const [isRefreshing, setisRefreshing] = useState<boolean>(false);
   const [showPreventiveReport, setShowPreventiveReport] = useState(false);
+  const [showCompletedTask, setShowCompletedTask] = useState(true);
   const [monthlyReport, setMonthlyReport] =
     useState<DashboardMonthlyReportProps | null>(null);
 
@@ -168,7 +175,8 @@ const Dashboard = () => {
       })
       .catch(error => {
         getCatchMessage(error);
-      });
+      })
+      .finally(() => {});
   };
   useEffect(() => {
     isMount = true;
@@ -198,7 +206,8 @@ const Dashboard = () => {
           setMonthlyReport(res?.data?.data || null);
         }
       })
-      .catch(err => getCatchMessage(err));
+      .catch(err => getCatchMessage(err))
+      .finally(() => {});
   };
 
   const handleGetDashboardCards = () => {
@@ -362,113 +371,39 @@ const Dashboard = () => {
       });
     }
   };
-
+  const onRefresh = async () => {
+    if (isMount) {
+      setisRefreshing(true);
+    }
+    totalPages = 1;
+    currentPage = 1;
+    try {
+      await Promise.all([
+        handleGetSpindleReportList(),
+        getMonthlyReport(),
+        handleGetDashboardCards(),
+        handleGetTaskperformanceData(),
+      ]);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setisRefreshing(false);
+    }
+  };
   return (
     <HOCView
       isEnableScrollView
       headerProps={{
         headerTitle: 'Dashboard',
-      }}>
-      {/* Dashboard Cards */}
-      {/* <View style={styles.cardContainer}>
-        {[...dashboardCards]?.map((card, cardIndex) => {
-          return (
-            <TouchableOpacity
-              activeOpacity={0.7}
-              onPress={() => {
-                navigation.navigate('ServiceRequestStack', {
-                  serviceType: card?.type,
-                });
-              }}
-              key={card?.displayName}
-              style={{
-                ...styles.cardItemContainer,
-                width: WINDOW_WIDTH / 2 - 20,
-              }}>
-              <View
-                style={{
-                  ...styles.iconConainer,
-                  backgroundColor: card?.bg_color,
-                }}>
-                <SVGIcon icon={card?.icon} />
-              </View>
-              <View style={styles.cardTextContainer}>
-                <StyledText
-                  style={{color: '#231F20', fontSize: FONTSIZES.small}}>
-                  {card?.displayName}
-                </StyledText>
-                <StyledText
-                  style={{
-                    color: '#232323',
-                    fontSize: FONTSIZES.medium,
-                    fontFamily: FONTS.poppins.semibold,
-                  }}>
-                  {card?.value}
-                </StyledText>
-              </View>
-            </TouchableOpacity>
-          );
-        })}
-      </View> */}
-
-      {/* New Dashboard Cards with service and preventive cards */}
-      {/* <View
-        style={{
-          ...CommonStyles.flexRow,
-          flexWrap: 'wrap',
-          justifyContent: 'space-between',
-        }}>
-        {CardData?.map((cardItem, cardItemIndex) => {
-          return (
-            <TouchableOpacity
-              onPress={() => {
-                if (cardItemIndex === 1) {
-                  navigation.navigate('PreventiveSRStack');
-                } else {
-                  navigation.navigate('ServiceRequestStack', {
-                    serviceType: cardItem?.type,
-                  });
-                }
-              }}
-              style={{
-                width: '48%',
-                backgroundColor: COLORS.white,
-                padding: 8,
-                borderRadius: 10,
-                marginBottom: 10,
-              }}>
-              <View style={styles.cardTextContainer}>
-                <View
-                  style={{
-                    ...CommonStyles.flexRow,
-                    justifyContent: 'space-between',
-                  }}>
-                  <StyledText
-                    style={{color: ' #8A8A8A', fontSize: FONTSIZES.tiny}}>
-                    {cardItem?.displayName}
-                  </StyledText>
-                  <View
-                    style={{
-                      ...styles.iconConainer,
-                      // backgroundColor: cardGroup?.icon_bg,
-                    }}>
-                    <SVGIcon height={20} icon={cardItem?.icon} />
-                  </View>
-                </View>
-                <StyledText
-                  style={{
-                    color: '#232323',
-                    fontSize: FONTSIZES.medium,
-                    fontFamily: FONTS.poppins.semibold,
-                  }}>
-                  {cardItem?.value}
-                </StyledText>
-              </View>
-            </TouchableOpacity>
-          );
-        })}
-      </View> */}
-
+      }}
+      refreshControl={
+        <RefreshControl
+          refreshing={isRefreshing}
+          onRefresh={() => {
+            if (onRefresh) onRefresh();
+          }}
+        />
+      }>
       <View>
         {dashboardCards?.map((cardGroup, cardGroupIndex) => {
           return (
@@ -635,45 +570,7 @@ const Dashboard = () => {
               </StyledText>
             </TouchableOpacity>
           </View>
-          {/* <LineChart
-            areaChart
-            curved
-            data={[
-              ...getChartData(showPreventiveReport ? 'preventive' : 'service'),
-            ]}
-            // hideDataPoints
-            color1={getChartColor()?.color1}
-            startFillColor1={getChartColor()?.fill}
-            endFillColor1="#f5ebe7"
-            startOpacity={0.9}
-            endOpacity={0.2}
-            initialSpacing={5}
-            endSpacing={5}
-            noOfSections={4}
-            showYAxisIndices
-            yAxisColor="white"
-            yAxisThickness={0}
-            yAxisIndicesWidth={7}
-            yAxisIndicesHeight={1.5}
-            yAxisIndicesColor={'rgba(0, 0, 0, 0.3'}
-            rulesColor={COLORS.disabledColor}
-            yAxisTextStyle={{color: 'gray'}}
-            xAxisColor="lightgray"
-            width={WINDOW_WIDTH - 100}
-            height={150}
-            customDataPoint={() => {
-              return (
-                <View
-                  style={{
-                    ...styles.customDataPoint,
-                    borderColor: showPreventiveReport
-                      ? '#39BFEA'
-                      : COLORS.primary,
-                  }}
-                />
-              );
-            }}
-          /> */}
+
           <BarChart
             key={showPreventiveReport ? 'preventive' : 'service'}
             data={[
@@ -695,18 +592,62 @@ const Dashboard = () => {
           available_running_hours={available_running_hours}
           handleGetSpindleReportList={handleGetSpindleReportList}
         />
-        <View style={{gap: 10}}>
+        <View
+          style={{
+            padding: 16,
+            borderRadius: 20,
+            backgroundColor: '#fff',
+            gap: 10,
+          }}>
           <StyledText style={[styles.subHeader, {paddingBottom: 0}]}>
             Tasks performance
           </StyledText>
-
+          <View style={{...CommonStyles.flexRow, justifyContent: 'flex-end'}}>
+            <TouchableOpacity
+              onPress={() => {
+                setShowCompletedTask(pre => !pre);
+              }}
+              style={{
+                ...styles.reportBtn,
+                backgroundColor: showCompletedTask
+                  ? COLORS.primary
+                  : COLORS.borderColor,
+                marginRight: 10,
+              }}>
+              <StyledText
+                style={{
+                  ...styles.reportBtnText,
+                  paddingTop: 1,
+                }}>
+                Completed
+              </StyledText>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setShowCompletedTask(pre => !pre);
+              }}
+              style={{
+                ...styles.reportBtn,
+                backgroundColor: !showCompletedTask
+                  ? COLORS.primary
+                  : COLORS.borderColor,
+              }}>
+              <StyledText
+                style={{
+                  ...styles.reportBtnText,
+                  paddingTop: 1,
+                }}>
+                Fault
+              </StyledText>
+            </TouchableOpacity>
+          </View>
           <CommonPieChart
-            taskPerformanceData={taskPerformanceData?.completedTaskPercentage}
-            title="Completed"
-          />
-          <CommonPieChart
-            taskPerformanceData={taskPerformanceData?.faultTaskPercentage}
-            title="Fault"
+            taskPerformanceData={
+              showCompletedTask
+                ? taskPerformanceData?.completedTaskPercentage
+                : taskPerformanceData?.faultTaskPercentage
+            }
+            title={showCompletedTask ? 'Completed' : 'Fault'}
           />
         </View>
       </View>

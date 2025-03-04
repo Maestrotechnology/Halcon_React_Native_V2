@@ -290,7 +290,7 @@ export const CreateAccessRoleService = (data: ObjectType) => {
 export const UpdateAccessRoleService = (data: ObjectType) => {
   return axios.post(`/user/update_role`, data, JSONHeaderType);
 };
-export const ViewAccessRoleService = (data: ObjectType) => {
+export const ViewAccessRoleService = (data: FormData) => {
   return axios.post(`/user/view_role`, data);
 };
 export const deleteAccessRoleService = (data: FormData) => {
@@ -473,11 +473,7 @@ export const ListMTTRMonthlyreportService = (data: FormData, page: number) => {
   return axios.post(`/report/month_mttrReport?page=${page}&size=10`, data);
 };
 export const UpdateTaskMappingService = (data: any) => {
-  return axios.post(
-    '/machine_task_mapping/updateTaskMachineMapping',
-    data,
-    JSONHeaderType,
-  );
+  return axios.post('/machine_task_mapping/edit_initial_date', data);
 };
 export const AddNewTasksMappingService = (data: any) => {
   return axios.post(
@@ -485,4 +481,7 @@ export const AddNewTasksMappingService = (data: any) => {
     data,
     JSONHeaderType,
   );
+};
+export const listUserAccessPermissionsService = (data: any) => {
+  return axios.post('/user/get_permission', data);
 };

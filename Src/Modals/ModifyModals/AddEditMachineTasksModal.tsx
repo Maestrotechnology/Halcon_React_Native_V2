@@ -3,7 +3,7 @@ import {AddEditModalProps} from '../../@types/Global';
 import {MachinesTaskMappingListDataProps} from '../../@types/api';
 import DropdownBox from '../../Components/DropdownBox';
 import {useFormik} from 'formik';
-import {isLoading} from '../../Utilities/Methods';
+import {ConvertJSONtoFormData, isLoading} from '../../Utilities/Methods';
 import {COLORS, INPUT_SIZE} from '../../Utilities/Constants';
 import TextInputBox from '../../Components/TextInputBox';
 import * as Yup from 'yup';
@@ -60,7 +60,7 @@ export default function AddEditMachineTasksModal({
     onSubmit: () => {
       if (type === 'Create') {
         handleAddTasks(values);
-      } else if (type === 'Update') {
+      } else if (type === 'settings' || type === 'time') {
         handleUpdateTasks(values);
       } else if (type === 'Assigntask') {
         handleAddMachineTasks(values);
@@ -108,7 +108,6 @@ export default function AddEditMachineTasksModal({
         return {task_id: ele?.task_id};
       }),
     };
-    console.log(finalObj, 'finalObj');
 
     CreateTasksMachineService(finalObj)
       .then(async res => {
@@ -128,11 +127,14 @@ export default function AddEditMachineTasksModal({
   const handleUpdateTasks = (values: MachineTasksFilterprops) => {
     isLoading(true);
 
-    let finalObj = {
+    let finalObj = ConvertJSONtoFormData({
       token: token,
       duration: values.duration,
-      master_task_map_id: lineData?.master_task_map_id,
-    };
+      master_task_id: lineData?.master_task_map_id,
+      starting_date: values.starting_date,
+      starting_time: values.starting_time,
+      status: type === 'settings' ? 0 : 3,
+    });
 
     UpdateTaskMappingService(finalObj)
       .then(async res => {
@@ -169,60 +171,67 @@ export default function AddEditMachineTasksModal({
         </StyledText>
         {type !== 'Assigntask' && (
           <>
-            <TextInputBox
-              value={values?.duration}
-              onChangeText={(val: string) => {
-                setFieldValue('duration', val);
-              }}
-              customInputBoxContainerStyle={{
-                borderColor: COLORS.primary,
-              }}
-              validationType="NUMBER"
-              keyboardType="number-pad"
-              textInputProps={{
-                maxLength: INPUT_SIZE.Machine_ID,
-              }}
-              isRequired
-              placeHolder="Enter Duration"
-              title={`Timeframe In ${TaskDurationList[category]?.name}`}
-              isEditable={type !== 'View'}
-              errorText={
-                errors?.duration && touched?.duration ? errors?.duration : ''
-              }
-            />
-
-            <DateTimePicker
-              mode="date"
-              format="YYYY-MM-DD"
-              title="Starting Date"
-              placeHolder="Select Date"
-              value={values.starting_date}
-              onSelect={date => {
-                setFieldValue('starting_date', date);
-              }}
-              errorText={
-                errors?.starting_date && touched.starting_date
-                  ? errors?.starting_date
-                  : ''
-              }
-              minimumDate={new Date()}
-            />
-            <DateTimePicker
-              mode="time"
-              format="hh:mm"
-              title="Starting Time"
-              placeHolder="Select Time"
-              value={values.starting_time}
-              onSelect={date => {
-                setFieldValue('starting_time', date);
-              }}
-              errorText={
-                errors?.starting_time && touched.starting_time
-                  ? errors?.starting_time
-                  : ''
-              }
-              minimumDate={new Date()}
-            />
+            {type !== 'time' && (
+              <TextInputBox
+                value={values?.duration}
+                onChangeText={(val: string) => {
+                  setFieldValue('duration', val);
+                }}
+                customInputBoxContainerStyle={{
+                  borderColor: COLORS.primary,
+                }}
+                validationType="NUMBER"
+                keyboardType="number-pad"
+                textInputProps={{
+                  maxLength: INPUT_SIZE.Machine_ID,
+                }}
+                isRequired
+                placeHolder="Enter Duration"
+                title={`Timeframe In ${TaskDurationList[category]?.name}`}
+                isEditable={type !== 'View'}
+                errorText={
+                  errors?.duration && touched?.duration ? errors?.duration : ''
+                }
+              />
+            )}
+            {type === 'Create' || type === 'time' ? (
+              <>
+                <DateTimePicker
+                  mode="date"
+                  format="YYYY-MM-DD"
+                  title="Starting Date"
+                  placeHolder="Select Date"
+                  value={values.starting_date}
+                  onSelect={date => {
+                    setFieldValue('starting_date', date);
+                  }}
+                  errorText={
+                    errors?.starting_date && touched.starting_date
+                      ? errors?.starting_date
+                      : ''
+                  }
+                  containerStyle={{width: '100%'}}
+                  minimumDate={new Date()}
+                />
+                <DateTimePicker
+                  mode="time"
+                  format="hh:mm"
+                  title="Starting Time"
+                  placeHolder="Select Time"
+                  value={values.starting_time}
+                  onSelect={date => {
+                    setFieldValue('starting_time', date);
+                  }}
+                  errorText={
+                    errors?.starting_time && touched.starting_time
+                      ? errors?.starting_time
+                      : ''
+                  }
+                  containerStyle={{width: '100%'}}
+                  minimumDate={new Date()}
+                />
+              </>
+            ) : null}
           </>
         )}
 

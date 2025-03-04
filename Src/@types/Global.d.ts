@@ -23,7 +23,7 @@ export type AddEditNavigationScreenProsp<T> = {
   lineData?: T;
 };
 export type AddEditModalScreenProsp<T> = {
-  type: 'Create' | 'Update' | 'View' | 'Assigntask' | '';
+  type: 'Create' | 'Update' | 'View' | 'Assigntask' | 'time' | 'settings' | '';
   lineData?: T | null;
   show: boolean;
 };
@@ -35,7 +35,7 @@ export type TableItemProps<T> = {
 export type AddEditModalProps<T> = {
   onApplyChanges: () => void;
   onClose: () => void;
-  type: 'Create' | 'Update' | 'View' | 'Assigntask' | '';
+  type: 'Create' | 'Update' | 'View' | 'Assigntask' | 'time' | 'settings' | '';
   lineData: T | null;
   category?: number;
 };
