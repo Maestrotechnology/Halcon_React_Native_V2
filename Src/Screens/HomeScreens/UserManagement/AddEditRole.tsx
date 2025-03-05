@@ -7,7 +7,7 @@ import {
   UserScreensNavigationProps,
   UserStackStackParamList,
 } from '../../../@types/navigation';
-import {GetUserAccessPermissions, UseToken} from '../../../Utilities/StoreData';
+import {UseToken} from '../../../Utilities/StoreData';
 import {BOX_SHADOW, COLORS, WINDOW_WIDTH} from '../../../Utilities/Constants';
 import HOCView from '../../../Components/HOCView';
 import CustomButton from '../../../Components/CustomButton';
@@ -37,7 +37,6 @@ const UserValidation = Yup.object().shape({
 const AddEditRole = ({navigation}: UserScreensNavigationProps) => {
   const focused = useIsFocused();
   const token = UseToken();
-  const UserPermissions = GetUserAccessPermissions();
   const route = useRoute<RouteProp<UserStackStackParamList, 'AddEditRole'>>();
   const {type} = route?.params;
   const isEditable = type === 'View' ? false : true;
@@ -46,7 +45,6 @@ const AddEditRole = ({navigation}: UserScreensNavigationProps) => {
   const [accessPermissionList, setAccessPermissionList] =
     useState<RolePermission[]>(RolePermissionList);
   const [selectedPermissions, setSelectedPermissions] = useState<number[]>([]);
-  //   const [expanded, setExpanded] = useState({isExpand: false, uniqueId: 0});
   const [expanded, setExpanded] = useState<{[key: number]: boolean}>({});
   const {values, errors, touched, setFieldValue, handleSubmit, setValues} =
     useFormik<AccessAddEditDataProps>({
@@ -323,21 +321,11 @@ const AddEditRole = ({navigation}: UserScreensNavigationProps) => {
         />
       </View>
       {renderTitleText('Access Permission')}
-
-      {accessPermissionList?.map((item, index) => {
-        return <RenderCardItem item={item} index={index} />;
-      })}
-      {/* <TableView
-        dataList={accessPermissionList}
-        rowData={[
-          {
-            label: 'name',
-            key: 'name',
-          },
-        ]}
-        customRenderer={RenderCardItem}
-      /> */}
-
+      <View style={{marginBottom: 15}}>
+        {accessPermissionList?.map((item, index) => {
+          return <RenderCardItem item={item} index={index} />;
+        })}
+      </View>
       {type !== 'View' && (
         <CustomButton
           onPress={handleSubmit}

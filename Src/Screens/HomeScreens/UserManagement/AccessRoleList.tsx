@@ -204,10 +204,14 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
       headerProps={{
         headerTitle: 'Role',
       }}
-      secondaryBtnTitle="Add Role"
+      secondaryBtnTitle="Add"
       isLoading={isLoading}
+      isShowFilterBtn
+      onPressisShowFilterBtn={() => {
+        setisShowFilter(true);
+      }}
       isBtnLoading={permissionLoader}>
-      <View style={CommonStyles.flexRow}>
+      {/* <View style={CommonStyles.flexRow}>
         <CustomButton
           onPress={() => {
             setisShowFilter(true);
@@ -216,7 +220,7 @@ const AccessRoleList = ({navigation, route}: UserScreensNavigationProps) => {
           style={{width: '30%', marginVertical: 8}}>
           Filter
         </CustomButton>
-      </View>
+      </View> */}
       <View style={{marginBottom: bottom, flex: 1}}>
         <TableView
           rowData={[

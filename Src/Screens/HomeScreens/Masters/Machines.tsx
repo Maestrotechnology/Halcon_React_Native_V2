@@ -240,10 +240,14 @@ const Machines = ({navigation, route}: MastersStackNavigationProps) => {
       headerProps={{
         headerTitle: 'Machines',
       }}
-      secondaryBtnTitle="Add Machine"
+      secondaryBtnTitle="Add"
+      isShowFilterBtn
+      onPressisShowFilterBtn={() => {
+        setisShowFilter(true);
+      }}
       isLoading={isLoading}
       isBtnLoading={permissionLoader}>
-      <View style={CommonStyles.flexRow}>
+      {/* <View style={CommonStyles.flexRow}>
         <CustomButton
           onPress={() => {
             setisShowFilter(true);
@@ -252,7 +256,7 @@ const Machines = ({navigation, route}: MastersStackNavigationProps) => {
           style={{width: '30%', marginVertical: 8}}>
           Filter
         </CustomButton>
-      </View>
+      </View> */}
       <View style={{marginBottom: bottom, flex: 1}}>
         <TableView
           rowData={[
