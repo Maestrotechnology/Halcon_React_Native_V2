@@ -15,6 +15,7 @@ import AddEditMaterial from '../Screens/HomeScreens/Masters/Matetial/AddEditMate
 import Machines from '../Screens/HomeScreens/Masters/Machines';
 import MachineTasks from '../Screens/HomeScreens/Masters/MachineTasks';
 import MachineStack from './MachineStack';
+import FileBulkUpload from '../Screens/HomeScreens/Masters/FileBulkUpload';
 
 const Stack = createNativeStackNavigator<MasterStackStackParamList>();
 
@@ -34,6 +35,7 @@ const MastersStack = ({route, navigation}: MastersStackNavigationProps) => {
         <Stack.Screen name="AddEditMaterial" component={AddEditMaterial} />
         <Stack.Screen name="WorkCenter" component={WorkCenter} />
         <Stack.Screen name="Holiday" component={Holiday} />
+        <Stack.Screen name="FileBulkUpload" component={FileBulkUpload} />
       </Stack.Navigator>
     </>
   );

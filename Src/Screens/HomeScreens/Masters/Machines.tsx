@@ -14,8 +14,6 @@ import {getCatchMessage} from '../../../Utilities/GeneralUtilities';
 import Toast from '../../../Components/Toast';
 import HOCView from '../../../Components/HOCView';
 import {FONTSIZES} from '../../../Utilities/Constants';
-import {CommonStyles} from '../../../Utilities/CommonStyles';
-import CustomButton from '../../../Components/CustomButton';
 import TableView from '../../../Components/TableView';
 import GlobaModal from '../../../Components/GlobalModal';
 import ConfirmationModal from '../../../Modals/ConfirmationModal';
@@ -27,6 +25,9 @@ import {
 } from '../../../@types/Global';
 import MachinesListFilterModal from '../../../Modals/Filter/MachinesListFilterModal';
 import AddEditMachinesModal from '../../../Modals/ModifyModals/AddEditMachinesModal';
+import {CommonStyles} from '../../../Utilities/CommonStyles';
+import CustomButton from '../../../Components/CustomButton';
+import ImportFileModal from '../../../Modals/ModifyModals/ImportFileModal';
 
 var isMount = true;
 var currentPage = 1;
@@ -41,6 +42,7 @@ const Machines = ({navigation, route}: MastersStackNavigationProps) => {
   const [isEndRefreshing, setisEndRefreshing] = useState<boolean>(false);
   const [isLoading, setisLoading] = useState<boolean>(false);
   const [permissionLoader, setPermissionLoader] = useState(false);
+  const [ImportMachine, setShowImport] = useState(false);
   const [WorkCenterList, setWorkCenterList] = useState<MachinesListDataProps[]>(
     [],
   );
@@ -247,16 +249,17 @@ const Machines = ({navigation, route}: MastersStackNavigationProps) => {
       }}
       isLoading={isLoading}
       isBtnLoading={permissionLoader}>
-      {/* <View style={CommonStyles.flexRow}>
+      <View style={CommonStyles.flexRow}>
         <CustomButton
           onPress={() => {
-            setisShowFilter(true);
+            // navigation.navigate('FileBulkUpload');
+            setShowImport(true);
           }}
-          type="secondary"
+          type="export"
           style={{width: '30%', marginVertical: 8}}>
-          Filter
+          Import
         </CustomButton>
-      </View> */}
+      </View>
       <View style={{marginBottom: bottom, flex: 1}}>
         <TableView
           rowData={[
@@ -337,6 +340,23 @@ const Machines = ({navigation, route}: MastersStackNavigationProps) => {
             onConfirmPress={() => {
               handleDeleteDivision(isShowDelete?.id);
             }}
+          />
+        </GlobaModal>
+      )}
+      {ImportMachine && (
+        <GlobaModal
+          title="File Upload"
+          visible={ImportMachine}
+          onClose={() => {
+            setShowImport(false);
+          }}>
+          <ImportFileModal
+            onApplyChanges={() => {}}
+            onClose={() => {
+              setShowImport(false);
+            }}
+            type=""
+            lineData={{}}
           />
         </GlobaModal>
       )}

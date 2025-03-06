@@ -491,3 +491,11 @@ export const listUserAccessPermissionsService = (data: any) => {
 export const UpdateUserAccessPermissionsService = (data: any) => {
   return axios.post('/user/edit_user_permission', data, JSONHeaderType);
 };
+
+export const SampleFileDownloadService = (data: FormData) => {
+  return axios.post('/masters/sample-import-file', data);
+};
+
+export const ImportMachineFileService = (data: FormData) => {
+  return axios.post('/masters/import_machines', data);
+};

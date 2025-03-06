@@ -80,6 +80,7 @@ export type MasterStackStackParamList = {
   AddEditMaterial: AddEditMaterialNavigationProps;
   // MachineTasks: {item: MachinesListDataProps};
   MachineStack: MachineStackParamsList;
+  FileBulkUpload: FileBulkUpload;
 };
 export type MachineStackParamsList = {
   MachineTasks: undefined;

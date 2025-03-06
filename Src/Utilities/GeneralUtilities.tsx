@@ -105,10 +105,13 @@ const downloadDocument = async (
       } Download`,
     },
   };
+  console.log('HERE===');
 
   config(options)
     .fetch('GET', url)
     .then((res: any) => {
+      console.log(res, 'RES===');
+
       if (download_type === 'latest_app') {
         // RNExitApp.exitApp();
       }
@@ -120,7 +123,9 @@ const downloadDocument = async (
       Toast.success('Download Successfully');
     })
     .catch(e => {
-      Toast.error(e.message);
+      console.log(e, 'ERROR----');
+
+      // Toast.error(e.message);
     })
     .finally(() => {
       if (setisLoading) setisLoading(false);
