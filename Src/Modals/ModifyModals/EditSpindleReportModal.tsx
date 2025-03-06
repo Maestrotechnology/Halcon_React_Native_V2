@@ -111,7 +111,7 @@ const EditSpindleReportModal = ({
           keyboardType="number-pad"
           validationType="NUMBER"
           textInputProps={{
-            maxLength: INPUT_SIZE.AMOUNT_LENGTH,
+            maxLength: INPUT_SIZE.SpindleRunningHours,
           }}
           customContainerStyle={{width: '90%'}}
           isRequired
@@ -149,7 +149,7 @@ const EditSpindleReportModal = ({
           keyboardType="number-pad"
           validationType="NUMBER"
           textInputProps={{
-            maxLength: INPUT_SIZE.AMOUNT_LENGTH,
+            maxLength: INPUT_SIZE.SpindleRunningHours,
           }}
           isRequired
           placeHolder={`Enter ${getMonthName()?.current} Total Running Hours`}

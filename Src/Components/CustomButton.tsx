@@ -47,7 +47,7 @@ const CustomButton = ({
             ? ['#FF7B4B', '#F25922']
             : type === 'secondary'
             ? ['#f7f7f7', '#dcdcdc']
-            : ['#297bc4', '#0063bb']
+            : ['#363543', COLORS.DEEP_BLUE]
         }
         style={[styles.gradientContainer, gradientContainerStyle]}>
         <StyledText

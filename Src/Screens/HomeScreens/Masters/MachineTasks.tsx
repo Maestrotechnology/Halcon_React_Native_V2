@@ -246,38 +246,22 @@ export default function MachineTasks({route}: any) {
         }}
         secondaryBtnTitle={taskSettingDatas?.is_exist ? 'Settings' : 'Add Task'}
         isLoading={isLoading}
-        isBtnLoading={permissionLoader}>
-        {taskSettingDatas?.is_exist ? (
-          <View style={styles.ActionIconsFlex}>
-            <CustomImageBox
-              alt="Setting"
-              src={ICONS.editSettingIcon}
-              onPress={() => {
-                setAddEditMachineTask({
-                  type: 'settings',
-                  lineData: null,
-                  show: true,
-                });
-              }}
-              ImageStyle={{
-                height: 20,
-                width: 20,
-              }}
-            />
-            <CustomImageBox
-              alt="Time"
-              src={ICONS.editTimeIcon}
-              ImageStyle={{height: 24, width: 24}}
-              onPress={() => {
-                setAddEditMachineTask({
-                  type: 'time',
-                  lineData: null,
-                  show: true,
-                });
-              }}
-            />
-          </View>
-        ) : null}
+        isBtnLoading={permissionLoader}
+        isShowIconGroups={taskSettingDatas?.is_exist ? true : false}
+        onPressSettingIcon={() => {
+          setAddEditMachineTask({
+            type: 'settings',
+            lineData: null,
+            show: true,
+          });
+        }}
+        onPressTimeIcon={() => {
+          setAddEditMachineTask({
+            type: 'time',
+            lineData: null,
+            show: true,
+          });
+        }}>
         <View
           style={[
             CommonStyles.flexRow,
@@ -374,6 +358,7 @@ export default function MachineTasks({route}: any) {
             dataList={[...machineTaskList]?.map(ele => ({
               ...ele,
             }))}
+            listEmptyText="No Tasks Found"
             onEndReached={onEndReached}
             onRefresh={onRefresh}
             isEndRefresh={isEndRefreshing}
@@ -388,6 +373,7 @@ export default function MachineTasks({route}: any) {
           visible={addEditMachineTask?.show}
           onClose={closeTaskModal}>
           <AddEditMachineTasksModal
+            // @ts-ignore
             lineData={taskSettingDatas || null}
             type={addEditMachineTask?.type}
             onApplyChanges={() => {
@@ -428,11 +414,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  ActionIconsFlex: {
-    flexDirection: 'row',
-    gap: 10,
-    alignItems: 'center',
-    alignSelf: 'flex-end',
   },
 });

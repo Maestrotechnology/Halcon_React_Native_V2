@@ -4,7 +4,7 @@ import {useFormik} from 'formik';
 import {WorkCenterListFilterProps} from '../../@types/modals';
 import CustomButton from '../../Components/CustomButton';
 import TextInputBox from '../../Components/TextInputBox';
-import {COLORS} from '../../Utilities/Constants';
+import {COLORS, INPUT_SIZE} from '../../Utilities/Constants';
 import {FilterModalProps} from '../../@types/Global';
 
 const WorkCenterListFilterModal = ({
@@ -50,6 +50,9 @@ const WorkCenterListFilterModal = ({
         placeHolder="Enter Work Center Name"
         title="Work Center Name"
         isEditable
+        textInputProps={{
+          maxLength: INPUT_SIZE.Name,
+        }}
       />
 
       <View

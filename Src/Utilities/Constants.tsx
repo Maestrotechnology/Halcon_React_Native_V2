@@ -18,7 +18,7 @@ export const IS_IOS = Platform.OS === 'ios';
 export const activeOpacityValue = 0.8;
 
 export const COLORS = {
-  orange: '#F25922',
+  orange: '#E45200',
   white: '#FFF9F8',
   black: '#262626',
   // darkBlue: '#1a2c41',
@@ -53,6 +53,8 @@ export const COLORS = {
   webBlack: '#363543',
   darkNavy: '#1E1E2F',
   lightWhightGreen: '#07bc0c',
+
+  DEEP_BLUE: '#1a2c41',
 };
 
 export const BOX_SHADOW = {
@@ -151,13 +153,21 @@ export const INPUT_SIZE = {
   AMOUNT_LENGTH: 11,
   Opening_Balance: 11,
   Contact: 10,
-  Description: 50,
+  Description: 200,
   Name: 100,
   Material_Code: 100,
   Notes: 100,
   Unit: 100,
   Machine_ID: 12,
   Serial_Number: 12,
+  ControlKey: 10,
+  Duration: 3,
+  Password: 20,
+  SpindleRunningHours: 4,
+  UnitName: 100,
+  Code: 10,
+  Email: 50,
+  Mobile: 10,
 };
 
 export const PolicyColorList = [

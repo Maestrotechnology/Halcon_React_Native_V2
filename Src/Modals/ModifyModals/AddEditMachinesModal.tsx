@@ -12,9 +12,7 @@ import {
 } from '../../Utilities/Methods';
 import {
   CreateMachineService,
-  CreateWorkCenterService,
   UpdateMachineService,
-  UpdateWorkCenterService,
 } from '../../Services/Services';
 import {getCatchMessage} from '../../Utilities/GeneralUtilities';
 import {UseToken} from '../../Utilities/StoreData';
@@ -23,7 +21,6 @@ import {MachinesListFilterProps} from '../../@types/modals';
 import DropdownBox from '../../Components/DropdownBox';
 import CheckBox from '../../Components/CheckBox';
 import StyledText from '../../Components/StyledText';
-import Loader from '../../Components/Loader';
 import Toast from '../../Components/Toast';
 
 const validationSchema = Yup.object().shape({
@@ -51,24 +48,24 @@ const AddEditMachinesModal = ({
     initialValues: {
       machine_name: '',
       equipment_id: '',
-      division_id: '',
+      division_id: null,
       serial_no: '',
       model: '',
-      work_center_id: '',
+      work_center_id: null,
       equipment_description: '',
       is_spindle: 0,
     },
     validationSchema,
     onSubmit(values) {
       if (type === 'Create') {
-        handleAddWorkCenter(values);
+        handleAddMachine(values);
       } else if (type === 'Update') {
-        handleUpdateWorkCenter(values);
+        handleUpdateMachine(values);
       }
     },
   });
 
-  const handleAddWorkCenter = (values: MachinesListFilterProps) => {
+  const handleAddMachine = (values: MachinesListFilterProps) => {
     isLoading(true);
     let finalObj = {
       ...values,
@@ -94,13 +91,13 @@ const AddEditMachinesModal = ({
   };
 
   // update user
-  const handleUpdateWorkCenter = (values: MachinesListFilterProps) => {
+  const handleUpdateMachine = (values: MachinesListFilterProps) => {
     isLoading(true);
     let finalObj = {
       ...values,
       token: token,
-      division_id: values.division_id.division_id,
-      work_center_id: values.work_center_id.work_center_id,
+      division_id: values.division_id?.division_id || '',
+      work_center_id: values.work_center_id?.work_center_id || '',
     };
 
     UpdateMachineService(ConvertJSONtoFormData(finalObj))
@@ -123,14 +120,18 @@ const AddEditMachinesModal = ({
     if (lineData) {
       setValues({
         ...lineData,
-        division_id: {
-          division_id: lineData.division_id,
-          division_description: lineData.division_description,
-        },
-        work_center_id: {
-          work_center_id: lineData.work_center_id,
-          work_center_name: lineData.work_center_name,
-        },
+        division_id: lineData.division_id
+          ? {
+              division_id: lineData.division_id,
+              description: lineData.division_description,
+            }
+          : null,
+        work_center_id: lineData.work_center_id
+          ? {
+              work_center_id: lineData.work_center_id,
+              work_center_name: lineData.work_center_name,
+            }
+          : null,
       });
     }
   }, []);
@@ -255,7 +256,7 @@ const AddEditMachinesModal = ({
           borderColor: COLORS.primary,
         }}
         textInputProps={{
-          maxLength: INPUT_SIZE.Name,
+          maxLength: INPUT_SIZE.Description,
         }}
         placeHolder="Enter Equipment Description"
         title="Equipment Description"

@@ -131,7 +131,7 @@ export type MTTRReportFilterProps = {
 
 export type MachineTasksFilterprops = {
   starting_date: string;
-  starting_time: string;
+  starting_time: {name: number; id: number} | null;
   duration: string;
   tasks: Array[any];
 };

@@ -137,7 +137,7 @@ const AddEditHolidayModal = ({
           borderColor: COLORS.primary,
         }}
         textInputProps={{
-          maxLength: INPUT_SIZE.Name,
+          maxLength: INPUT_SIZE.Description,
         }}
         placeHolder="Enter Reason"
         title="Reason"

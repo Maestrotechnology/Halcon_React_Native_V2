@@ -18,7 +18,7 @@ import {
 } from '../../../@types/api';
 import Toast from '../../../Components/Toast';
 import SVGIcon from '../../../Components/SVGIcon';
-import {WINDOW_WIDTH} from '../../../Utilities/Constants';
+import {INPUT_SIZE, WINDOW_WIDTH} from '../../../Utilities/Constants';
 import TextInputBox from '../../../Components/TextInputBox';
 import CustomButton from '../../../Components/CustomButton';
 import {AlertBox} from '../../../Utilities/GeneralUtilities';
@@ -303,7 +303,7 @@ const PreventiveFileUploading = ({route, navigation}: any) => {
               ? errors.deviceFailureFileName
               : ''
           }
-          textInputProps={{maxLength: 25}}
+          textInputProps={{maxLength: INPUT_SIZE.Name}}
         />
       )}
       <ImageUpload

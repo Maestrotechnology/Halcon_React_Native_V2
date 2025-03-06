@@ -11,7 +11,7 @@ import DropdownBox from '../../Components/DropdownBox';
 import CustomButton from '../../Components/CustomButton';
 import {FilterModalProps} from '../../@types/Global';
 import TextInputBox from '../../Components/TextInputBox';
-import {COLORS} from '../../Utilities/Constants';
+import {COLORS, INPUT_SIZE} from '../../Utilities/Constants';
 
 const reqStatusOptions: DeviceStatusProps[] = [...requestStatusOptions];
 
@@ -68,6 +68,9 @@ const ApprovalStatusFilterModal = ({
         placeHolder="Enter Role Name"
         title="Role Name"
         isEditable
+        textInputProps={{
+          maxLength: INPUT_SIZE.Name,
+        }}
       />
       <DropdownBox
         title="Status"

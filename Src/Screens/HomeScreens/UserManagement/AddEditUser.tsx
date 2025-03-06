@@ -11,6 +11,7 @@ import {UseToken} from '../../../Utilities/StoreData';
 import {
   COLORS,
   EMAIL_REGEX,
+  INPUT_SIZE,
   PHONE_NUMBER_REGEX,
   REGEX,
 } from '../../../Utilities/Constants';
@@ -189,6 +190,7 @@ const AddEditUser = ({navigation}: UserScreensNavigationProps) => {
           disableNonEditableBg={true}
           isRequired
           errorText={errors.username && touched.username ? errors.username : ''}
+          textInputProps={{maxLength: INPUT_SIZE.Name}}
         />
         <TextInputBox
           value={values?.name}
@@ -201,6 +203,7 @@ const AddEditUser = ({navigation}: UserScreensNavigationProps) => {
           disableNonEditableBg={true}
           isRequired
           errorText={errors.name && touched.name ? errors.name : ''}
+          textInputProps={{maxLength: INPUT_SIZE.Name}}
         />
 
         <TextInputBox
@@ -214,6 +217,7 @@ const AddEditUser = ({navigation}: UserScreensNavigationProps) => {
           disableNonEditableBg={true}
           isRequired
           errorText={errors.email_id && touched.email_id ? errors.email_id : ''}
+          textInputProps={{maxLength: INPUT_SIZE.Email}}
         />
         <DropdownBox
           title="Role"
@@ -246,7 +250,7 @@ const AddEditUser = ({navigation}: UserScreensNavigationProps) => {
           isEditable={isEditable}
           disableNonEditableBg={true}
           textInputProps={{
-            maxLength: 10,
+            maxLength: INPUT_SIZE.Mobile,
           }}
           errorText={
             errors.mobile_no && touched.mobile_no ? errors.mobile_no : ''
@@ -265,6 +269,9 @@ const AddEditUser = ({navigation}: UserScreensNavigationProps) => {
             onChangeText={text => {
               setFieldValue('password', text);
             }}
+            textInputProps={{
+              maxLength: INPUT_SIZE.Password,
+            }}
             value={values.password}
             errorText={
               errors.password && touched.password ? errors?.password : ''
@@ -280,6 +287,9 @@ const AddEditUser = ({navigation}: UserScreensNavigationProps) => {
           title="State"
           isEditable={isEditable}
           disableNonEditableBg={true}
+          textInputProps={{
+            maxLength: INPUT_SIZE.Name,
+          }}
           errorText={errors.state && touched.state ? errors.state : ''}
         />
         <TextInputBox
@@ -292,6 +302,9 @@ const AddEditUser = ({navigation}: UserScreensNavigationProps) => {
           isEditable={isEditable}
           disableNonEditableBg={true}
           errorText={errors.city && touched.city ? errors.city : ''}
+          textInputProps={{
+            maxLength: INPUT_SIZE.Name,
+          }}
         />
         <TextInputBox
           value={values?.country}
@@ -303,6 +316,9 @@ const AddEditUser = ({navigation}: UserScreensNavigationProps) => {
           isEditable={isEditable}
           disableNonEditableBg={true}
           errorText={errors.country && touched.country ? errors.country : ''}
+          textInputProps={{
+            maxLength: INPUT_SIZE.Name,
+          }}
         />
 
         <TextInputBox
@@ -317,6 +333,9 @@ const AddEditUser = ({navigation}: UserScreensNavigationProps) => {
           multiline
           numberOfLines={3}
           errorText={errors.address && touched.address ? errors.address : ''}
+          textInputProps={{
+            maxLength: INPUT_SIZE.Description,
+          }}
         />
         {type !== 'View' && (
           <CustomButton

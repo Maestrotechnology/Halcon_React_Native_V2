@@ -8,7 +8,12 @@ import {
   UserStackStackParamList,
 } from '../../../@types/navigation';
 import {UseToken} from '../../../Utilities/StoreData';
-import {BOX_SHADOW, COLORS, WINDOW_WIDTH} from '../../../Utilities/Constants';
+import {
+  BOX_SHADOW,
+  COLORS,
+  INPUT_SIZE,
+  WINDOW_WIDTH,
+} from '../../../Utilities/Constants';
 import HOCView from '../../../Components/HOCView';
 import CustomButton from '../../../Components/CustomButton';
 import TextInputBox from '../../../Components/TextInputBox';
@@ -294,6 +299,7 @@ const AddEditRole = ({navigation}: UserScreensNavigationProps) => {
           customInputBoxContainerStyle={{
             borderColor: COLORS.primary,
           }}
+          textInputProps={{maxLength: INPUT_SIZE.Name}}
           placeHolder="Enter Role Name"
           title="Role Name"
           isEditable={isEditable}
@@ -313,6 +319,7 @@ const AddEditRole = ({navigation}: UserScreensNavigationProps) => {
           title="Description"
           isEditable={isEditable}
           disableNonEditableBg={true}
+          textInputProps={{maxLength: INPUT_SIZE.Description}}
           multiline
           numberOfLines={3}
           errorText={

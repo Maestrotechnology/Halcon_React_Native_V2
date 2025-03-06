@@ -42,6 +42,7 @@ export type TableViewProps = {
   customRenderer?: ListRenderItem<any> | null | undefined;
   onChangeStatus?: (status: number, data: any) => void;
   lineTextNumberofLines?: number;
+  listEmptyText?: string;
 };
 
 export type TableRowDataProps = {

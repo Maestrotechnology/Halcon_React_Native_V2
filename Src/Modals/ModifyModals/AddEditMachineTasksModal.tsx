@@ -19,14 +19,21 @@ import {
 import Toast from '../../Components/Toast';
 import {getCatchMessage} from '../../Utilities/GeneralUtilities';
 import {useEffect} from 'react';
-import {TaskDurationList} from '../../Utilities/StaticDropdownOptions';
+import {
+  HoursList,
+  TaskDurationList,
+} from '../../Utilities/StaticDropdownOptions';
 import StyledText from '../../Components/StyledText';
 import {useRoute} from '@react-navigation/native';
+import TimePickerComponent from '../../Components/TimePIcker';
+import moment from 'moment';
 
 const validationSchema = Yup.object().shape({
-  duration: Yup.string().required('Duration is required'),
+  duration: Yup.number()
+    .min(1, 'Duration must be greater tha zero')
+    .required('Duration is required'),
   starting_date: Yup.string().required('Start Date is required'),
-  starting_time: Yup.string().required('Start Time is required'),
+  starting_time: Yup.mixed().required('Start Time is required'),
 });
 
 export default function AddEditMachineTasksModal({
@@ -52,7 +59,7 @@ export default function AddEditMachineTasksModal({
   } = useFormik<MachineTasksFilterprops>({
     initialValues: {
       starting_date: '',
-      starting_time: '',
+      starting_time: null,
       duration: '',
       tasks: [],
     },
@@ -101,7 +108,14 @@ export default function AddEditMachineTasksModal({
       token: token,
       duration: values.duration,
       starting_date: values.starting_date,
-      starting_time: values.starting_time,
+      starting_time: values.starting_time?.id
+        ? `${
+            values.starting_time.id < 10
+              ? `0${values.starting_time.id}`
+              : values.starting_time.id
+          }:00:00`
+        : '',
+
       machine_id: item?.machine_id,
       category: category + 1,
       tasks: values.tasks?.map((ele: MachinesTaskMappingListDataProps) => {
@@ -127,16 +141,24 @@ export default function AddEditMachineTasksModal({
   const handleUpdateTasks = (values: MachineTasksFilterprops) => {
     isLoading(true);
 
-    let finalObj = ConvertJSONtoFormData({
+    let finalObj = {
       token: token,
       duration: values.duration,
       master_task_id: lineData?.master_task_map_id,
       starting_date: values.starting_date,
-      starting_time: values.starting_time,
-      status: type === 'settings' ? 0 : 3,
-    });
+      starting_time: values.starting_time?.id
+        ? `${
+            values.starting_time.id < 10
+              ? `0${values.starting_time.id}`
+              : values.starting_time.id
+          }:00:00`
+        : '',
 
-    UpdateTaskMappingService(finalObj)
+      status: type === 'settings' ? 0 : 3,
+    };
+    console.log(finalObj, 'finalObj');
+
+    UpdateTaskMappingService(ConvertJSONtoFormData(finalObj))
       .then(async res => {
         if (res.data.status === 1) {
           Toast.success(res?.data?.msg);
@@ -154,14 +176,19 @@ export default function AddEditMachineTasksModal({
 
   useEffect(() => {
     if (lineData) {
+      let timeValue = lineData.starting_time
+        ? parseInt(lineData?.starting_time?.split(':')[0])
+        : null;
       setValues({
         tasks: null,
         duration: lineData.duration ? lineData.duration?.toString() : '',
         starting_date: lineData.starting_date,
-        starting_time: lineData.starting_time,
+        starting_time: timeValue ? {id: timeValue, name: timeValue} : null,
       });
     }
   }, []);
+
+  console.log(errors, 'LINE');
 
   return (
     <>
@@ -169,13 +196,14 @@ export default function AddEditMachineTasksModal({
         <StyledText>
           Interval Selector : {TaskDurationList[category]?.name}
         </StyledText>
+
         {type !== 'Assigntask' && (
           <>
             {type !== 'time' && (
               <TextInputBox
                 value={values?.duration}
                 onChangeText={(val: string) => {
-                  setFieldValue('duration', val);
+                  setFieldValue('duration', val > '0' || val === '' ? '' : val);
                 }}
                 customInputBoxContainerStyle={{
                   borderColor: COLORS.primary,
@@ -183,7 +211,7 @@ export default function AddEditMachineTasksModal({
                 validationType="NUMBER"
                 keyboardType="number-pad"
                 textInputProps={{
-                  maxLength: INPUT_SIZE.Machine_ID,
+                  maxLength: INPUT_SIZE.Duration,
                 }}
                 isRequired
                 placeHolder="Enter Duration"
@@ -213,7 +241,42 @@ export default function AddEditMachineTasksModal({
                   containerStyle={{width: '100%'}}
                   minimumDate={new Date()}
                 />
-                <DateTimePicker
+                <DropdownBox
+                  title="Starting Time"
+                  value={values.starting_time ? values.starting_time : ''}
+                  placeHolder="Select Starting Time"
+                  onSelect={val => {
+                    console.log(val, 'VAL+==');
+
+                    setFieldValue('starting_time', val);
+                  }}
+                  options={HoursList}
+                  isEnableRightIcon={false}
+                  isRequired
+                  uniqueKey="task_id"
+                  type="miniList"
+                  fieldName="name"
+                  searchFieldName="name"
+                />
+                {/* <TimePickerComponent
+                  mode="time"
+                  format="hh:mm"
+                  date={values?.starting_date}
+                  title="Starting Time"
+                  placeHolder="Select Time"
+                  value={values.starting_time}
+                  onSelect={date => {
+                    setFieldValue('starting_time', date);
+                  }}
+                  errorText={
+                    errors?.starting_time && touched.starting_time
+                      ? errors?.starting_time
+                      : ''
+                  }
+                  containerStyle={{width: '100%'}}
+                  minimumDate={new Date()}
+                /> */}
+                {/* <DateTimePicker
                   mode="time"
                   format="hh:mm"
                   title="Starting Time"
@@ -229,7 +292,7 @@ export default function AddEditMachineTasksModal({
                   }
                   containerStyle={{width: '100%'}}
                   minimumDate={new Date()}
-                />
+                /> */}
               </>
             ) : null}
           </>
@@ -259,6 +322,7 @@ export default function AddEditMachineTasksModal({
             searchFieldName="task_name"
           />
         ) : null}
+
         <View
           style={{
             flexDirection: 'row',

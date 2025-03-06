@@ -54,6 +54,7 @@ const TableView = ({
   customRenderer,
   onChangeStatus,
   lineTextNumberofLines = 1,
+  listEmptyText,
 }: TableViewProps) => {
   const isScrollBeginRef = useRef(true);
   const columnWidth: number =
@@ -252,7 +253,10 @@ const TableView = ({
         removeClippedSubviews={false}
         ListEmptyComponent={() => {
           return (
-            <ListEmptyComponent errorText="No data found" alignItems="center" />
+            <ListEmptyComponent
+              errorText={listEmptyText || 'No data found'}
+              alignItems="center"
+            />
           );
         }}
         ListFooterComponent={() => {

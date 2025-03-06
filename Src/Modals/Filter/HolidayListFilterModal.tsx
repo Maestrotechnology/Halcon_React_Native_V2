@@ -4,7 +4,7 @@ import {useFormik} from 'formik';
 import {HolidayListFilterProps} from '../../@types/modals';
 import CustomButton from '../../Components/CustomButton';
 import TextInputBox from '../../Components/TextInputBox';
-import {COLORS} from '../../Utilities/Constants';
+import {COLORS, INPUT_SIZE} from '../../Utilities/Constants';
 import {FilterModalProps} from '../../@types/Global';
 
 const HolidayListFilterModal = ({
@@ -50,6 +50,9 @@ const HolidayListFilterModal = ({
         placeHolder="Enter Reason"
         title="Reason"
         isEditable
+        textInputProps={{
+          maxLength: INPUT_SIZE.Description,
+        }}
       />
 
       <View

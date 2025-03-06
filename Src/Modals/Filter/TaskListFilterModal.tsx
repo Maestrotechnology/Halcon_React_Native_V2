@@ -4,7 +4,7 @@ import {useFormik} from 'formik';
 import {TaskListFilterProps} from '../../@types/modals';
 import CustomButton from '../../Components/CustomButton';
 import TextInputBox from '../../Components/TextInputBox';
-import {COLORS} from '../../Utilities/Constants';
+import {COLORS, INPUT_SIZE} from '../../Utilities/Constants';
 import {FilterModalProps} from '../../@types/Global';
 
 const TaskListFilterModal = ({
@@ -50,6 +50,9 @@ const TaskListFilterModal = ({
         placeHolder="Enter User Name"
         title="Task Name"
         isEditable
+        textInputProps={{
+          maxLength: INPUT_SIZE.Name,
+        }}
       />
 
       <View

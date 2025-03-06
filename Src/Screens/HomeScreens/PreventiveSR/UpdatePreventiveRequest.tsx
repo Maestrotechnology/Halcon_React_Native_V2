@@ -37,6 +37,7 @@ import {
 import TextInputBox from '../../../Components/TextInputBox';
 import {
   COLORS,
+  INPUT_SIZE,
   WINDOW_WIDTH,
   bigInputBoxStyle,
 } from '../../../Utilities/Constants';
@@ -344,15 +345,13 @@ const UpdatePreventiveRequest = ({route, navigation}: any) => {
               onChangeText={val => {
                 setFieldValue('comments', val);
               }}
-              textInputProps={{
-                ...bigInputBoxStyle,
-              }}
               customInputBoxContainerStyle={{
                 height: 110,
                 backgroundColor: COLORS.white,
                 borderColor: !isView ? COLORS.primary : COLORS.secondary,
               }}
               multiline
+              textInputProps={{maxLength: INPUT_SIZE.Description}}
               isEditable={!isView}
             />
           )}

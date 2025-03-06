@@ -7,7 +7,7 @@ import {
 } from '../../@types/modals';
 import CustomButton from '../../Components/CustomButton';
 import TextInputBox from '../../Components/TextInputBox';
-import {COLORS} from '../../Utilities/Constants';
+import {COLORS, INPUT_SIZE} from '../../Utilities/Constants';
 import {FilterModalProps} from '../../@types/Global';
 import DropdownBox from '../../Components/DropdownBox';
 
@@ -45,7 +45,7 @@ const MachinesListFilterModal = ({
 
   return (
     <View>
-      <DropdownBox
+      {/* <DropdownBox
         title="Machine"
         value={values.machine_id}
         placeHolder="Select machine"
@@ -60,7 +60,7 @@ const MachinesListFilterModal = ({
         onIconPress={() => {
           setFieldValue('machine_id', null);
         }}
-      />
+      /> */}
       <TextInputBox
         value={values?.machine_name}
         onChangeText={(val: string) => {
@@ -72,6 +72,9 @@ const MachinesListFilterModal = ({
         placeHolder="Enter Machine Name"
         title="Machine Name"
         isEditable
+        textInputProps={{
+          maxLength: INPUT_SIZE.Name,
+        }}
       />
 
       <DropdownBox

@@ -248,18 +248,9 @@ const Machines = ({navigation, route}: MastersStackNavigationProps) => {
         setisShowFilter(true);
       }}
       isLoading={isLoading}
-      isBtnLoading={permissionLoader}>
-      <View style={CommonStyles.flexRow}>
-        <CustomButton
-          onPress={() => {
-            // navigation.navigate('FileBulkUpload');
-            setShowImport(true);
-          }}
-          type="export"
-          style={{width: '30%', marginVertical: 8}}>
-          Import
-        </CustomButton>
-      </View>
+      isBtnLoading={permissionLoader}
+      isShowImportBtn
+      onPressImportBtn={() => setShowImport(true)}>
       <View style={{marginBottom: bottom, flex: 1}}>
         <TableView
           rowData={[
@@ -305,7 +296,7 @@ const Machines = ({navigation, route}: MastersStackNavigationProps) => {
       </View>
       {isShowFilter && (
         <GlobaModal
-          title="Mahine Filter"
+          title="Machine Filter"
           visible={isShowFilter}
           onClose={closeFilterModal}>
           <MachinesListFilterModal

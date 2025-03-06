@@ -218,3 +218,6 @@ export const ReportLegentOptions = [
     color: '#fab101',
   },
 ];
+export const HoursList = new Array(24)
+  .fill('')
+  ?.map((ele, index) => ({name: index + 1, id: index + 1}));

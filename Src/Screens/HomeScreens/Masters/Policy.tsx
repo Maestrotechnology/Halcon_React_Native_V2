@@ -249,7 +249,7 @@ const Policy = ({route}: MastersStackNavigationProps) => {
                       width: '100%',
                     }}
                     textInputProps={{
-                      maxLength: INPUT_SIZE.AMOUNT_LENGTH,
+                      maxLength: INPUT_SIZE.SpindleRunningHours,
                       keyboardType: 'number-pad',
                     }}
                     isRequired

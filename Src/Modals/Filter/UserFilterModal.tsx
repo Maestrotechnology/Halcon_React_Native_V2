@@ -8,7 +8,7 @@ import {
 import DropdownBox from '../../Components/DropdownBox';
 import CustomButton from '../../Components/CustomButton';
 import TextInputBox from '../../Components/TextInputBox';
-import {COLORS} from '../../Utilities/Constants';
+import {COLORS, INPUT_SIZE} from '../../Utilities/Constants';
 
 const UserFilterModal = ({
   filterData,
@@ -87,6 +87,9 @@ const UserFilterModal = ({
         placeHolder="Enter User Name"
         title="User Name"
         isEditable
+        textInputProps={{
+          maxLength: INPUT_SIZE.Name,
+        }}
       />
 
       <View

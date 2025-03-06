@@ -97,8 +97,12 @@ import MTBFIconWhite from '../Assets/Icons/MtbfIconWhite.png';
 import editSettingIcon from '../Assets/Icons/Editsettings.png';
 import editTimeIcon from '../Assets/Icons/editTime.png';
 import LockIcon from '../Assets/Svg/lock.svg';
+import ExcelIcon from '../Assets/Icons/excel.png';
+import NoDataIcon from '../Assets/Icons/NoDataIcon.png';
 
 export type IconType =
+  | 'NoDataIcon'
+  | 'ExcelIcon'
   | 'LockIcon'
   | 'editSettingIcon'
   | 'editTimeIcon'
@@ -282,4 +286,6 @@ export const ICONS = {
   editSettingIcon,
   editTimeIcon,
   LockIcon,
+  ExcelIcon,
+  NoDataIcon,
 };

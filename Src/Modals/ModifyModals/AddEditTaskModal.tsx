@@ -133,8 +133,10 @@ const AddEditTaskModal = ({
           borderColor: COLORS.primary,
         }}
         textInputProps={{
-          maxLength: INPUT_SIZE.Fifty,
+          maxLength: INPUT_SIZE.ControlKey,
         }}
+        validationType="NUMBER"
+        keyboardType="number-pad"
         placeHolder="Enter Control Key"
         title="Control Key"
         isEditable={type !== 'View'}

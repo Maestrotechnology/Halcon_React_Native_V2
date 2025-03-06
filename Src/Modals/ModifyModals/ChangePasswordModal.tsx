@@ -92,7 +92,7 @@ const ChangePasswordModal = ({
           borderColor: COLORS.primary,
         }}
         textInputProps={{
-          maxLength: INPUT_SIZE.Name,
+          maxLength: INPUT_SIZE.Password,
         }}
         isRequired
         placeHolder="Enter Password"
@@ -111,7 +111,7 @@ const ChangePasswordModal = ({
           borderColor: COLORS.primary,
         }}
         textInputProps={{
-          maxLength: INPUT_SIZE.Machine_ID,
+          maxLength: INPUT_SIZE.Password,
         }}
         isRequired
         placeHolder="Enter Confirm Password"

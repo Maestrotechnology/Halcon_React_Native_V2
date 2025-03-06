@@ -106,6 +106,11 @@ export interface HOCViewProps extends CustomHeaderProps {
   isBtnLoading?: boolean;
   isShowFilterBtn?: boolean;
   onPressisShowFilterBtn?: () => void;
+  isShowImportBtn?: boolean;
+  onPressImportBtn?: () => void;
+  isShowIconGroups?: boolean;
+  onPressTimeIcon?: () => void;
+  onPressSettingIcon?: () => void;
 }
 
 export interface CustomHeaderProps {
@@ -251,6 +256,7 @@ export type DateTimePickerProps = {
   isRequired?: boolean;
   dateTimePickerProps?: DateTimePickerProps | NativePickerProps;
   format?: string;
+  date?: string;
 };
 
 export type BottomSheetProps = {

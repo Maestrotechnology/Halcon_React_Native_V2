@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import {COLORS} from '../../../../Utilities/Constants';
+import {COLORS, INPUT_SIZE} from '../../../../Utilities/Constants';
 import {
   MastersStackNavigationProps,
   MasterStackStackParamList,
@@ -136,6 +136,7 @@ const AddEditMaterial = ({navigation}: MastersStackNavigationProps) => {
           customInputBoxContainerStyle={{
             borderColor: COLORS.primary,
           }}
+          textInputProps={{maxLength: INPUT_SIZE.Name}}
           placeHolder="Enter Material Name"
           title="Material Name"
           isEditable={isEditable}
@@ -155,6 +156,7 @@ const AddEditMaterial = ({navigation}: MastersStackNavigationProps) => {
           title="Unit"
           isEditable={isEditable}
           disableNonEditableBg={true}
+          textInputProps={{maxLength: INPUT_SIZE.UnitName}}
           isRequired
           errorText={errors.unit_id && touched.unit_id ? errors.unit_id : ''}
         />
@@ -170,6 +172,7 @@ const AddEditMaterial = ({navigation}: MastersStackNavigationProps) => {
           placeHolder="Enter Description"
           title="Description"
           isEditable={isEditable}
+          textInputProps={{maxLength: INPUT_SIZE.Description}}
           disableNonEditableBg={true}
           errorText={
             errors.description && touched.description ? errors.description : ''
@@ -189,9 +192,7 @@ const AddEditMaterial = ({navigation}: MastersStackNavigationProps) => {
           title="Material Code"
           isEditable={isEditable}
           disableNonEditableBg={true}
-          textInputProps={{
-            maxLength: 10,
-          }}
+          textInputProps={{maxLength: INPUT_SIZE.Code}}
           errorText={
             errors.material_code && touched.material_code
               ? errors.material_code
@@ -207,6 +208,7 @@ const AddEditMaterial = ({navigation}: MastersStackNavigationProps) => {
           customInputBoxContainerStyle={{
             borderColor: COLORS.primary,
           }}
+          textInputProps={{maxLength: INPUT_SIZE.Description}}
           placeHolder="Enter Notes"
           title="Notes"
           isEditable={isEditable}

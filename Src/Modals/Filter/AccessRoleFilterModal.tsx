@@ -4,7 +4,7 @@ import {useFormik} from 'formik';
 import {RoleListFilterdataProps} from '../../@types/modals';
 import CustomButton from '../../Components/CustomButton';
 import TextInputBox from '../../Components/TextInputBox';
-import {COLORS} from '../../Utilities/Constants';
+import {COLORS, INPUT_SIZE} from '../../Utilities/Constants';
 import {FilterModalProps} from '../../@types/Global';
 
 const AccessRoleFilterModal = ({
@@ -50,6 +50,9 @@ const AccessRoleFilterModal = ({
         placeHolder="Enter Role Name"
         title="Role Name"
         isEditable
+        textInputProps={{
+          maxLength: INPUT_SIZE.Name,
+        }}
       />
 
       <View

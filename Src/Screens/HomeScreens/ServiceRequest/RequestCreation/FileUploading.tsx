@@ -19,6 +19,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {FONTS} from '../../../../Utilities/Fonts';
 import {
   COLORS,
+  INPUT_SIZE,
   WINDOW_WIDTH,
   bigInputBoxStyle,
 } from '../../../../Utilities/Constants';
@@ -407,7 +408,7 @@ const FileUploading = ({
                 ? errors.deviceFailureFileName
                 : ''
             }
-            textInputProps={{maxLength: 100}}
+            textInputProps={{maxLength: INPUT_SIZE.Name}}
           />
         )}
         <ImageUpload

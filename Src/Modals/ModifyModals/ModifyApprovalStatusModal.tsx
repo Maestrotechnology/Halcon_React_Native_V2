@@ -107,7 +107,7 @@ const ModifyApprovalStatusModal = ({
           height: 80,
         }}
         textInputProps={{
-          maxLength: INPUT_SIZE.Name,
+          maxLength: INPUT_SIZE.Description,
         }}
         multiline
         isRequired

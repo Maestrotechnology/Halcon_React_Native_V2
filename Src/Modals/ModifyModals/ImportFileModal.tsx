@@ -1,29 +1,34 @@
+import moment from 'moment';
 import {StyleSheet, View} from 'react-native';
 import React, {useEffect} from 'react';
 import * as Yup from 'yup';
 import {useFormik} from 'formik';
 import {ConvertJSONtoFormData, isLoading} from '../../Utilities/Methods';
 import {
-  CreateWorkCenterService,
+  ImportMachineFileService,
   SampleFileDownloadService,
 } from '../../Services/Services';
 import {downloadPdf, getCatchMessage} from '../../Utilities/GeneralUtilities';
 import Toast from '../../Components/Toast';
 import {UseToken} from '../../Utilities/StoreData';
 import {AddEditModalProps} from '../../@types/Global';
-import ImageUpload from '../../Components/ImageUpload';
 import CustomButton from '../../Components/CustomButton';
 import DocumentPicker from 'react-native-document-picker';
 import StyledText from '../../Components/StyledText';
-import moment from 'moment';
 import {COLORS, FONTSIZES} from '../../Utilities/Constants';
 import {FONTS} from '../../Utilities/Fonts';
-
+import CustomImageBox from '../../Components/CustomImageBox';
+import {ICONS} from '../../Utilities/Icons';
 type FileUploadProps = {
-  file: File | null;
+  file: FileType | null;
+};
+type FileType = {
+  type: string;
+  name: string;
+  uri: string;
 };
 const validationSchema = Yup.object().shape({
-  file: Yup.string().trim().required('* Work Center Name is required.'),
+  file: Yup.mixed().required('* File is required.'),
 });
 const ImportFileModal = ({
   onApplyChanges,
@@ -41,6 +46,7 @@ const ImportFileModal = ({
     initialValues,
     errors,
     touched,
+    setFieldTouched,
   } = useFormik<FileUploadProps>({
     initialValues: {
       file: null,
@@ -50,6 +56,7 @@ const ImportFileModal = ({
       handleUploadMachines(values);
     },
   });
+
   const handleDownloadSampleFile = () => {
     isLoading(true);
     let finalObj = {
@@ -59,7 +66,6 @@ const ImportFileModal = ({
     SampleFileDownloadService(ConvertJSONtoFormData(finalObj))
       .then(async res => {
         if (res.data.status === 1) {
-          console.log(res?.data?.file_url);
           downloadPdf(
             res?.data?.file_url,
             `Machine ${moment(new Date()).format('YYYY-MM-DD hh:mm A')}`,
@@ -71,8 +77,6 @@ const ImportFileModal = ({
         }
       })
       .catch(err => {
-        console.log(err, 'ERROR==');
-
         getCatchMessage(err);
       })
       .finally(() => isLoading(false));
@@ -82,9 +86,14 @@ const ImportFileModal = ({
     isLoading(true);
     let finalObj = {
       token: token,
+      upload_file: {
+        type: values?.file?.type,
+        name: values?.file?.name,
+        uri: values?.file?.uri,
+      },
     };
 
-    SampleFileDownloadService(ConvertJSONtoFormData(finalObj))
+    ImportMachineFileService(ConvertJSONtoFormData(finalObj))
       .then(async res => {
         if (res.data.status === 1) {
           Toast.success(res?.data?.msg);
@@ -109,41 +118,43 @@ const ImportFileModal = ({
   }, []);
   const pickExcelFile = async () => {
     try {
-      console.log('CALLED');
-
       const res = await DocumentPicker.pick({
         type: [DocumentPicker.types.xlsx, DocumentPicker.types.csv], // Supports both Excel & CSV
       });
       setFieldValue('file', res[0]);
-
-      console.log('File picked:', res[0]);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
-        console.log('User canceled file picker.');
       } else {
-        console.error('File selection error:', err);
       }
     }
   };
+
   return (
-    <View>
+    <View style={styles.UploadContainer}>
+      <View style={styles.fileBox}>
+        <CustomImageBox alt="ExcelIcon" src={ICONS.ExcelIcon} />
+        <StyledText
+          onPress={handleDownloadSampleFile}
+          style={{
+            paddingVertical: 10,
+            color: COLORS.green,
+            fontSize: FONTSIZES.small,
+            fontFamily: FONTS.poppins.medium,
+          }}>
+          Download Sample Excel File
+        </StyledText>
+      </View>
       <CustomButton
         onPress={() => {
-          console.log('CLICED');
           pickExcelFile();
-        }}>
+        }}
+        type="export">
         Choose File
       </CustomButton>
-      <StyledText
-        onPress={handleDownloadSampleFile}
-        style={{
-          paddingVertical: 10,
-          color: COLORS.blue,
-          fontSize: FONTSIZES.small,
-          fontFamily: FONTS.poppins.medium,
-        }}>
-        Download Sample Excel File
-      </StyledText>
+      {errors.file && touched?.file ? (
+        <StyledText style={{color: COLORS.red}}>{errors?.file}</StyledText>
+      ) : null}
+      {values?.file && <StyledText>{values?.file?.name}</StyledText>}
       <View
         style={{
           flexDirection: 'row',
@@ -163,7 +174,12 @@ const ImportFileModal = ({
           }}>
           Close
         </CustomButton>
-        <CustomButton style={{width: '45%'}} onPress={handleSubmit}>
+        <CustomButton
+          style={{width: '45%'}}
+          onPress={() => {
+            setFieldTouched('file', true);
+            handleSubmit();
+          }}>
           {type || 'SUbmit'}
         </CustomButton>
       </View>
@@ -173,4 +189,17 @@ const ImportFileModal = ({
 
 export default ImportFileModal;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  fileBox: {
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'center',
+    borderRadius: 10,
+    borderColor: COLORS.green,
+    borderWidth: 1,
+    paddingHorizontal: 10,
+  },
+  UploadContainer: {
+    gap: 10,
+  },
+});

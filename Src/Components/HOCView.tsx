@@ -15,6 +15,7 @@ import {MainStackParamList} from '../@types/navigation';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import CustomImageBox from './CustomImageBox';
 import {ICONS} from '../Utilities/Icons';
+import SVGIcon from './SVGIcon';
 
 const HOCView = ({
   children,
@@ -41,6 +42,11 @@ const HOCView = ({
   isBtnLoading = false,
   isShowFilterBtn = false,
   onPressisShowFilterBtn,
+  isShowImportBtn = false,
+  onPressImportBtn,
+  isShowIconGroups = false,
+  onPressTimeIcon,
+  onPressSettingIcon,
 }: HOCViewProps) => {
   const navigation: NativeStackNavigationProp<MainStackParamList> =
     useNavigation();
@@ -121,27 +127,55 @@ const HOCView = ({
             </StyledText>
           </View>
         )}
-        {isShowFilterBtn && (
-          <CustomImageBox
-            alt="Filter Icon"
-            src={ICONS.FilterIcon}
-            onPress={onPressisShowFilterBtn}
-            ImageStyle={{width: 20, height: 20, marginRight: 10}}
-          />
-        )}
-        {isShowSecondaryHeaderBtn && (
-          <CustomButton
-            textStyle={secondaryBtnTextStyle}
-            isDisabled={isDisabledSecondaryHeaderBtn}
-            onPress={onHeaderBtnPress}
-            style={[{width: '20%'}, secondaryBtnStyle]}>
-            {isBtnLoading ? (
-              <ActivityIndicator color={COLORS.white} />
-            ) : (
-              secondaryBtnTitle
-            )}
-          </CustomButton>
-        )}
+        <View style={{gap: 7, flexDirection: 'row', alignItems: 'center'}}>
+          {isShowFilterBtn && (
+            <CustomImageBox
+              alt="Filter Icon"
+              src={ICONS.FilterIcon}
+              onPress={onPressisShowFilterBtn}
+              ImageStyle={{width: 20, height: 20}}
+            />
+          )}
+          {isShowSecondaryHeaderBtn && (
+            <CustomButton
+              textStyle={secondaryBtnTextStyle}
+              isDisabled={isDisabledSecondaryHeaderBtn}
+              onPress={onHeaderBtnPress}
+              style={[{width: 70}, secondaryBtnStyle]}>
+              {isBtnLoading ? (
+                <ActivityIndicator color={COLORS.white} />
+              ) : (
+                secondaryBtnTitle
+              )}
+            </CustomButton>
+          )}
+          {isShowImportBtn && (
+            <CustomButton
+              onPress={() => {
+                onPressImportBtn?.();
+              }}
+              type="export"
+              style={{width: 70, marginVertical: 8}}>
+              Import
+            </CustomButton>
+          )}
+          {isShowIconGroups && (
+            <View style={styles.ActionIconsFlex}>
+              <CustomButton
+                onPress={onPressSettingIcon}
+                type="secondary"
+                style={{width: 70, marginVertical: 8}}>
+                edit
+              </CustomButton>
+              <CustomButton
+                onPress={onPressTimeIcon}
+                type="export"
+                style={{width: 70, marginVertical: 8}}>
+                Time
+              </CustomButton>
+            </View>
+          )}
+        </View>
       </View>
     );
   };
@@ -169,5 +203,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.primary,
     ...BOX_SHADOW,
+  },
+  ActionIconsFlex: {
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'center',
+    alignSelf: 'flex-end',
   },
 });
