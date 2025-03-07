@@ -1,3 +1,4 @@
+import * as Yup from 'yup';
 import {StyleSheet, View} from 'react-native';
 import React, {useEffect} from 'react';
 import {useFormik} from 'formik';
@@ -10,8 +11,8 @@ import {getCatchMessage} from '../../Utilities/GeneralUtilities';
 import Toast from '../../Components/Toast';
 import {UseToken} from '../../Utilities/StoreData';
 import {TaskListDataProps} from '../../@types/api';
-import * as Yup from 'yup';
 import {AddEditModalProps} from '../../@types/Global';
+import ActionButtons from '../../Components/ActionButtons';
 
 const validationSchema = Yup.object().shape({
   task_name: Yup.string().trim().required('* Task Name is required.'),
@@ -110,9 +111,6 @@ const AddEditTaskModal = ({
         onChangeText={(val: string) => {
           setFieldValue('task_name', val);
         }}
-        customInputBoxContainerStyle={{
-          borderColor: COLORS.primary,
-        }}
         textInputProps={{
           maxLength: INPUT_SIZE.Name,
         }}
@@ -129,9 +127,6 @@ const AddEditTaskModal = ({
         onChangeText={(val: string) => {
           setFieldValue('control_key', val);
         }}
-        customInputBoxContainerStyle={{
-          borderColor: COLORS.primary,
-        }}
         textInputProps={{
           maxLength: INPUT_SIZE.ControlKey,
         }}
@@ -141,29 +136,19 @@ const AddEditTaskModal = ({
         title="Control Key"
         isEditable={type !== 'View'}
       />
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginTop: 10,
-        }}>
-        <CustomButton
-          style={{width: '45%'}}
-          type="secondary"
-          onPress={() => {
-            resetForm({
-              values: {
-                ...initialValues,
-              },
-            });
-            onClose();
-          }}>
-          Close
-        </CustomButton>
-        <CustomButton style={{width: '45%'}} onPress={handleSubmit}>
-          {type || 'SUbmit'}
-        </CustomButton>
-      </View>
+      <ActionButtons
+        onPressNegativeBtn={() => {
+          resetForm({
+            values: {
+              ...initialValues,
+            },
+          });
+          onClose();
+        }}
+        onPressPositiveBtn={handleSubmit}
+        PositiveBtnTitle={type || 'SUbmit'}
+        NegativeBtnTitle="Close"
+      />
     </View>
   );
 };

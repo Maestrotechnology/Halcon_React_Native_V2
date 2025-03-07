@@ -1,64 +1,32 @@
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import HOCView from '../../../Components/HOCView';
 import {LoaderStatus, UseToken} from '../../../Utilities/StoreData';
 import {
   addPreventiveRequestService,
-  updatePreventiveTaskService,
   viewPreventiveSRService,
 } from '../../../Services/Services';
 import {ConvertJSONtoFormData} from '../../../Utilities/Methods';
 import {
-  PreventiveSRListApiProps,
-  PreventiveTaskListProps,
   PreventiveViewApiDataProps,
   PreventiveViewApiProps,
-  PreventiveViewSelectedTaskProps,
 } from '../../../@types/api';
 import Toast from '../../../Components/Toast';
 import {getCatchMessage} from '../../../Utilities/GeneralUtilities';
-import TableView, {TableItemProps} from '../../../Components/TableView';
-import TaskDetails from './TaskDetails';
 import DropdownBox from '../../../Components/DropdownBox';
 import DateTimePicker from '../../../Components/DateTimePicker';
-import {useFormik} from 'formik';
 import moment from 'moment';
-import {
-  deviceStatusOptions,
-  priorityLevelOptions,
-  requestStatusOptions,
-} from '../../../Utilities/StaticDropdownOptions';
+import {requestStatusOptions} from '../../../Utilities/StaticDropdownOptions';
 import TextInputBox from '../../../Components/TextInputBox';
-import {
-  COLORS,
-  INPUT_SIZE,
-  WINDOW_WIDTH,
-  bigInputBoxStyle,
-} from '../../../Utilities/Constants';
-import TextField from '../../../Components/TextField';
-import {PreventiveRequestFormikDataProps} from '../../../@types/context';
+import {COLORS, INPUT_SIZE} from '../../../Utilities/Constants';
 import CustomButton from '../../../Components/CustomButton';
-import GlobaModal from '../../../Components/GlobalModal';
-import AddPreventiveModal from '../../../Modals/AddPreventiveModal';
 import {useDispatch} from 'react-redux';
 import {openLoader} from '../../../Store/Slices/LoaderSlice';
 import {
   TaskDetailsRefProp,
   preventiveModalProps,
 } from './@types/preventiveTypes';
-import SVGIcon from '../../../Components/SVGIcon';
-import {ICONS} from '../../../Utilities/Icons';
-import StyledText from '../../../Components/StyledText';
 import {FONTS} from '../../../Utilities/Fonts';
-import {CommonStyles} from '../../../Utilities/CommonStyles';
-import * as yup from 'yup';
-import CheckBox from '../../../Components/CheckBox';
 import {usePreventiveRequestContext} from '../../../Utilities/Contexts';
 
 var isMount = true;
@@ -67,13 +35,9 @@ var totalPages = 1;
 
 const UpdatePreventiveRequest = ({route, navigation}: any) => {
   const {
-    preventiveViewData,
     setPreventiveViewData,
-    selectedId,
     errors,
-    handleSubmit,
     setFieldValue,
-    setselectedId,
     touched,
     values,
     setValues,
@@ -82,14 +46,11 @@ const UpdatePreventiveRequest = ({route, navigation}: any) => {
   const isAdd = route?.params?.type === 4;
   const isView = route?.params?.type === 1;
   const token = UseToken();
-  const taskDetailsRef = useRef<TaskDetailsRefProp | null>(null);
   const dispatch = useDispatch();
   const loading = LoaderStatus();
 
   const [isLoading, setIsLoading] = useState(false);
-  // const [selectedTasks, setSelectedTasks] = useState<
-  //   PreventiveViewSelectedTaskProps[]
-  // >([]);
+
   const [preventiveTaskModal, setPreventiveTaskModal] =
     useState<preventiveModalProps>({
       status: false,
@@ -164,7 +125,6 @@ const UpdatePreventiveRequest = ({route, navigation}: any) => {
         const response: PreventiveViewApiProps = res?.data;
         if (res?.data?.status) {
           setPreventiveViewData(response.data);
-          // setSelectedTasks(response?.data?.selected_task || []);
           setFieldValue(
             'selected_tasks',
             response?.data?.selected_task?.map(ele => ({
@@ -223,13 +183,6 @@ const UpdatePreventiveRequest = ({route, navigation}: any) => {
       })),
     }));
   };
-
-  const handleCloseModal = () =>
-    setPreventiveTaskModal(pre => ({
-      status: false,
-      data: null,
-      isView: false,
-    }));
 
   return (
     <HOCView
@@ -302,16 +255,7 @@ const UpdatePreventiveRequest = ({route, navigation}: any) => {
               isDisabled={isView}
             />
           )}
-          {/* <DateTimePicker
-            mode="datetime"
-            format="YYYY-MM-DD hh:mm A"
-            title="Schedule Date"
-            value={values.scheduleDate}
-            onSelect={date => {
-              setFieldValue('scheduleDate', date);
-            }}
-            isDisabled={!isAdd}
-          /> */}
+
           <DateTimePicker
             mode="datetime"
             format="YYYY-MM-DD hh:mm A"
@@ -357,55 +301,6 @@ const UpdatePreventiveRequest = ({route, navigation}: any) => {
           )}
         </View>
 
-        {/* <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('PreventiveFileUpload', {
-              preventiveId: route?.params?.data,
-              isView:
-                route?.params?.type === 1 ||
-                preventiveViewData?.request_status === 3,
-            });
-          }}
-          style={styles.uploadContainer}>
-          <StyledText style={styles.uploadText}>
-            {route?.params?.type === 1 ||
-            preventiveViewData?.request_status === 3
-              ? 'Uploaded Files'
-              : 'File Upload'}
-          </StyledText>
-          <View style={styles.uploadImgContainer}>
-            <ICONS.uploadIcon />
-          </View>
-        </TouchableOpacity> */}
-
-        {/* <TaskDetails
-          onViewPress={value => {
-            setPreventiveTaskModal(pre => ({
-              ...pre,
-              data: value,
-              isView: true,
-              status: true,
-            }));
-          }}
-          onEditPress={value => {
-            setPreventiveTaskModal(pre => ({
-              ...pre,
-              data: value,
-              isView: false,
-              status: true,
-            }));
-          }}
-          ref={taskDetailsRef}
-          reqId={route?.params?.data}
-          isView={
-            route?.params?.type === 1 ||
-            preventiveViewData?.request_status === 3
-          }
-        /> */}
-
-        {/* {route?.params?.type !== 1 &&
-          preventiveViewData?.request_status !== 3 &&
-           ( */}
         <CustomButton
           onPress={() => {
             if (!isAdd) {
@@ -416,33 +311,7 @@ const UpdatePreventiveRequest = ({route, navigation}: any) => {
           }}>
           {!isAdd ? 'Next' : 'Submit'}
         </CustomButton>
-        {/* )} */}
       </View>
-
-      {preventiveTaskModal.status && (
-        <GlobaModal
-          title={`${
-            preventiveTaskModal?.isView
-              ? ''
-              : preventiveTaskModal?.data
-              ? 'Update Preventive Task'
-              : 'Add Preventive Task'
-          }`}
-          visible={preventiveTaskModal.status}
-          onClose={handleCloseModal}>
-          <AddPreventiveModal
-            onClose={handleCloseModal}
-            preventive_request_id={route?.params?.data}
-            updateData={() => {
-              if (taskDetailsRef.current) {
-                taskDetailsRef.current.updateTaskList();
-              }
-            }}
-            data={preventiveTaskModal.data}
-            isView={preventiveTaskModal.isView}
-          />
-        </GlobaModal>
-      )}
     </HOCView>
   );
 };

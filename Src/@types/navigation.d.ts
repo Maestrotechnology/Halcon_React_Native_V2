@@ -20,7 +20,6 @@ export type DrawerNavigationParamList = {
   PreventiveSRStack: undefined;
   PermisionDeniedStack: undefined;
   ProfileStack: undefined;
-  MaintenaceWorkOrderStack: undefined;
   UserManagementStack: undefined;
   MastersStack: undefined;
   ReportStack: undefined;
@@ -110,11 +109,6 @@ export type ReportStackStackParamList = {
   MtbfReport: undefined;
   SpindleReportChart: undefined;
   MttrMonthlyReport: undefined;
-};
-
-export type MaintananceWorkOrderParamList = {
-  MaintenacneWorkOrder: undefined;
-  AddWorkOrder: undefined;
 };
 
 export type FileUploadingScreenParamDataProps = {

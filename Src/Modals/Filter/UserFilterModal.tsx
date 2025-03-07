@@ -9,6 +9,7 @@ import DropdownBox from '../../Components/DropdownBox';
 import CustomButton from '../../Components/CustomButton';
 import TextInputBox from '../../Components/TextInputBox';
 import {COLORS, INPUT_SIZE} from '../../Utilities/Constants';
+import ActionButtons from '../../Components/ActionButtons';
 
 const UserFilterModal = ({
   filterData,
@@ -91,31 +92,20 @@ const UserFilterModal = ({
           maxLength: INPUT_SIZE.Name,
         }}
       />
-
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginTop: 10,
-        }}>
-        <CustomButton
-          style={{width: '45%'}}
-          type="secondary"
-          onPress={() => {
-            resetForm({
-              values: {
-                ...initialValues,
-              },
-            });
-            onApplyFilter(null);
-            onClose();
-          }}>
-          Reset
-        </CustomButton>
-        <CustomButton style={{width: '45%'}} onPress={handleSubmit}>
-          Submit
-        </CustomButton>
-      </View>
+      <ActionButtons
+        onPressNegativeBtn={() => {
+          resetForm({
+            values: {
+              ...initialValues,
+            },
+          });
+          onApplyFilter(null);
+          onClose();
+        }}
+        onPressPositiveBtn={() => {
+          handleSubmit();
+        }}
+      />
     </View>
   );
 };

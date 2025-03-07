@@ -203,28 +203,20 @@ const TasksList = ({route}: MastersStackNavigationProps) => {
   return (
     <HOCView
       isListLoading={isListLoader}
-      secondaryHeaderTitle="Task"
+      secondaryHeaderTitle="Tasks"
       isShowSecondaryHeaderBtn
       secondaryBtnTextStyle={{fontSize: FONTSIZES.small}}
       onHeaderBtnPress={() => {
         handleCheckAccessToAdd();
       }}
       headerProps={{
-        headerTitle: 'Task',
+        headerTitle: 'Tasks',
       }}
-      secondaryBtnTitle="Add Task"
+      secondaryBtnTitle="Add"
       isLoading={isLoading}
+      isShowFilterBtn
+      onPressisShowFilterBtn={() => setisShowFilter(true)}
       isBtnLoading={permissionLoader}>
-      <View style={CommonStyles.flexRow}>
-        <CustomButton
-          onPress={() => {
-            setisShowFilter(true);
-          }}
-          type="secondary"
-          style={{width: '30%', marginVertical: 8}}>
-          Filter
-        </CustomButton>
-      </View>
       <View style={{marginBottom: bottom, flex: 1}}>
         <TableView
           rowData={[

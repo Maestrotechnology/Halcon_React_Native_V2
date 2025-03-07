@@ -12,7 +12,6 @@ import PreventiveSRStatck from '../../Stacks/PreventiveSRStatck';
 import {GetPermissions} from '../../Utilities/StoreData';
 import PermisionDeniedStack from '../../Screens/ErrorScreen/PermisionDeniedStack';
 import MyProfile from '../../Screens/HomeScreens/Profile/MyProfile';
-import MaintenaceWorkOrderStack from '../../Stacks/MaintenaceWorkOrderStack';
 import UserManagementStack from '../../Stacks/UserManagementStack';
 import MastersStack from '../../Stacks/MastersStack';
 import ReportStack from '../../Stacks/ReportStack';
@@ -62,12 +61,6 @@ const DrawerNavigation = () => {
       name: 'ReportStack',
       component: ReportStack,
       // hasPermission: UserPermissions?.preventive_sr?.preventive_sr_menu,
-      hasPermission: 1,
-    },
-    {
-      name: 'MaintenaceWorkOrderStack',
-      component: MaintenaceWorkOrderStack,
-      // hasPermission: UserPermissions?.maintenance_workorder?.work_order_menu,
       hasPermission: 1,
     },
 

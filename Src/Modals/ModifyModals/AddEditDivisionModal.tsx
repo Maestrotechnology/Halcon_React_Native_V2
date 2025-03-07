@@ -15,6 +15,7 @@ import Toast from '../../Components/Toast';
 import {UseToken} from '../../Utilities/StoreData';
 import {DivisionListDataProps} from '../../@types/api';
 import {AddEditModalProps} from '../../@types/Global';
+import ActionButtons from '../../Components/ActionButtons';
 
 const validationSchema = Yup.object().shape({
   description: Yup.string().trim().required('* Division Name is required.'),
@@ -125,30 +126,19 @@ const AddEditDivisionModal = ({
           errors?.description && touched?.description ? errors?.description : ''
         }
       />
-
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginTop: 10,
-        }}>
-        <CustomButton
-          style={{width: '45%'}}
-          type="secondary"
-          onPress={() => {
-            resetForm({
-              values: {
-                ...initialValues,
-              },
-            });
-            onClose();
-          }}>
-          Close
-        </CustomButton>
-        <CustomButton style={{width: '45%'}} onPress={handleSubmit}>
-          {type || 'SUbmit'}
-        </CustomButton>
-      </View>
+      <ActionButtons
+        onPressNegativeBtn={() => {
+          resetForm({
+            values: {
+              ...initialValues,
+            },
+          });
+          onClose();
+        }}
+        onPressPositiveBtn={handleSubmit}
+        PositiveBtnTitle={type || 'SUbmit'}
+        NegativeBtnTitle="Close"
+      />
     </View>
   );
 };

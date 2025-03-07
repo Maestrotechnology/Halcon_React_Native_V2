@@ -10,6 +10,7 @@ import TextInputBox from '../../Components/TextInputBox';
 import {COLORS, INPUT_SIZE} from '../../Utilities/Constants';
 import {FilterModalProps} from '../../@types/Global';
 import DropdownBox from '../../Components/DropdownBox';
+import ActionButtons from '../../Components/ActionButtons';
 
 const MachinesListFilterModal = ({
   filterData,
@@ -93,31 +94,18 @@ const MachinesListFilterModal = ({
           setFieldValue('division_id', null);
         }}
       />
-
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginTop: 10,
-        }}>
-        <CustomButton
-          style={{width: '45%'}}
-          type="secondary"
-          onPress={() => {
-            resetForm({
-              values: {
-                ...initialValues,
-              },
-            });
-            onApplyFilter(null);
-            onClose();
-          }}>
-          Reset
-        </CustomButton>
-        <CustomButton style={{width: '45%'}} onPress={handleSubmit}>
-          Submit
-        </CustomButton>
-      </View>
+      <ActionButtons
+        onPressNegativeBtn={() => {
+          resetForm({
+            values: {
+              ...initialValues,
+            },
+          });
+          onApplyFilter(null);
+          onClose();
+        }}
+        onPressPositiveBtn={handleSubmit}
+      />
     </View>
   );
 };

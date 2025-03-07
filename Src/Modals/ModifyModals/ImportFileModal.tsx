@@ -19,6 +19,7 @@ import {COLORS, FONTSIZES} from '../../Utilities/Constants';
 import {FONTS} from '../../Utilities/Fonts';
 import CustomImageBox from '../../Components/CustomImageBox';
 import {ICONS} from '../../Utilities/Icons';
+import ActionButtons from '../../Components/ActionButtons';
 type FileUploadProps = {
   file: FileType | null;
 };
@@ -155,34 +156,19 @@ const ImportFileModal = ({
         <StyledText style={{color: COLORS.red}}>{errors?.file}</StyledText>
       ) : null}
       {values?.file && <StyledText>{values?.file?.name}</StyledText>}
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginTop: 10,
-        }}>
-        <CustomButton
-          style={{width: '45%'}}
-          type="secondary"
-          onPress={() => {
-            resetForm({
-              values: {
-                ...initialValues,
-              },
-            });
-            onClose();
-          }}>
-          Close
-        </CustomButton>
-        <CustomButton
-          style={{width: '45%'}}
-          onPress={() => {
-            setFieldTouched('file', true);
-            handleSubmit();
-          }}>
-          {type || 'SUbmit'}
-        </CustomButton>
-      </View>
+      <ActionButtons
+        onPressNegativeBtn={() => {
+          resetForm({
+            values: {
+              ...initialValues,
+            },
+          });
+          onClose();
+        }}
+        onPressPositiveBtn={handleSubmit}
+        PositiveBtnTitle={type || 'SUbmit'}
+        NegativeBtnTitle="Close"
+      />
     </View>
   );
 };

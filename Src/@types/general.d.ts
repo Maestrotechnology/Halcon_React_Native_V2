@@ -389,3 +389,9 @@ export type ChangesPasswordProps = {
   show: boolean;
   lineData: UserRequestListDataProps | null;
 };
+export type ActionButtonsProps = {
+  onPressNegativeBtn: () => void;
+  onPressPositiveBtn: () => void;
+  NegativeBtnTitle?: string;
+  PositiveBtnTitle?: string;
+};

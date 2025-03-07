@@ -25,15 +25,13 @@ import {
 } from '../../../@types/Global';
 import MachinesListFilterModal from '../../../Modals/Filter/MachinesListFilterModal';
 import AddEditMachinesModal from '../../../Modals/ModifyModals/AddEditMachinesModal';
-import {CommonStyles} from '../../../Utilities/CommonStyles';
-import CustomButton from '../../../Components/CustomButton';
 import ImportFileModal from '../../../Modals/ModifyModals/ImportFileModal';
 
 var isMount = true;
 var currentPage = 1;
 var totalPages = 1;
 
-const Machines = ({navigation, route}: MastersStackNavigationProps) => {
+const Machines = ({navigation}: MastersStackNavigationProps) => {
   const token = UseToken();
   const {bottom} = useSafeAreaInsets();
   const focused = useIsFocused();

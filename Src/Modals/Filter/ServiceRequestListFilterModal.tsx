@@ -13,6 +13,7 @@ import DropdownBox from '../../Components/DropdownBox';
 import CustomButton from '../../Components/CustomButton';
 import DateTimePicker from '../../Components/DateTimePicker';
 import {getCurrentMonthDates} from '../../Utilities/GeneralUtilities';
+import ActionButtons from '../../Components/ActionButtons';
 
 const reqStatusOptions: DeviceStatusProps[] = [...requestStatusOptions];
 
@@ -137,25 +138,13 @@ const ServiceRequestListFilterModal = ({
           setFieldValue('reqStatus', null);
         }}
       />
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginTop: 10,
-        }}>
-        <CustomButton
-          style={{width: '45%'}}
-          type="secondary"
-          onPress={() => {
-            resetForm();
-            handleSubmit();
-          }}>
-          Reset
-        </CustomButton>
-        <CustomButton style={{width: '45%'}} onPress={handleSubmit}>
-          Submit
-        </CustomButton>
-      </View>
+      <ActionButtons
+        onPressNegativeBtn={() => {
+          resetForm();
+          handleSubmit();
+        }}
+        onPressPositiveBtn={handleSubmit}
+      />
     </View>
   );
 };

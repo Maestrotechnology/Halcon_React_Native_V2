@@ -14,6 +14,7 @@ import * as Yup from 'yup';
 import {AddEditModalProps} from '../../@types/Global';
 import {APPROVAL_STATUS_OPTIONS} from '../../Utilities/StaticDropdownOptions';
 import DropdownBox from '../../Components/DropdownBox';
+import ActionButtons from '../../Components/ActionButtons';
 
 const validationSchema = Yup.object().shape({
   action: Yup.mixed().required('* Status is required.'),
@@ -116,30 +117,19 @@ const ModifyApprovalStatusModal = ({
         isEditable={type !== 'View'}
         errorText={errors?.comment && touched?.comment ? errors?.comment : ''}
       />
-
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginTop: 10,
-        }}>
-        <CustomButton
-          style={{width: '45%'}}
-          type="secondary"
-          onPress={() => {
-            resetForm({
-              values: {
-                ...initialValues,
-              },
-            });
-            onClose();
-          }}>
-          Close
-        </CustomButton>
-        <CustomButton style={{width: '45%'}} onPress={handleSubmit}>
-          {type || 'SUbmit'}
-        </CustomButton>
-      </View>
+      <ActionButtons
+        onPressNegativeBtn={() => {
+          resetForm({
+            values: {
+              ...initialValues,
+            },
+          });
+          onClose();
+        }}
+        onPressPositiveBtn={handleSubmit}
+        PositiveBtnTitle={type || 'SUbmit'}
+        NegativeBtnTitle="Close"
+      />
     </View>
   );
 };

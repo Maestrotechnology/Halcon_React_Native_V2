@@ -15,6 +15,7 @@ import Toast from '../../Components/Toast';
 import {UseToken} from '../../Utilities/StoreData';
 import {AddEditModalProps} from '../../@types/Global';
 import {WorkCenterListFilterProps} from '../../@types/modals';
+import ActionButtons from '../../Components/ActionButtons';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().trim().required('* Work Center Name is required.'),
@@ -122,30 +123,19 @@ const AddEditWorkCenterModal = ({
         isEditable={type !== 'View'}
         errorText={errors?.name && touched?.name ? errors?.name : ''}
       />
-
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginTop: 10,
-        }}>
-        <CustomButton
-          style={{width: '45%'}}
-          type="secondary"
-          onPress={() => {
-            resetForm({
-              values: {
-                ...initialValues,
-              },
-            });
-            onClose();
-          }}>
-          Close
-        </CustomButton>
-        <CustomButton style={{width: '45%'}} onPress={handleSubmit}>
-          {type || 'SUbmit'}
-        </CustomButton>
-      </View>
+      <ActionButtons
+        onPressNegativeBtn={() => {
+          resetForm({
+            values: {
+              ...initialValues,
+            },
+          });
+          onClose();
+        }}
+        onPressPositiveBtn={handleSubmit}
+        PositiveBtnTitle={type || 'SUbmit'}
+        NegativeBtnTitle="Close"
+      />
     </View>
   );
 };

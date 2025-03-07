@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import {useFormik} from 'formik';
 import CustomButton from '../../Components/CustomButton';
 import TextInputBox from '../../Components/TextInputBox';
-import {COLORS, INPUT_SIZE} from '../../Utilities/Constants';
+import {INPUT_SIZE} from '../../Utilities/Constants';
 import {
   ConvertJSONtoFormData,
   isLoading,
@@ -22,6 +22,7 @@ import DropdownBox from '../../Components/DropdownBox';
 import CheckBox from '../../Components/CheckBox';
 import StyledText from '../../Components/StyledText';
 import Toast from '../../Components/Toast';
+import ActionButtons from '../../Components/ActionButtons';
 
 const validationSchema = Yup.object().shape({
   machine_name: Yup.string().trim().required('* Machine Name is required.'),
@@ -69,8 +70,8 @@ const AddEditMachinesModal = ({
     isLoading(true);
     let finalObj = {
       ...values,
-      division_id: values.division_id.division_id,
-      work_center_id: values.work_center_id.work_center_id,
+      division_id: values.division_id?.division_id,
+      work_center_id: values.work_center_id?.work_center_id,
       token: token,
     };
 
@@ -90,7 +91,7 @@ const AddEditMachinesModal = ({
       .finally(() => isLoading(false));
   };
 
-  // update user
+  // update Machines
   const handleUpdateMachine = (values: MachinesListFilterProps) => {
     isLoading(true);
     let finalObj = {
@@ -143,9 +144,6 @@ const AddEditMachinesModal = ({
         onChangeText={(val: string) => {
           setFieldValue('machine_name', val);
         }}
-        customInputBoxContainerStyle={{
-          borderColor: COLORS.primary,
-        }}
         textInputProps={{
           maxLength: INPUT_SIZE.Name,
         }}
@@ -163,9 +161,6 @@ const AddEditMachinesModal = ({
         value={values?.equipment_id}
         onChangeText={(val: string) => {
           setFieldValue('equipment_id', RemoveSpace(val));
-        }}
-        customInputBoxContainerStyle={{
-          borderColor: COLORS.primary,
         }}
         textInputProps={{
           maxLength: INPUT_SIZE.Machine_ID,
@@ -203,9 +198,6 @@ const AddEditMachinesModal = ({
         onChangeText={(val: string) => {
           setFieldValue('serial_no', RemoveSpace(val));
         }}
-        customInputBoxContainerStyle={{
-          borderColor: COLORS.primary,
-        }}
         textInputProps={{
           maxLength: INPUT_SIZE.Serial_Number,
         }}
@@ -218,9 +210,6 @@ const AddEditMachinesModal = ({
         value={values?.model}
         onChangeText={(val: string) => {
           setFieldValue('model', val);
-        }}
-        customInputBoxContainerStyle={{
-          borderColor: COLORS.primary,
         }}
         textInputProps={{
           maxLength: INPUT_SIZE.Name,
@@ -251,9 +240,6 @@ const AddEditMachinesModal = ({
         value={values?.equipment_description}
         onChangeText={(val: string) => {
           setFieldValue('equipment_description', val);
-        }}
-        customInputBoxContainerStyle={{
-          borderColor: COLORS.primary,
         }}
         textInputProps={{
           maxLength: INPUT_SIZE.Description,
@@ -290,30 +276,19 @@ const AddEditMachinesModal = ({
           </View>
         </View>
       </View>
-
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginTop: 10,
-        }}>
-        <CustomButton
-          style={{width: '45%'}}
-          type="secondary"
-          onPress={() => {
-            resetForm({
-              values: {
-                ...initialValues,
-              },
-            });
-            onClose();
-          }}>
-          Close
-        </CustomButton>
-        <CustomButton style={{width: '45%'}} onPress={handleSubmit}>
-          {type || 'SUbmit'}
-        </CustomButton>
-      </View>
+      <ActionButtons
+        onPressNegativeBtn={() => {
+          resetForm({
+            values: {
+              ...initialValues,
+            },
+          });
+          onClose();
+        }}
+        onPressPositiveBtn={handleSubmit}
+        PositiveBtnTitle={type || 'SUbmit'}
+        NegativeBtnTitle="Close"
+      />
     </View>
   );
 };

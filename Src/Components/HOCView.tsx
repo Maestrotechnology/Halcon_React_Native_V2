@@ -165,7 +165,7 @@ const HOCView = ({
                 onPress={onPressSettingIcon}
                 type="secondary"
                 style={{width: 70, marginVertical: 8}}>
-                edit
+                Edit
               </CustomButton>
               <CustomButton
                 onPress={onPressTimeIcon}

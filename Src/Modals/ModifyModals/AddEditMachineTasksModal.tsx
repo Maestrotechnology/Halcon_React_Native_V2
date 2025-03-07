@@ -25,16 +25,7 @@ import {
 } from '../../Utilities/StaticDropdownOptions';
 import StyledText from '../../Components/StyledText';
 import {useRoute} from '@react-navigation/native';
-import TimePickerComponent from '../../Components/TimePIcker';
-import moment from 'moment';
-
-const validationSchema = Yup.object().shape({
-  duration: Yup.number()
-    .min(1, 'Duration must be greater tha zero')
-    .required('Duration is required'),
-  starting_date: Yup.string().required('Start Date is required'),
-  starting_time: Yup.mixed().required('Start Time is required'),
-});
+import ActionButtons from '../../Components/ActionButtons';
 
 export default function AddEditMachineTasksModal({
   lineData,
@@ -46,6 +37,19 @@ export default function AddEditMachineTasksModal({
   const token = UseToken();
   const route: any = useRoute();
   const {item} = route.params || {};
+  const validationSchema = Yup.object().shape({
+    duration: Yup.number()
+      .min(1, 'Duration must be greater tha zero')
+      .required('Duration is required'),
+    starting_date: Yup.string().required('Start Date is required'),
+    starting_time: Yup.mixed().required('Start Time is required'),
+    tasks:
+      type == 'Create' || type === 'Assigntask'
+        ? Yup.array()
+            .min(1, 'At least one task is required')
+            .required('Tasks are required')
+        : Yup.array().notRequired(),
+  });
   const {
     values,
     errors,
@@ -156,7 +160,6 @@ export default function AddEditMachineTasksModal({
 
       status: type === 'settings' ? 0 : 3,
     };
-    console.log(finalObj, 'finalObj');
 
     UpdateTaskMappingService(ConvertJSONtoFormData(finalObj))
       .then(async res => {
@@ -188,8 +191,6 @@ export default function AddEditMachineTasksModal({
     }
   }, []);
 
-  console.log(errors, 'LINE');
-
   return (
     <>
       <View>
@@ -202,11 +203,8 @@ export default function AddEditMachineTasksModal({
             {type !== 'time' && (
               <TextInputBox
                 value={values?.duration}
-                onChangeText={(val: string) => {
-                  setFieldValue('duration', val > '0' || val === '' ? '' : val);
-                }}
-                customInputBoxContainerStyle={{
-                  borderColor: COLORS.primary,
+                onChangeText={(val: any) => {
+                  setFieldValue('duration', val <= 0 || val === '' ? '' : val);
                 }}
                 validationType="NUMBER"
                 keyboardType="number-pad"
@@ -246,8 +244,6 @@ export default function AddEditMachineTasksModal({
                   value={values.starting_time ? values.starting_time : ''}
                   placeHolder="Select Starting Time"
                   onSelect={val => {
-                    console.log(val, 'VAL+==');
-
                     setFieldValue('starting_time', val);
                   }}
                   options={HoursList}
@@ -257,6 +253,11 @@ export default function AddEditMachineTasksModal({
                   type="miniList"
                   fieldName="name"
                   searchFieldName="name"
+                  errorText={
+                    errors?.starting_time && touched.starting_time
+                      ? errors?.starting_time
+                      : ''
+                  }
                 />
                 {/* <TimePickerComponent
                   mode="time"
@@ -320,32 +321,22 @@ export default function AddEditMachineTasksModal({
             fieldName="task_name"
             isLocalSearch
             searchFieldName="task_name"
+            errorText={errors?.tasks && touched.tasks ? errors?.tasks : ''}
           />
         ) : null}
-
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginTop: 10,
-          }}>
-          <CustomButton
-            style={{width: '45%'}}
-            type="secondary"
-            onPress={() => {
-              resetForm({
-                values: {
-                  ...initialValues,
-                },
-              });
-              onClose();
-            }}>
-            Close
-          </CustomButton>
-          <CustomButton style={{width: '45%'}} onPress={handleSubmit}>
-            {!lineData?.master_task_map_id ? 'Create' : 'Update'}
-          </CustomButton>
-        </View>
+        <ActionButtons
+          onPressNegativeBtn={() => {
+            resetForm({
+              values: {
+                ...initialValues,
+              },
+            });
+            onClose();
+          }}
+          onPressPositiveBtn={handleSubmit}
+          PositiveBtnTitle={!lineData?.master_task_map_id ? 'Create' : 'Update'}
+          NegativeBtnTitle="Close"
+        />
       </View>
     </>
   );

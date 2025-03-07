@@ -16,6 +16,7 @@ import {UseToken} from '../../Utilities/StoreData';
 import {AddEditModalProps} from '../../@types/Global';
 import {HolidayListDataProps} from '../../@types/api';
 import DateTimePicker from '../../Components/DateTimePicker';
+import ActionButtons from '../../Components/ActionButtons';
 
 const validationSchema = Yup.object().shape({
   holiday_date: Yup.string().trim().required('* Holiday Date is required.'),
@@ -144,30 +145,19 @@ const AddEditHolidayModal = ({
         isEditable={type !== 'View'}
         errorText={errors?.reason && touched?.reason ? errors?.reason : ''}
       />
-
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginTop: 10,
-        }}>
-        <CustomButton
-          style={{width: '45%'}}
-          type="secondary"
-          onPress={() => {
-            resetForm({
-              values: {
-                ...initialValues,
-              },
-            });
-            onClose();
-          }}>
-          Close
-        </CustomButton>
-        <CustomButton style={{width: '45%'}} onPress={handleSubmit}>
-          {type || 'SUbmit'}
-        </CustomButton>
-      </View>
+      <ActionButtons
+        onPressNegativeBtn={() => {
+          resetForm({
+            values: {
+              ...initialValues,
+            },
+          });
+          onClose();
+        }}
+        onPressPositiveBtn={handleSubmit}
+        PositiveBtnTitle={type || 'SUbmit'}
+        NegativeBtnTitle="Close"
+      />
     </View>
   );
 };

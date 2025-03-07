@@ -5,6 +5,7 @@ import {MTTRReportFilterProps} from '../../@types/modals';
 import CustomButton from '../../Components/CustomButton';
 import {FilterModalProps} from '../../@types/Global';
 import DropdownBox from '../../Components/DropdownBox';
+import ActionButtons from '../../Components/ActionButtons';
 
 const MTTRreportFilterModal = ({
   filterData,
@@ -56,31 +57,18 @@ const MTTRreportFilterModal = ({
           setFieldValue('machine_id', null);
         }}
       />
-
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginTop: 10,
-        }}>
-        <CustomButton
-          style={{width: '45%'}}
-          type="secondary"
-          onPress={() => {
-            resetForm({
-              values: {
-                ...initialValues,
-              },
-            });
-            onApplyFilter(null);
-            onClose();
-          }}>
-          Reset
-        </CustomButton>
-        <CustomButton style={{width: '45%'}} onPress={handleSubmit}>
-          Submit
-        </CustomButton>
-      </View>
+      <ActionButtons
+        onPressNegativeBtn={() => {
+          resetForm({
+            values: {
+              ...initialValues,
+            },
+          });
+          onApplyFilter(null);
+          onClose();
+        }}
+        onPressPositiveBtn={handleSubmit}
+      />
     </View>
   );
 };

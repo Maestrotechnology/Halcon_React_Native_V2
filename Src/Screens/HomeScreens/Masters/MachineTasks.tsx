@@ -38,6 +38,7 @@ import ConfirmationModal from '../../../Modals/ConfirmationModal';
 import {TaskDurationList} from '../../../Utilities/StaticDropdownOptions';
 import {ICONS} from '../../../Utilities/Icons';
 import CustomImageBox from '../../../Components/CustomImageBox';
+import {FONTS} from '../../../Utilities/Fonts';
 
 var isMount = true;
 var currentPage = 1;
@@ -271,7 +272,9 @@ export default function MachineTasks({route}: any) {
               marginBottom: 10,
             },
           ]}>
-          <StyledText>Periodic Checks In</StyledText>
+          <StyledText style={{fontFamily: FONTS.poppins.medium}}>
+            Periodic Checks In {TaskDurationList[currentIndex]?.name}
+          </StyledText>
 
           {taskSettingDatas?.is_exist ? (
             <CustomButton
@@ -284,7 +287,7 @@ export default function MachineTasks({route}: any) {
                   lineData: null,
                 });
               }}
-              style={[{width: '45%'}]}>
+              style={[{width: 100}]}>
               {permissionLoader ? (
                 <ActivityIndicator color={COLORS.white} />
               ) : (
@@ -336,17 +339,24 @@ export default function MachineTasks({route}: any) {
               />
 
               {selectedTaskList?.length > 0 && (
-                <SVGIcon
-                  icon="deleteIcon"
-                  width={18}
-                  height={18}
-                  isButton
-                  onPress={() => {
-                    setIsShowDelete({
-                      status: true,
-                    });
-                  }}
-                />
+                <StyledText
+                  style={{
+                    color: COLORS.red,
+                    fontFamily: FONTS.poppins.regular,
+                  }}>
+                  Delete
+                </StyledText>
+                // <SVGIcon
+                //   icon="deleteIcon"
+                //   width={18}
+                //   height={18}
+                //   isButton
+                //   onPress={() => {
+                //     setIsShowDelete({
+                //       status: true,
+                //     });
+                //   }}
+                // />
               )}
             </View>
           )}
@@ -369,7 +379,15 @@ export default function MachineTasks({route}: any) {
         </View>
 
         <GlobaModal
-          title={`${addEditMachineTask?.type} ${TaskDurationList[currentIndex].title} Tasks`}
+          title={`${
+            addEditMachineTask?.type === 'Assigntask'
+              ? 'Update'
+              : addEditMachineTask?.type === 'settings'
+              ? 'Update Setting for'
+              : addEditMachineTask?.type === 'time'
+              ? 'Update Time for'
+              : 'Create'
+          } ${TaskDurationList[currentIndex].title} Tasks`}
           visible={addEditMachineTask?.show}
           onClose={closeTaskModal}>
           <AddEditMachineTasksModal
@@ -405,10 +423,17 @@ const styles = StyleSheet.create({
   itemContainer: {
     backgroundColor: COLORS.white,
     paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 6,
+    paddingVertical: 10,
+    // borderTopColor: COLORS.DEEP_BLUE,
+    // borderRightColor: COLORS.DEEP_BLUE,
+
+    // borderWidth: 0.4,
+    // borderBottomColor: COLORS.orange,
+    // borderLeftColor: COLORS.orange,
+
     marginBottom: 10,
     elevation: 1,
+    borderRadius: 5,
   },
   rowStyle: {
     flexDirection: 'row',
