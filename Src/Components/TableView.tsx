@@ -16,12 +16,9 @@ import ListEmptyComponent from './ListEmptyComponent';
 import CommonSwitch from './CommonSwitch';
 import lodash from 'lodash';
 import {FormateDate} from '../Utilities/Methods';
-import {
-  deviceStatusOptions,
-  LIST_TYPE_MAP,
-  TASK_DONE_BY_OPTIONS,
-} from '../Utilities/StaticDropdownOptions';
+import {LIST_TYPE_MAP} from '../Utilities/StaticDropdownOptions';
 import {converttoHours} from '../Utilities/GeneralUtilities';
+import {ListTypeProps} from '../@types/general';
 export type TableItemProps = {
   item: any;
   index: number;
@@ -132,7 +129,6 @@ const TableView = ({
               flex: 1,
               flexDirection: 'column',
               alignSelf: 'flex-start',
-              // maxWidth: WINDOW_WIDTH - 100,
             }}
             onPress={() => {
               if (onActionPress) onActionPress(1, item);
@@ -145,7 +141,7 @@ const TableView = ({
                 </StyledText>
                 <StyledText style={styles.valueLabel}>{index + 1}</StyledText>
               </View>
-              {[...rowData]?.map((cardItem, cardIndex) => {
+              {[...rowData]?.map(cardItem => {
                 return (
                   <View
                     style={[

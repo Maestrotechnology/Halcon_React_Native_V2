@@ -1,3 +1,4 @@
+import {getMonthName} from './GeneralUtilities';
 import {IconType} from './Icons';
 
 export type DeviceStatusProps = {
@@ -221,3 +222,145 @@ export const ReportLegentOptions = [
 export const HoursList = new Array(24)
   .fill('')
   ?.map((ele, index) => ({name: index + 1, id: index + 1}));
+
+export const DivisionListRowData = [
+  {key: 'description', label: 'Division Name'},
+  {key: 'created_at', label: 'Created at', type: 'date'},
+];
+
+export const HolidayListRowData = [
+  {key: 'holiday_date', label: 'Date'},
+  {key: 'reason', label: 'Reason'},
+];
+
+export const MachineListRowData = [
+  {key: 'equipment_id', label: 'Machine ID'},
+  {key: 'machine_name', label: 'Machine Name'},
+  {key: 'division_description', label: 'Division'},
+];
+
+export const TaskListRowData = [
+  {key: 'task_name', label: 'Task Name'},
+  {key: 'control_key', label: 'Control Key'},
+];
+
+export const WorkCenterListRowData = [
+  {key: 'name', label: 'Work Center Name'},
+  {key: 'created_at', label: 'Created at', type: 'date'},
+];
+
+export const MeterialListRowData = [
+  {key: 'name', label: 'Name'},
+  {key: 'description', label: 'Description'},
+  {key: 'unit_id', label: 'Unit'},
+  {key: 'created_at', label: 'Start Date'},
+];
+
+export const ApprovalStatusListRowData = [
+  {key: 'role_name', label: 'Role Id'},
+  {
+    key: 'action',
+    label: 'Status',
+    ListType: 'APPROVAL_STATUS_OPTIONS',
+  },
+  {key: 'updated_by', label: 'Updated By'},
+  {key: 'comment', label: 'Comment'},
+];
+
+export const AssignTaskListRowData = [
+  {
+    key: 'task_name',
+    label: '',
+  },
+];
+
+export const PreventiveListRowData = [
+  {key: 'equipment_id', label: 'Machine Id'},
+  {key: 'machine_name', label: 'Machine Name'},
+  {key: 'work_center_name', label: 'Work Center'},
+  {key: 'division_description', label: 'Division Id'},
+  {key: 'schedule_date', label: 'Request Date'},
+  {key: 'request_status_name', label: 'Request Status'},
+];
+
+export const PreventiveTaskRowData = [{key: 'task_name', label: 'Task Name'}];
+
+export const TaskDetailsRowData = [
+  {key: 'task_name', label: 'Task Name'},
+  {key: 'created_at', label: 'Start Date'},
+  {key: 'updated_at', label: 'End Date'},
+];
+
+export const SpindleReportRowData = [
+  {key: 'machine_id', label: 'Machine Id'},
+  {key: 'machine_name', label: 'Machine Name'},
+  {key: 'work_center_name', label: 'Work Center'},
+  {key: 'division_description', label: 'Division'},
+  {
+    key: 'previous_month_consumed_hour',
+    label: `${getMonthName()?.previous} Running Hours`,
+    type: 'converttoHours',
+  },
+  {
+    key: 'previous_month_spindle_hr',
+    label: `${getMonthName()?.previous} Total Running Hours`,
+    type: 'converttoHours',
+  },
+  {
+    key: 'current_month_spindle_hr',
+    label: `${getMonthName()?.current} Total Running Hours`,
+    type: 'converttoHours',
+  },
+];
+
+export const DowntimeSrRowData = [
+  {key: 'equipment_id', label: 'Machine Id'},
+  {key: 'machine_name', label: 'Machine Name'},
+  {key: 'division_description', label: 'Division Id'},
+  {key: 'machine_status_name', label: 'Machine Status'},
+  {key: 'date_of_error_occur', label: 'Error Occurred At'},
+  {key: 'requested_date', label: 'Request Date', type: 'date'},
+  {key: 'completed_date', label: 'Completed Date'},
+  {key: 'request_status_name', label: 'Request Status'},
+];
+
+export const DownTimeTaskDetailsRowData = [
+  {key: 'intervention_start_date', label: 'Intervention Start Date'},
+  {key: 'intervention_end_date', label: 'Intervention End Date'},
+  {
+    key: 'start_status',
+    label: 'Machine Status at Task Start',
+    ListType: 'deviceStatusOptions',
+  },
+  {
+    key: 'end_status',
+    label: 'Machine Status at Task End',
+    ListType: 'deviceStatusOptions',
+  },
+  {
+    key: 'task_done_by',
+    label: 'Task Done By',
+    ListType: 'TASK_DONE_BY_OPTIONS',
+  },
+];
+
+export const AccessRoleListRowData = [
+  {key: 'role_name', label: 'Role Name'},
+  {key: 'role_description', label: 'Description'},
+];
+
+export const UserListRowData = [
+  {key: 'holiday_date', label: 'Date'},
+  {key: 'reason', label: 'Reason'},
+];
+
+export const TableRowDatas = {
+  DIVISION: DivisionListRowData,
+  HOLIDAY: HolidayListRowData,
+  MACHINE: MachineListRowData,
+  TASK: TaskListRowData,
+  WORK_CENTER: WorkCenterListRowData,
+  METERIAL: MeterialListRowData,
+  APPROVAL_STATUS: ApprovalStatusListRowData,
+  PREVENTIVE_SR: PreventiveListRowData,
+};

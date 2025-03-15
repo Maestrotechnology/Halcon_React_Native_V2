@@ -366,8 +366,7 @@ const Policy = ({route}: MastersStackNavigationProps) => {
       <View style={{marginBottom: bottom, flex: 1}}>
         <TableView
           rowData={[
-            {key: 'description', label: ''},
-            {key: 'control_key', label: 'Control Key'},
+            
           ]}
           dataList={[...PolicyList]?.map(ele => ({
             ...ele,

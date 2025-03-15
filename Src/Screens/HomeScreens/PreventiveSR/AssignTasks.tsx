@@ -171,6 +171,7 @@ const AssignTasks = ({navigation}: any) => {
         style={{
           flex: 1,
         }}>
+        <StyledText>sdsdsd</StyledText>
         {/* {preventiveViewData && ( */}
         <TableView
           dataList={[...taskList]}

@@ -395,3 +395,5 @@ export type ActionButtonsProps = {
   NegativeBtnTitle?: string;
   PositiveBtnTitle?: string;
 };
+
+export type ListTypeProps = 'MachineList' | '';

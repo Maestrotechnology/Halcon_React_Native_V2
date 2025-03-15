@@ -361,10 +361,7 @@ export default function MachineTasks({route}: any) {
             </View>
           )}
           <TableView
-            rowData={[
-              {key: 'task_name', label: 'Task Name'},
-              {key: 'control_key', label: 'Control Key'},
-            ]}
+            rowData={[]}
             dataList={[...machineTaskList]?.map(ele => ({
               ...ele,
             }))}

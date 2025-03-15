@@ -11,8 +11,6 @@ import {getCatchMessage} from '../../../Utilities/GeneralUtilities';
 import Toast from '../../../Components/Toast';
 import HOCView from '../../../Components/HOCView';
 import {FONTSIZES} from '../../../Utilities/Constants';
-import {CommonStyles} from '../../../Utilities/CommonStyles';
-import CustomButton from '../../../Components/CustomButton';
 import TableView from '../../../Components/TableView';
 import GlobaModal from '../../../Components/GlobalModal';
 import ConfirmationModal from '../../../Modals/ConfirmationModal';
